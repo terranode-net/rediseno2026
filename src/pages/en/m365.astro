@@ -1,0 +1,98 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/Hero.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import PricingCard from '@/components/PricingCard.astro';
+import FeatureCard from '@/components/FeatureCard.astro';
+import Testimonial from '@/components/Testimonial.astro';
+import FAQAccordion from '@/components/FAQAccordion.astro';
+import CTASection from '@/components/CTASection.astro';
+import { pathFor, ORG } from '@/lib/site';
+import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
+
+const faqs = [
+  { q: 'Is Terranode an official Microsoft Partner?', a: 'Yes, we are a Microsoft Partner, which lets us offer Microsoft 365 licensing with local support, competitive pricing and implementation guidance included.' },
+  { q: 'What does Microsoft 365 Business include?', a: 'It includes Outlook, Word, Excel, PowerPoint, Teams and OneDrive, with business email on your own domain and 1 TB of cloud storage per user.' },
+  { q: 'How long does Microsoft 365 implementation take?', a: 'In most cases we activate and migrate your email and files in under 24 hours, including domain configuration and basic training for your team.' },
+  { q: 'Can I migrate from Google Workspace or another provider to Microsoft 365?', a: 'Yes, we perform full migrations of email, calendar and contacts from Google Workspace, Zimbra or other providers, without losing your history.' },
+  { q: 'Is Microsoft 365 support available in English?', a: 'Yes, all our implementation and post-sale support for Microsoft 365 is available in English and Spanish, with certified engineers available 24/7.' },
+];
+
+const plans = [
+  { name: 'Business Basic', tagline: 'Email and Office in the cloud', price: '$6', period: '/user/mo', specs: ['Outlook + email on your domain', 'Teams and 1TB OneDrive', 'Office on the web', 'Implementation support'] },
+  { name: 'Business Standard', tagline: 'Most popular with SMBs', price: '$12.50', period: '/user/mo', featured: true, specs: ['Full desktop Office apps', 'Outlook, Teams, 1TB OneDrive', 'Teams meeting recording', 'Priority support'] },
+  { name: 'Business Premium', tagline: 'Advanced security included', price: '$22', period: '/user/mo', specs: ['Everything in Business Standard', 'Advanced threat protection', 'Device management (Intune)', 'Encryption and enterprise compliance'] },
+];
+
+const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'Microsoft 365', key: 'm365' }]);
+const service = serviceSchema('en', {
+  name: 'Microsoft 365 for Business',
+  description: 'Microsoft 365 licensing and implementation with local support from a certified Microsoft Partner.',
+  pageKey: 'm365',
+  serviceType: 'Microsoft 365 Implementation',
+});
+const products = productPlanSchema(plans.map(p => ({ name: `Microsoft 365 ${p.name}`, price: p.price.replace('$',''), description: p.tagline, url: pathFor('en','m365') })));
+---
+<BaseLayout
+  locale="en"
+  pageKey="m365"
+  title="Microsoft 365 for Business | Microsoft Partner | Terranode"
+  description="We implement Microsoft 365 for your business as an official Microsoft Partner: email, Teams, Office and local support. Activation in under 24 hours."
+  jsonLd={[organizationSchema('en'), breadcrumb, service, ...products, faqSchema(faqs)]}
+>
+  <Hero
+    eyebrow="Microsoft 365 · Certified Microsoft Partner"
+    title="Microsoft 365, implemented"
+    highlight="by local experts"
+    description="Email, Teams, Word, Excel and PowerPoint running in your business in under 24 hours, with support from an official Microsoft Partner."
+    primaryCta={{ label: 'Request implementation', href: pathFor('en','contacto') }}
+    secondaryCta={{ label: 'See Terramail', href: pathFor('en','terramail') }}
+  />
+
+  <section class="container-page py-20 md:py-28">
+    <SectionHeading eyebrow="Plans" title="Choose the Microsoft 365 plan for your team" />
+    <div class="mt-14 grid gap-6 lg:grid-cols-3">
+      {plans.map((p) => (
+        <PricingCard name={p.name} tagline={p.tagline} price={p.price} period={p.period} featured={p.featured} specs={p.specs} ctaLabel="Get a licensing quote" ctaHref={pathFor('en','contacto')} />
+      ))}
+    </div>
+    <p class="mt-6 text-center text-xs text-slate-400">Reference pricing per user. Volume licensing discounts available.</p>
+  </section>
+
+  <section class="bg-surface py-20 md:py-28">
+    <div class="container-page">
+      <SectionHeading eyebrow="Why Terranode" title="Full implementation, not just the license" />
+      <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <FeatureCard icon="shield" title="Official Microsoft Partner" description="Direct licensing, backed support and certified best practices." />
+        <FeatureCard icon="server" title="Email migration" description="We move your email, calendar and contacts from your current provider without data loss." />
+        <FeatureCard icon="bolt" title="24h activation" description="Your team working in Microsoft 365 the same day, in most cases." />
+        <FeatureCard icon="lock" title="Enterprise security" description="We configure MFA, access policies and phishing protection from day one." />
+        <FeatureCard icon="support" title="24/7 support" description="Ongoing guidance, not just during initial implementation." />
+        <FeatureCard icon="chart" title="Training included" description="Basic onboarding so your team gets the most out of Teams and Office from day one." />
+      </div>
+    </div>
+  </section>
+
+  <section class="container-page py-20 md:py-28">
+    <SectionHeading eyebrow="Clients" title="Businesses that already migrated with us" />
+    <div class="mt-14">
+      <Testimonial
+        quote="I hired the corporate email service with Office 365 through Terranode because I found out they're a Microsoft Partner. Hands down the best guidance and implementation — in less than a day my whole company was already using cloud email."
+        author="Angel Gabriel"
+        role="Microsoft 365 client"
+      />
+    </div>
+  </section>
+
+  <section class="container-page pb-20 md:pb-28">
+    <SectionHeading eyebrow="FAQ" title="Everything about Microsoft 365 with Terranode" />
+    <div class="mt-12"><FAQAccordion items={faqs} /></div>
+  </section>
+
+  <CTASection
+    title="Move your business to Microsoft 365 without the headaches"
+    description="Book a call with our certified team and we'll put together the ideal licensing proposal."
+    primaryCta={{ label: 'Talk to a Microsoft Partner', href: pathFor('en','contacto') }}
+    secondaryCta={{ label: 'Client portal', href: ORG.clientPortal }}
+  />
+</BaseLayout>

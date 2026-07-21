@@ -1,0 +1,109 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/Hero.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import PricingCard from '@/components/PricingCard.astro';
+import FeatureCard from '@/components/FeatureCard.astro';
+import ComparisonTable from '@/components/ComparisonTable.astro';
+import FAQAccordion from '@/components/FAQAccordion.astro';
+import CTASection from '@/components/CTASection.astro';
+import { pathFor, ORG } from '@/lib/site';
+import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
+
+const faqs = [
+  { q: 'What is a VPS and how is it different from shared hosting?', a: 'A VPS (Virtual Private Server) gives you dedicated CPU, RAM and storage resources with full root access. Unlike shared hosting, your performance never depends on other sites on the same machine.' },
+  { q: 'Do Terranode VPS plans use NVMe storage?', a: 'Yes, every VPS plan includes NVMe storage by default — up to 10x faster than traditional SSDs for read/write operations.' },
+  { q: 'Can I choose my VPS location?', a: 'Yes. We offer VPS in Guayaquil (Ecuador), Los Angeles (US) and London (UK), so you can pick the lowest latency for your audience.' },
+  { q: 'What virtualization or control panel do you use?', a: 'We use KVM virtualization, which provides full resource isolation and lets you install any OS or control panel you prefer (cPanel, Plesk, or none).' },
+  { q: 'Can I scale my VPS as my project grows?', a: 'Yes, you can scale CPU, RAM and storage in minutes from the client panel, or migrate to a dedicated server when your project needs it.' },
+];
+
+const plans = [
+  { name: 'Velocity', tagline: 'Ideal for personal and starter projects', price: '$5', period: '/mo', specs: ['2 dedicated vCPU', '4 GB RAM', '40 GB NVMe', '2 TB bandwidth', '1 Gbps port · 1 IPv4', 'KVM virtualization'] },
+  { name: 'Momentum', tagline: 'For growing sites and apps', price: '$12', period: '/mo', featured: true, specs: ['4 dedicated vCPU', '8 GB RAM', '80 GB NVMe', '4 TB bandwidth', '1 Gbps port · 1 IPv4', 'Weekly backups included'] },
+  { name: 'Apex', tagline: 'Demanding, multi-site workloads', price: '$24', period: '/mo', specs: ['8 dedicated vCPU', '16 GB RAM', '160 GB NVMe', '8 TB bandwidth', '1 Gbps port · 1 IPv4', '24/7 priority support'] },
+];
+
+const breadcrumb = breadcrumbSchema('en', [
+  { name: 'Home', key: 'home' },
+  { name: 'VPS', key: 'vps' },
+]);
+const service = serviceSchema('en', {
+  name: 'NVMe VPS',
+  description: 'Virtual private servers with NVMe storage, KVM virtualization and locations in Ecuador, the United States and the United Kingdom.',
+  pageKey: 'vps',
+  serviceType: 'VPS Hosting',
+});
+const products = productPlanSchema(plans.map(p => ({
+  name: `VPS ${p.name}`,
+  price: p.price.replace('$',''),
+  description: p.tagline,
+  url: `${pathFor('en','vps')}`,
+})));
+---
+<BaseLayout
+  locale="en"
+  pageKey="vps"
+  title="NVMe VPS Hosting from $5/mo | Terranode"
+  description="Deploy a VPS with NVMe storage, KVM virtualization and locations in Ecuador, the US and the UK. Plans from $5/mo with 24/7 support."
+  jsonLd={[organizationSchema('en'), breadcrumb, service, ...products, faqSchema(faqs)]}
+>
+  <Hero
+    eyebrow="VPS · Guayaquil · Los Angeles · London"
+    title="NVMe VPS with"
+    highlight="fully dedicated resources"
+    description="Deploy in minutes with full root access, blazing-fast NVMe disks and KVM virtualization. Pick the region closest to your users."
+    primaryCta={{ label: 'Choose my plan', href: pathFor('en','contacto') }}
+    secondaryCta={{ label: 'See dedicated servers', href: pathFor('en','dedicados') }}
+  />
+
+  <section class="container-page py-20 md:py-28">
+    <SectionHeading eyebrow="VPS plans" title="A plan for every stage of your project" description="Every plan includes NVMe, generous bandwidth and instant deployment." />
+    <div class="mt-14 grid gap-6 lg:grid-cols-3">
+      {plans.map((p) => (
+        <PricingCard name={`VPS ${p.name}`} tagline={p.tagline} price={p.price} period={p.period} featured={p.featured} specs={p.specs} ctaLabel="Order now" ctaHref={pathFor('en','contacto')} />
+      ))}
+    </div>
+    <p class="mt-6 text-center text-xs text-slate-400">Reference pricing. Contact us for a quote tailored to your exact resource needs.</p>
+  </section>
+
+  <section class="bg-surface py-20 md:py-28">
+    <div class="container-page">
+      <SectionHeading eyebrow="Comparison" title="Technical specs by plan" />
+      <div class="mt-12">
+        <ComparisonTable
+          headers={['Plan', 'vCPU', 'RAM', 'Storage', 'Bandwidth', 'Price']}
+          rows={[
+            ['Velocity', '2', '4 GB', '40 GB NVMe', '2 TB', '$5/mo'],
+            ['Momentum', '4', '8 GB', '80 GB NVMe', '4 TB', '$12/mo'],
+            ['Apex', '8', '16 GB', '160 GB NVMe', '8 TB', '$24/mo'],
+          ]}
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="container-page py-20 md:py-28">
+    <SectionHeading eyebrow="Why our VPS" title="Built for consistent performance" />
+    <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <FeatureCard icon="bolt" title="NVMe by default" description="No spinning disks or SATA SSDs — NVMe on every plan, at no extra cost." />
+      <FeatureCard icon="shield" title="DDoS included" description="Up to 160 Gbps of protection active by default across the network." />
+      <FeatureCard icon="globe" title="3 locations" description="Guayaquil, Los Angeles and London to optimize latency for your users." />
+      <FeatureCard icon="server" title="Full root access" description="Install whatever stack you need: Docker, Node, PHP, databases, anything." />
+      <FeatureCard icon="chart" title="Scale with zero downtime" description="Increase CPU, RAM or disk from the panel without reinstalling anything." />
+      <FeatureCard icon="support" title="Real 24/7 support" description="Engineers available every day of the year." />
+    </div>
+  </section>
+
+  <section class="container-page pb-20 md:pb-28">
+    <SectionHeading eyebrow="FAQ" title="Everything about our VPS" />
+    <div class="mt-12"><FAQAccordion items={faqs} /></div>
+  </section>
+
+  <CTASection
+    title="Not sure which VPS plan to choose?"
+    description="Tell us about your project and we'll recommend the exact resources you need — no overselling."
+    primaryCta={{ label: 'Talk to an engineer', href: pathFor('en','contacto') }}
+    secondaryCta={{ label: 'Client portal', href: ORG.clientPortal }}
+  />
+</BaseLayout>

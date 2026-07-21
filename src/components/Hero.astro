@@ -1,0 +1,47 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  highlight?: string;
+  description: string;
+  primaryCta: { label: string; href: string };
+  secondaryCta?: { label: string; href: string };
+  stats?: { value: string; label: string }[];
+}
+const { eyebrow, title, highlight, description, primaryCta, secondaryCta, stats } = Astro.props;
+---
+<section class="relative overflow-hidden bg-ink pt-16 pb-20 md:pt-24 md:pb-28">
+  <div class="absolute inset-0 bg-dot-grid opacity-[0.15]"></div>
+  <div class="absolute -top-40 left-1/2 h-[520px] w-[820px] -translate-x-1/2 rounded-full bg-accent/25 blur-[120px]"></div>
+  <div class="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-signal/20 blur-[100px]"></div>
+
+  <div class="container-page relative">
+    <div class="mx-auto max-w-3xl text-center">
+      <span class="eyebrow !border-white/15 !bg-white/5 !text-white/90 backdrop-blur">
+        <span class="h-1.5 w-1.5 rounded-full bg-signal animate-pulse"></span>
+        {eyebrow}
+      </span>
+      <h1 class="mt-6 text-balance text-4xl font-semibold leading-[1.08] text-white md:text-6xl">
+        {title} {highlight && <span class="text-accent">{highlight}</span>}
+      </h1>
+      <p class="mx-auto mt-6 max-w-xl text-balance text-base leading-relaxed text-slate-300 md:text-lg">
+        {description}
+      </p>
+      <div class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <a href={primaryCta.href} class="btn-primary w-full sm:w-auto">{primaryCta.label}</a>
+        {secondaryCta && <a href={secondaryCta.href} class="btn-ghost-dark w-full sm:w-auto">{secondaryCta.label}</a>}
+      </div>
+    </div>
+
+    {stats && (
+      <div class="mx-auto mt-16 grid max-w-3xl grid-cols-2 gap-6 border-t border-white/10 pt-10 md:grid-cols-4">
+        {stats.map((s) => (
+          <div class="text-center">
+            <p class="stat-number">{s.value}</p>
+            <p class="mt-1 text-xs uppercase tracking-wide text-slate-400">{s.label}</p>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+</section>

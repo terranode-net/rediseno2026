@@ -1,0 +1,98 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/Hero.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import PricingCard from '@/components/PricingCard.astro';
+import FeatureCard from '@/components/FeatureCard.astro';
+import Testimonial from '@/components/Testimonial.astro';
+import FAQAccordion from '@/components/FAQAccordion.astro';
+import CTASection from '@/components/CTASection.astro';
+import { pathFor, ORG } from '@/lib/site';
+import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
+
+const faqs = [
+  { q: '¿Terranode es Partner oficial de Microsoft?', a: 'Sí, somos Partner de Microsoft, lo que nos permite ofrecerte licenciamiento de Microsoft 365 con soporte local en español, precios competitivos y asesoría de implementación incluida.' },
+  { q: '¿Qué incluye Microsoft 365 Business?', a: 'Incluye Outlook, Word, Excel, PowerPoint, Teams y OneDrive, con correo corporativo en tu propio dominio y 1 TB de almacenamiento en la nube por usuario.' },
+  { q: '¿Cuánto tarda la implementación de Microsoft 365 en mi empresa?', a: 'En la mayoría de los casos activamos y migramos tu correo y archivos en menos de 24 horas, incluyendo la configuración de tu dominio y capacitación básica a tu equipo.' },
+  { q: '¿Puedo migrar desde Google Workspace u otro proveedor a Microsoft 365?', a: 'Sí, realizamos migraciones completas de correo, calendario y contactos desde Google Workspace, Zimbra u otros proveedores, sin perder tu historial.' },
+  { q: '¿El soporte de Microsoft 365 es en español?', a: 'Sí, todo nuestro soporte de implementación y postventa para Microsoft 365 es en español, con ingenieros certificados disponibles 24/7.' },
+];
+
+const plans = [
+  { name: 'Business Basic', tagline: 'Correo y Office en la nube', price: '$6', period: '/usuario/mes', specs: ['Outlook + correo con tu dominio', 'Teams y OneDrive 1TB', 'Office en la web', 'Soporte de implementación'] },
+  { name: 'Business Standard', tagline: 'El más elegido por pymes', price: '$12.50', period: '/usuario/mes', featured: true, specs: ['Apps de escritorio Office completas', 'Outlook, Teams, OneDrive 1TB', 'Grabación de reuniones en Teams', 'Soporte prioritario en español'] },
+  { name: 'Business Premium', tagline: 'Seguridad avanzada incluida', price: '$22', period: '/usuario/mes', specs: ['Todo Business Standard', 'Protección contra amenazas avanzada', 'Gestión de dispositivos (Intune)', 'Cifrado y compliance empresarial'] },
+];
+
+const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Microsoft 365', key: 'm365' }]);
+const service = serviceSchema('es', {
+  name: 'Microsoft 365 para Empresas',
+  description: 'Licenciamiento e implementación de Microsoft 365 con soporte local de Partner Microsoft certificado.',
+  pageKey: 'm365',
+  serviceType: 'Microsoft 365 Implementation',
+});
+const products = productPlanSchema(plans.map(p => ({ name: `Microsoft 365 ${p.name}`, price: p.price.replace('$',''), description: p.tagline, url: pathFor('es','m365') })));
+---
+<BaseLayout
+  locale="es"
+  pageKey="m365"
+  title="Microsoft 365 para Empresas | Partner Microsoft | Terranode"
+  description="Implementamos Microsoft 365 en tu empresa como Partner oficial de Microsoft: correo, Teams, Office y soporte local en español. Activación en menos de 24 horas."
+  jsonLd={[organizationSchema('es'), breadcrumb, service, ...products, faqSchema(faqs)]}
+>
+  <Hero
+    eyebrow="Microsoft 365 · Partner Microsoft certificado"
+    title="Microsoft 365 implementado"
+    highlight="por expertos locales"
+    description="Correo, Teams, Word, Excel y PowerPoint funcionando en tu empresa en menos de 24 horas, con soporte en español de un Partner oficial de Microsoft."
+    primaryCta={{ label: 'Solicitar implementación', href: pathFor('es','contacto') }}
+    secondaryCta={{ label: 'Ver Terramail', href: pathFor('es','terramail') }}
+  />
+
+  <section class="container-page py-20 md:py-28">
+    <SectionHeading eyebrow="Planes" title="Elige el plan de Microsoft 365 para tu equipo" />
+    <div class="mt-14 grid gap-6 lg:grid-cols-3">
+      {plans.map((p) => (
+        <PricingCard name={p.name} tagline={p.tagline} price={p.price} period={p.period} featured={p.featured} specs={p.specs} ctaLabel="Cotizar licencias" ctaHref={pathFor('es','contacto')} />
+      ))}
+    </div>
+    <p class="mt-6 text-center text-xs text-slate-400">Precios de referencia por usuario. Descuentos disponibles por volumen de licencias.</p>
+  </section>
+
+  <section class="bg-surface py-20 md:py-28">
+    <div class="container-page">
+      <SectionHeading eyebrow="Por qué con Terranode" title="Implementación completa, no solo la licencia" />
+      <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <FeatureCard icon="shield" title="Partner oficial Microsoft" description="Licenciamiento directo, soporte respaldado y buenas prácticas certificadas." />
+        <FeatureCard icon="server" title="Migración de correo" description="Movemos tu correo, calendario y contactos desde tu proveedor actual sin pérdidas." />
+        <FeatureCard icon="bolt" title="Activación en 24h" description="Tu equipo trabajando en Microsoft 365 el mismo día, en la mayoría de los casos." />
+        <FeatureCard icon="lock" title="Seguridad empresarial" description="Configuramos MFA, políticas de acceso y protección contra phishing desde el día uno." />
+        <FeatureCard icon="support" title="Soporte en español 24/7" description="Asesoría continua, no solo durante la implementación inicial." />
+        <FeatureCard icon="chart" title="Capacitación incluida" description="Onboarding básico para que tu equipo aproveche Teams y Office desde el primer día." />
+      </div>
+    </div>
+  </section>
+
+  <section class="container-page py-20 md:py-28">
+    <SectionHeading eyebrow="Clientes" title="Empresas que ya migraron con nosotros" />
+    <div class="mt-14">
+      <Testimonial
+        quote="Contraté el servicio de correo corporativo con Office 365 de la mano de Terranode debido a que me enteré que son Partner de Microsoft. Sin duda la mejor asesoría e implementación: en menos de un día ya tenía toda mi empresa usando correo en la nube."
+        author="Ángel Gabriel"
+        role="Cliente Microsoft 365"
+      />
+    </div>
+  </section>
+
+  <section class="container-page pb-20 md:pb-28">
+    <SectionHeading eyebrow="Preguntas frecuentes" title="Todo sobre Microsoft 365 con Terranode" />
+    <div class="mt-12"><FAQAccordion items={faqs} /></div>
+  </section>
+
+  <CTASection
+    title="Lleva a tu empresa a Microsoft 365 sin dolores de cabeza"
+    description="Agenda una llamada con nuestro equipo certificado y te armamos la propuesta de licenciamiento ideal."
+    primaryCta={{ label: 'Hablar con un Partner Microsoft', href: pathFor('es','contacto') }}
+    secondaryCta={{ label: 'Portal de cliente', href: ORG.clientPortal }}
+  />
+</BaseLayout>

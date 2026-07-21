@@ -1,0 +1,23 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  primaryCta: { label: string; href: string };
+  secondaryCta?: { label: string; href: string };
+}
+const { title, description, primaryCta, secondaryCta } = Astro.props;
+---
+<section class="container-page py-16 md:py-24">
+  <div class="relative overflow-hidden rounded-xl2 bg-ink px-8 py-14 text-center md:py-20">
+    <div class="absolute inset-0 bg-noise"></div>
+    <div class="absolute -top-24 left-1/2 h-64 w-96 -translate-x-1/2 rounded-full bg-accent/30 blur-[100px]"></div>
+    <div class="relative">
+      <h2 class="mx-auto max-w-2xl text-balance text-3xl font-semibold text-white md:text-4xl">{title}</h2>
+      <p class="mx-auto mt-4 max-w-lg text-balance text-slate-300">{description}</p>
+      <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <a href={primaryCta.href} class="btn-primary w-full sm:w-auto">{primaryCta.label}</a>
+        {secondaryCta && <a href={secondaryCta.href} class="btn-ghost-dark w-full sm:w-auto">{secondaryCta.label}</a>}
+      </div>
+    </div>
+  </div>
+</section>

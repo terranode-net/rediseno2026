@@ -1,0 +1,84 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/Hero.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import PricingCard from '@/components/PricingCard.astro';
+import FeatureCard from '@/components/FeatureCard.astro';
+import FAQAccordion from '@/components/FAQAccordion.astro';
+import CTASection from '@/components/CTASection.astro';
+import { pathFor, ORG } from '@/lib/site';
+import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
+
+const faqs = [
+  { q: '¿Qué es Terramail?', a: 'Terramail es nuestro servicio de correo corporativo profesional con tu propio dominio (por ejemplo, tunombre@tuempresa.com), con altísima entregabilidad, antispam y antivirus incluidos.' },
+  { q: '¿Terramail es lo mismo que Microsoft 365?', a: 'No, son servicios distintos. Terramail es nuestra solución de correo propia, ideal si buscas simplicidad y costo bajo. Microsoft 365 es la suite completa de Microsoft con Outlook, Teams y Office. Te ayudamos a elegir según tu necesidad.' },
+  { q: '¿Puedo acceder a mi correo desde el celular?', a: 'Sí, Terramail es compatible con cualquier cliente de correo (Outlook, Gmail app, Apple Mail) vía IMAP/SMTP, además de un webmail moderno accesible desde cualquier navegador.' },
+  { q: '¿Cuántas cuentas de correo puedo crear?', a: 'Depende del plan que elijas. Ofrecemos desde planes individuales hasta paquetes corporativos con decenas de cuentas y buzones compartidos.' },
+];
+
+const plans = [
+  { name: 'Mail Basic', tagline: 'Para emprendedores', price: '$2', period: '/mes', specs: ['5 GB por buzón', '1 cuenta de correo', 'Antispam + Antivirus', 'Webmail incluido'] },
+  { name: 'Mail Business', tagline: 'Para equipos pequeños', price: '$5', period: '/mes', featured: true, specs: ['25 GB por buzón', 'Hasta 10 cuentas', 'Antispam + Antivirus', 'Soporte IMAP/SMTP', 'Calendarios compartidos'] },
+  { name: 'Mail Enterprise', tagline: 'Para empresas en crecimiento', price: '$9', period: '/mes', specs: ['50 GB por buzón', 'Cuentas ilimitadas', 'Reglas y alias avanzados', 'Soporte prioritario 24/7'] },
+];
+
+const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Terramail', key: 'terramail' }]);
+const service = serviceSchema('es', {
+  name: 'Terramail — Correo Corporativo',
+  description: 'Correo electrónico corporativo con tu propio dominio, alta entregabilidad y protección antispam.',
+  pageKey: 'terramail',
+  serviceType: 'Business Email Hosting',
+});
+const products = productPlanSchema(plans.map(p => ({ name: p.name, price: p.price.replace('$',''), description: p.tagline, url: pathFor('es','terramail') })));
+---
+<BaseLayout
+  locale="es"
+  pageKey="terramail"
+  title="Terramail: Correo Corporativo Profesional | Terranode"
+  description="Correo electrónico corporativo con tu propio dominio, antispam, antivirus y alta entregabilidad. Planes desde $2/mes con soporte 24/7."
+  jsonLd={[organizationSchema('es'), breadcrumb, service, ...products, faqSchema(faqs)]}
+>
+  <Hero
+    eyebrow="Terramail · Correo Corporativo"
+    title="El correo que hace ver"
+    highlight="profesional a tu marca"
+    description="Deja atrás el @gmail.com. Con Terramail tu equipo escribe desde tunombre@tuempresa.com, con seguridad y entregabilidad de nivel empresarial."
+    primaryCta={{ label: 'Activar mi correo', href: pathFor('es','contacto') }}
+    secondaryCta={{ label: 'Ver Microsoft 365', href: pathFor('es','m365') }}
+  />
+
+  <section class="container-page py-20 md:py-28">
+    <SectionHeading eyebrow="Planes" title="Correo corporativo para cada tamaño de equipo" />
+    <div class="mt-14 grid gap-6 lg:grid-cols-3">
+      {plans.map((p) => (
+        <PricingCard name={p.name} tagline={p.tagline} price={p.price} period={p.period} featured={p.featured} specs={p.specs} ctaLabel="Contratar ahora" ctaHref={pathFor('es','contacto')} />
+      ))}
+    </div>
+  </section>
+
+  <section class="bg-surface py-20 md:py-28">
+    <div class="container-page">
+      <SectionHeading eyebrow="Características" title="Diseñado para la comunicación de tu negocio" />
+      <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <FeatureCard icon="lock" title="Antispam y antivirus" description="Filtros avanzados que mantienen tu bandeja limpia y segura." />
+        <FeatureCard icon="globe" title="Alta entregabilidad" description="Configuración SPF, DKIM y DMARC para que tus correos lleguen, no al spam." />
+        <FeatureCard icon="server" title="Acceso multiplataforma" description="IMAP, SMTP y webmail moderno, compatible con Outlook, Apple Mail y más." />
+        <FeatureCard icon="shield" title="Respaldos automáticos" description="Copias de seguridad periódicas de todos tus buzones." />
+        <FeatureCard icon="chart" title="Panel de administración" description="Crea, elimina y gestiona cuentas de tu equipo en segundos." />
+        <FeatureCard icon="support" title="Soporte 24/7" description="Asistencia técnica real cuando tu equipo más lo necesita." />
+      </div>
+    </div>
+  </section>
+
+  <section class="container-page pb-20 md:pb-28">
+    <SectionHeading eyebrow="Preguntas frecuentes" title="Todo sobre Terramail" />
+    <div class="mt-12"><FAQAccordion items={faqs} /></div>
+  </section>
+
+  <CTASection
+    title="Dale a tu empresa el correo que se merece"
+    description="Activamos tu correo corporativo el mismo día, con soporte para la migración de tus cuentas actuales."
+    primaryCta={{ label: 'Activar Terramail', href: pathFor('es','contacto') }}
+    secondaryCta={{ label: 'Portal de cliente', href: ORG.clientPortal }}
+  />
+</BaseLayout>

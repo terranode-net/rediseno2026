@@ -1,0 +1,100 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/Hero.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import PricingCard from '@/components/PricingCard.astro';
+import FeatureCard from '@/components/FeatureCard.astro';
+import ComparisonTable from '@/components/ComparisonTable.astro';
+import FAQAccordion from '@/components/FAQAccordion.astro';
+import CTASection from '@/components/CTASection.astro';
+import { pathFor, ORG } from '@/lib/site';
+import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
+
+const faqs = [
+  { q: '¿Qué diferencia a un servidor dedicado de un VPS?', a: 'Un servidor dedicado te entrega el hardware físico completo, sin compartir recursos con nadie más. Es la opción con mayor rendimiento y aislamiento para cargas de trabajo críticas o de alto consumo.' },
+  { q: '¿Los servidores dedicados incluyen protección DDoS?', a: 'Sí, todos nuestros servidores dedicados incluyen mitigación DDoS de hasta 100 Gbps en modo entrante, sin costo adicional.' },
+  { q: '¿Puedo personalizar el hardware de mi servidor?', a: 'Sí, podemos ajustar RAM, almacenamiento (SSD/NVMe), RAID y ancho de banda según tus necesidades específicas. Escríbenos para una configuración a medida.' },
+  { q: '¿En qué datacenters están ubicados sus servidores dedicados?', a: 'Contamos con servidores dedicados en Ecuador y Estados Unidos, con conectividad de 1 Gbps y direccionamiento IPv4/IPv6 incluido.' },
+];
+
+const plans = [
+  { name: 'Xeon E3', tagline: 'Ideal para proyectos personales', price: '$79', period: '/mes', specs: ['Intel Xeon E3-1230 V5 @ 3.4GHz', '4 cores / 8 threads', '32 GB RAM', '1 TB SSD', '1 Gbps · IPv4 + IPv6'] },
+  { name: 'Xeon E5 Dual', tagline: 'Para proyectos en crecimiento', price: '$149', period: '/mes', featured: true, specs: ['2x Intel Xeon E5-2680 V4 @ 2.4GHz', '28 cores / 56 threads', '128 GB RAM', '1 TB SSD', '1 Gbps · Transferencia ilimitada'] },
+  { name: 'Xeon Gold', tagline: 'Proyectos escalables y alto tráfico', price: '$249', period: '/mes', specs: ['2x Intel Xeon Gold 6138 @ 2.0GHz', '40 cores / 80 threads', '256 GB RAM', 'NVMe configurable', '1 Gbps · IPv4 + IPv6'] },
+];
+
+const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Servidores Dedicados', key: 'dedicados' }]);
+const service = serviceSchema('es', {
+  name: 'Servidores Dedicados',
+  description: 'Servidores dedicados con procesadores Intel Xeon, protección DDoS y conectividad de 1 Gbps en Ecuador y Estados Unidos.',
+  pageKey: 'dedicados',
+  serviceType: 'Dedicated Server Hosting',
+});
+const products = productPlanSchema(plans.map(p => ({ name: `Servidor ${p.name}`, price: p.price.replace('$',''), description: p.tagline, url: pathFor('es','dedicados') })));
+---
+<BaseLayout
+  locale="es"
+  pageKey="dedicados"
+  title="Servidores Dedicados Intel Xeon en Ecuador | Terranode"
+  description="Servidores dedicados con procesadores Intel Xeon, hasta 256 GB de RAM, protección DDoS y conectividad de 1 Gbps. Máximo rendimiento sin compartir recursos."
+  jsonLd={[organizationSchema('es'), breadcrumb, service, ...products, faqSchema(faqs)]}
+>
+  <Hero
+    eyebrow="Servidores Dedicados · Intel Xeon"
+    title="Todo el hardware,"
+    highlight="solo para ti"
+    description="Rendimiento, estabilidad y seguridad de nivel empresarial con procesadores Intel Xeon dedicados al 100% a tu operación."
+    primaryCta={{ label: 'Ver todos los servidores', href: pathFor('es','contacto') }}
+    secondaryCta={{ label: 'Configuración a medida', href: pathFor('es','contacto') }}
+  />
+
+  <section class="container-page py-20 md:py-28">
+    <SectionHeading eyebrow="Configuraciones" title="Del proyecto personal al clúster empresarial" />
+    <div class="mt-14 grid gap-6 lg:grid-cols-3">
+      {plans.map((p) => (
+        <PricingCard name={p.name} tagline={p.tagline} price={p.price} period={p.period} featured={p.featured} specs={p.specs} ctaLabel="Solicitar cotización" ctaHref={pathFor('es','contacto')} />
+      ))}
+    </div>
+    <p class="mt-6 text-center text-xs text-slate-400">Configuraciones personalizadas disponibles bajo cotización.</p>
+  </section>
+
+  <section class="bg-surface py-20 md:py-28">
+    <div class="container-page">
+      <SectionHeading eyebrow="Comparativa" title="Especificaciones por servidor" />
+      <div class="mt-12">
+        <ComparisonTable
+          headers={['Servidor', 'CPU', 'Núcleos', 'RAM', 'Almacenamiento', 'Precio']}
+          rows={[
+            ['Xeon E3', 'E3-1230 V5 @ 3.4GHz', '4c / 8t', '32 GB', '1 TB SSD', '$79/mes'],
+            ['Xeon E5 Dual', '2x E5-2680 V4 @ 2.4GHz', '28c / 56t', '128 GB', '1 TB SSD', '$149/mes'],
+            ['Xeon Gold', '2x Gold 6138 @ 2.0GHz', '40c / 80t', '256 GB', 'NVMe config.', '$249/mes'],
+          ]}
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="container-page py-20 md:py-28">
+    <SectionHeading eyebrow="Por qué un dedicado" title="Cuando el rendimiento no es negociable" />
+    <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <FeatureCard icon="server" title="Hardware exclusivo" description="Sin vecinos ruidosos: todos los recursos del servidor son solo tuyos." />
+      <FeatureCard icon="shield" title="DDoS 100 Gbps" description="Mitigación de ataques en la capa de red antes de que lleguen a tu servidor." />
+      <FeatureCard icon="globe" title="IPv4 + IPv6" description="Direccionamiento incluido con espacio ampliable según tu proyecto." />
+      <FeatureCard icon="chart" title="Alto rendimiento sostenido" description="Ideal para bases de datos, ERPs, juegos y aplicaciones críticas." />
+      <FeatureCard icon="lock" title="Seguridad y aislamiento" description="Control total del hardware para cumplir requisitos de compliance." />
+      <FeatureCard icon="support" title="Gestión opcional" description="Podemos administrar tu servidor por ti: parches, monitoreo y hardening." />
+    </div>
+  </section>
+
+  <section class="container-page pb-20 md:pb-28">
+    <SectionHeading eyebrow="Preguntas frecuentes" title="Todo sobre nuestros servidores dedicados" />
+    <div class="mt-12"><FAQAccordion items={faqs} /></div>
+  </section>
+
+  <CTASection
+    title="Diseñemos la configuración exacta que necesitas"
+    description="Cuéntanos tu carga de trabajo esperada y te armamos una propuesta de hardware a medida."
+    primaryCta={{ label: 'Solicitar cotización', href: pathFor('es','contacto') }}
+    secondaryCta={{ label: 'Portal de cliente', href: ORG.clientPortal }}
+  />
+</BaseLayout>

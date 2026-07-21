@@ -1,0 +1,57 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/Hero.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import FeatureCard from '@/components/FeatureCard.astro';
+import CTASection from '@/components/CTASection.astro';
+import { pathFor } from '@/lib/site';
+import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+
+const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'About Us', key: 'nosotros' }]);
+---
+<BaseLayout
+  locale="en"
+  pageKey="nosotros"
+  title="About Us | The Story Behind Terranode"
+  description="Learn the story of Terranode: from Vsphost to a cloud infrastructure provider with presence in Ecuador, the United States and the United Kingdom."
+  jsonLd={[organizationSchema('en'), breadcrumb]}
+>
+  <Hero
+    eyebrow="Our story"
+    title="From Vsphost to"
+    highlight="Terranode"
+    description="We started in Ecuador, focused on the Spanish-speaking market. Today we're a cloud infrastructure built to serve Latin America and the world."
+    primaryCta={{ label: 'Talk to our team', href: pathFor('en','contacto') }}
+  />
+
+  <section class="container-page py-20 md:py-28">
+    <div class="mx-auto max-w-2xl">
+      <SectionHeading eyebrow="Our origin" title="An evolution, not just a rebrand" align="left" />
+      <div class="mt-8 space-y-5 text-slate-600 leading-relaxed">
+        <p>Terranode began as <strong>Vsphost</strong>, a hosting provider focused on the Spanish-speaking Latin American market. Over time, our team of experts across different parts of the world let us offer an increasingly complete and global service.</p>
+        <p>To reflect that evolution — and to reach new markets outside Latin America — we completely redesigned our brand and launched an English-language site, while keeping the same commitment that got us here: reliable infrastructure, human support and fair pricing.</p>
+        <p>Today, as <strong>Terranode</strong>, we still operate under the same philosophy: customer satisfaction is our number one priority. That's why we work every day to deliver quality service, exceptional technical support and solutions tailored to every business.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-surface py-20 md:py-28">
+    <div class="container-page">
+      <SectionHeading eyebrow="What defines us" title="The principles behind every server we manage" />
+      <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <FeatureCard icon="globe" title="Global reach, local touch" description="We serve Ecuador, Latin America, the US and Europe, without losing the closeness of local support." />
+        <FeatureCard icon="shield" title="Enterprise-grade infrastructure" description="The same technology global providers use, backed by a team that actually responds." />
+        <FeatureCard icon="support" title="People, not tickets" description="Behind every reply is an engineer who understands your problem — not a script." />
+        <FeatureCard icon="chart" title="We grow with you" description="From your first VPS to a cluster of dedicated servers, without ever switching providers." />
+        <FeatureCard icon="lock" title="Security by default" description="DDoS protection, backups and hardening aren\u2019t extras — they\u2019re built into how we build every service." />
+        <FeatureCard icon="bolt" title="Continuous improvement" description="We keep investing in NVMe, network and automation so you can feel the difference." />
+      </div>
+    </div>
+  </section>
+
+  <CTASection
+    title="Want to meet the team behind your infrastructure?"
+    description="Reach out and we'll gladly tell you more about how we work and why so many businesses trust us."
+    primaryCta={{ label: 'Contact us', href: pathFor('en','contacto') }}
+  />
+</BaseLayout>

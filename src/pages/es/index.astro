@@ -1,0 +1,105 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/Hero.astro';
+import TrustBar from '@/components/TrustBar.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import FeatureCard from '@/components/FeatureCard.astro';
+import Testimonial from '@/components/Testimonial.astro';
+import CTASection from '@/components/CTASection.astro';
+import FAQAccordion from '@/components/FAQAccordion.astro';
+import { pathFor } from '@/lib/site';
+import { organizationSchema, websiteSchema, faqSchema } from '@/lib/schema';
+
+const faqs = [
+  { q: '¿Qué diferencia a Terranode de otros proveedores de hosting en Ecuador?', a: 'Combinamos infraestructura NVMe de alto rendimiento, protección DDoS de hasta 160 Gbps y soporte técnico en español 24/7, con ubicaciones en Ecuador, Estados Unidos y Reino Unido para que elijas la latencia ideal según tu audiencia.' },
+  { q: '¿Puedo migrar mi sitio o servidor actual sin perder tiempo de actividad?', a: 'Sí. Nuestro equipo se encarga de la migración completa (archivos, bases de datos y correo) coordinando el corte de DNS para minimizar el tiempo fuera de línea, normalmente a menos de unos minutos.' },
+  { q: '¿Ofrecen soporte técnico en español las 24 horas?', a: 'Sí, contamos con soporte técnico 24/7 en español e inglés vía ticket, chat y correo, además de asesoría comercial para ayudarte a elegir el plan correcto.' },
+  { q: '¿Trabajan con empresas fuera de Ecuador?', a: 'Sí. Aunque nacimos en Ecuador, hoy damos servicio a clientes en toda Latinoamérica, Estados Unidos y Europa gracias a nuestra red multi-región.' },
+];
+---
+<BaseLayout
+  locale="es"
+  pageKey="home"
+  title="Terranode | Hosting, VPS y Servidores Dedicados en Ecuador"
+  description="Infraestructura cloud de alto rendimiento con protección DDoS de 160 Gbps, discos NVMe y soporte 24/7. VPS, hosting, servidores dedicados y Microsoft 365 en Ecuador y el mundo."
+  jsonLd={[organizationSchema('es'), websiteSchema('es'), faqSchema(faqs)]}
+>
+  <Hero
+    eyebrow="Infraestructura cloud • Ecuador · LATAM · Global"
+    title="Infraestructura que"
+    highlight="nunca te deja caer"
+    description="VPS, hosting y servidores dedicados con NVMe, protección DDoS de 160 Gbps y soporte 24/7 en español. La base técnica que tu negocio necesita para crecer sin sustos."
+    primaryCta={{ label: 'Ver planes VPS', href: pathFor('es','vps') }}
+    secondaryCta={{ label: 'Hablar con un asesor', href: pathFor('es','contacto') }}
+    stats={[
+      { value: '160 Gbps', label: 'Mitigación DDoS' },
+      { value: '99.9%', label: 'Uptime garantizado' },
+      { value: '24/7', label: 'Soporte en español' },
+      { value: '3', label: 'Regiones: EC · US · UK' },
+    ]}
+  />
+
+  <TrustBar items={['NVMe en todos los planes', 'Partner Microsoft 365', 'Soporte 24/7 en español', 'Datacenters en Guayaquil, EE.UU. y Reino Unido']} />
+
+  <section class="container-page py-20 md:py-28">
+    <SectionHeading
+      eyebrow="Qué hacemos"
+      title="Todo lo que tu infraestructura necesita, bajo un mismo techo"
+      description="Desde tu primer VPS hasta un clúster de servidores dedicados: escalamos contigo sin que tengas que cambiar de proveedor."
+    />
+    <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <FeatureCard icon="server" title="VPS NVMe" description="Servidores virtuales con recursos garantizados, KVM y despliegue en minutos." />
+      <FeatureCard icon="cloud" title="Web Hosting" description="Hosting LiteSpeed optimizado para WordPress y aplicaciones de alto tráfico." />
+      <FeatureCard icon="shield" title="Servidores Dedicados" description="Hardware Intel Xeon dedicado 100% a tu operación, con máxima estabilidad." />
+      <FeatureCard icon="lock" title="Terramail" description="Correo corporativo profesional, seguro y con altísima entregabilidad." />
+    </div>
+  </section>
+
+  <section class="bg-surface py-20 md:py-28">
+    <div class="container-page">
+      <SectionHeading
+        eyebrow="Por qué Terranode"
+        title="Rendimiento y seguridad de nivel empresarial"
+        description="Diseñamos cada capa de nuestra red pensando en negocios que no pueden permitirse una caída."
+      />
+      <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <FeatureCard icon="bolt" title="Almacenamiento NVMe" description="Hasta 10 veces más rápido que SSD tradicional en lectura/escritura." />
+        <FeatureCard icon="shield" title="DDoS 160 Gbps" description="Mitigación de ataques en tiempo real sin afectar la latencia de tu tráfico legítimo." />
+        <FeatureCard icon="globe" title="Red multi-región" description="Guayaquil, Los Ángeles y Londres: elige la ubicación más cercana a tus usuarios." />
+        <FeatureCard icon="support" title="Soporte humano 24/7" description="Sin bots ni respuestas automáticas: ingenieros reales resolviendo tu ticket." />
+        <FeatureCard icon="chart" title="Escalabilidad sin fricción" description="Crece de VPS a servidor dedicado sin migraciones dolorosas." />
+        <FeatureCard icon="lock" title="Backups y seguridad" description="Copias de respaldo programadas y hardening de seguridad incluido." />
+      </div>
+    </div>
+  </section>
+
+  <section class="container-page py-20 md:py-28">
+    <SectionHeading eyebrow="Clientes" title="Empresas que ya confían en nuestra infraestructura" />
+    <div class="mt-14 grid gap-6 md:grid-cols-2">
+      <Testimonial
+        quote="Contraté el servicio de correo corporativo con Office 365 de la mano de Terranode porque supe que son Partner de Microsoft. En menos de un día ya tenía toda mi empresa usando correo en la nube."
+        author="Ángel Gabriel"
+        role="Cliente Terramail + M365"
+      />
+      <Testimonial
+        quote="Me desarrollaron el sitio web para mi negocio y sin duda quedé encantada con el trabajo. El soporte es muy ameno y te ayudan en todo, sin duda el mejor hosting en Ecuador."
+        author="Lady Rivera"
+        role="Cliente Hosting"
+      />
+    </div>
+  </section>
+
+  <section class="container-page pb-20 md:pb-28">
+    <SectionHeading eyebrow="Preguntas frecuentes" title="Resolvemos tus dudas antes de empezar" />
+    <div class="mt-12">
+      <FAQAccordion items={faqs} />
+    </div>
+  </section>
+
+  <CTASection
+    title="Tu infraestructura merece estar en las mejores manos"
+    description="Cuéntanos qué necesitas y un ingeniero te recomendará el plan exacto — sin compromiso."
+    primaryCta={{ label: 'Cotizar ahora', href: pathFor('es','contacto') }}
+    secondaryCta={{ label: 'Ver servidores dedicados', href: pathFor('es','dedicados') }}
+  />
+</BaseLayout>

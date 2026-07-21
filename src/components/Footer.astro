@@ -1,0 +1,77 @@
+---
+import { NAV, ORG, pathFor, type Locale } from '@/lib/site';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+
+const t = {
+  es: {
+    tagline: 'Infraestructura cloud de alto rendimiento para negocios que no pueden permitirse caídas.',
+    company: 'Empresa',
+    services: 'Servicios',
+    resources: 'Soporte',
+    portal: 'Portal de Cliente',
+    status: 'Estado de la Red',
+    tickets: 'Centro de Soporte',
+    rights: 'Todos los derechos reservados.',
+    legal: 'Antes conocida como Vsphost — evolucionamos para servir a más países.',
+  },
+  en: {
+    tagline: 'High-performance cloud infrastructure for businesses that can\u2019t afford downtime.',
+    company: 'Company',
+    services: 'Services',
+    resources: 'Support',
+    portal: 'Client Portal',
+    status: 'Network Status',
+    tickets: 'Support Center',
+    rights: 'All rights reserved.',
+    legal: 'Formerly known as Vsphost — we evolved to serve more countries.',
+  },
+}[locale];
+---
+<footer class="relative overflow-hidden bg-ink text-white">
+  <div class="absolute inset-0 bg-grid-fade pointer-events-none"></div>
+  <div class="container-page relative py-16">
+    <div class="grid grid-cols-2 gap-10 md:grid-cols-5">
+      <div class="col-span-2">
+        <img src="/logo.png" alt="Terranode" class="h-8 w-auto" width="190" height="38" />
+        <p class="mt-4 max-w-xs text-sm leading-relaxed text-slate-400">{t.tagline}</p>
+        <p class="mt-4 text-xs text-slate-500">{t.legal}</p>
+      </div>
+
+      <div>
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">{t.services}</h3>
+        <ul class="mt-4 space-y-2.5 text-sm text-slate-300">
+          {NAV.filter(n => n.key !== 'nosotros' && n.key !== 'contacto').map((item) => (
+            <li><a href={pathFor(locale, item.key)} class="hover:text-white transition-colors">{item.label[locale]}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">{t.company}</h3>
+        <ul class="mt-4 space-y-2.5 text-sm text-slate-300">
+          <li><a href={pathFor(locale, 'nosotros')} class="hover:text-white transition-colors">{NAV.find(n=>n.key==='nosotros')?.label[locale]}</a></li>
+          <li><a href={pathFor(locale, 'contacto')} class="hover:text-white transition-colors">{NAV.find(n=>n.key==='contacto')?.label[locale]}</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">{t.resources}</h3>
+        <ul class="mt-4 space-y-2.5 text-sm text-slate-300">
+          <li><a href={ORG.clientPortal} target="_blank" rel="noopener" class="hover:text-white transition-colors">{t.portal}</a></li>
+          <li><a href={`${ORG.clientPortal}/submitticket.php`} target="_blank" rel="noopener" class="hover:text-white transition-colors">{t.tickets}</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-14 flex flex-col gap-4 border-t border-white/10 pt-6 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+      <p>&copy; {new Date().getFullYear()} Terranode. {t.rights}</p>
+      <div class="flex gap-4">
+        {ORG.sameAs.map((url) => (
+          <a href={url} target="_blank" rel="noopener" class="hover:text-white transition-colors">{new URL(url).hostname.replace('www.','').split('.')[0]}</a>
+        ))}
+      </div>
+    </div>
+  </div>
+</footer>

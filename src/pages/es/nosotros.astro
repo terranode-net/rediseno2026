@@ -1,0 +1,57 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/Hero.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import FeatureCard from '@/components/FeatureCard.astro';
+import CTASection from '@/components/CTASection.astro';
+import { pathFor } from '@/lib/site';
+import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+
+const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Nosotros', key: 'nosotros' }]);
+---
+<BaseLayout
+  locale="es"
+  pageKey="nosotros"
+  title="Nosotros | La historia detrás de Terranode"
+  description="Conoce la historia de Terranode: de Vsphost a un proveedor de infraestructura cloud con presencia en Ecuador, Estados Unidos y Reino Unido."
+  jsonLd={[organizationSchema('es'), breadcrumb]}
+>
+  <Hero
+    eyebrow="Nuestra historia"
+    title="De Vsphost a"
+    highlight="Terranode"
+    description="Nacimos en Ecuador enfocados en el público de habla hispana. Hoy somos una infraestructura cloud pensada para servir a Latinoamérica y al mundo."
+    primaryCta={{ label: 'Habla con nuestro equipo', href: pathFor('es','contacto') }}
+  />
+
+  <section class="container-page py-20 md:py-28">
+    <div class="mx-auto max-w-2xl">
+      <SectionHeading eyebrow="Nuestro origen" title="Una evolución, no un cambio de nombre" align="left" />
+      <div class="mt-8 space-y-5 text-slate-600 leading-relaxed">
+        <p>Terranode nació como <strong>Vsphost</strong>, un proveedor de hosting enfocado en el público latinoamericano de habla hispana. Con el tiempo, nuestro equipo de expertos en distintas partes del mundo nos permitió ofrecer un servicio cada vez más completo y global.</p>
+        <p>Para reflejar esa evolución —y para cubrir nuevos mercados fuera de Latinoamérica— rediseñamos por completo nuestra marca y lanzamos un sitio en inglés, manteniendo el mismo compromiso que nos trajo hasta aquí: infraestructura confiable, soporte humano y precios justos.</p>
+        <p>Hoy, como <strong>Terranode</strong>, seguimos operando con la misma filosofía: la satisfacción del cliente es nuestra prioridad número uno. Por eso trabajamos todos los días para ofrecer servicios de calidad, soporte técnico excepcional y soluciones a la medida de cada negocio.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-surface py-20 md:py-28">
+    <div class="container-page">
+      <SectionHeading eyebrow="Lo que nos define" title="Los principios detrás de cada servidor que gestionamos" />
+      <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <FeatureCard icon="globe" title="Alcance global, trato local" description="Servimos a Ecuador, Latinoamérica, Estados Unidos y Europa, sin perder la cercanía del soporte en español." />
+        <FeatureCard icon="shield" title="Infraestructura de nivel empresarial" description="La misma tecnología que usan proveedores globales, con un equipo que responde de verdad." />
+        <FeatureCard icon="support" title="Personas, no tickets" description="Detrás de cada respuesta hay un ingeniero que entiende tu problema, no un script." />
+        <FeatureCard icon="chart" title="Crecemos contigo" description="De tu primer VPS a un clúster de servidores dedicados, sin que tengas que cambiar de proveedor." />
+        <FeatureCard icon="lock" title="Seguridad como base" description="DDoS, backups y hardening no son un extra: vienen incluidos en cómo construimos cada servicio." />
+        <FeatureCard icon="bolt" title="Mejora constante" description="Invertimos continuamente en NVMe, red y automatización para que sientas la diferencia." />
+      </div>
+    </div>
+  </section>
+
+  <CTASection
+    title="¿Quieres conocer al equipo detrás de tu infraestructura?"
+    description="Escríbenos y con gusto te contamos más sobre cómo trabajamos y por qué tantos negocios confían en nosotros."
+    primaryCta={{ label: 'Contáctanos', href: pathFor('es','contacto') }}
+  />
+</BaseLayout>
