@@ -1,0 +1,262 @@
+---
+interface Props { locale: 'es' | 'en' }
+const { locale } = Astro.props;
+const es = locale === 'es';
+
+const T = es ? {
+  eyebrow: 'Herramienta gratuita', h1: '¿Cuál es mi IP?', h1b: 'Tu información de red en tiempo real',
+  sub: 'Consulta tu dirección IP pública, proveedor de internet, ASN, ubicación y más — al instante.',
+  loading: 'Detectando tu IP...', copy: 'Copiar', copied: '¡Copiado!',
+  labels: { ip: 'Dirección IP', type: 'Tipo de IP', isp: 'Proveedor de Internet (ISP)', org: 'Organización', asn: 'ASN', hostname: 'Hostname', city: 'Ciudad', region: 'Región / Estado', country: 'País', continent: 'Continente', timezone: 'Zona horaria', lat: 'Latitud', lon: 'Longitud', proxy: 'Proxy / VPN detectado' },
+  sections: { network: 'Red', location: 'Ubicación', privacy: 'Privacidad' },
+  yes: 'Sí', no: 'No', unknown: '—', refresh: 'Actualizar',
+  errorTitle: 'No se pudo obtener la información', errorSub: 'Verifica tu conexión e intenta de nuevo.', retry: 'Reintentar',
+  infoTitle: '¿Para qué sirve conocer mi IP?',
+  infoItems: ['Solucionar problemas de red o conectividad', 'Verificar si tu VPN está activa y funcionando', 'Configurar reglas de firewall o acceso remoto', 'Saber qué información comparte tu dispositivo al navegar', 'Geolocalización: verificar desde dónde pareces conectarte'],
+} : {
+  eyebrow: 'Free tool', h1: 'What is my IP?', h1b: 'Your network information in real time',
+  sub: 'Look up your public IP address, internet provider, ASN, location and more — instantly.',
+  loading: 'Detecting your IP...', copy: 'Copy', copied: 'Copied!',
+  labels: { ip: 'IP Address', type: 'IP Type', isp: 'Internet Service Provider', org: 'Organization', asn: 'ASN', hostname: 'Hostname', city: 'City', region: 'Region / State', country: 'Country', continent: 'Continent', timezone: 'Timezone', lat: 'Latitude', lon: 'Longitude', proxy: 'Proxy / VPN detected' },
+  sections: { network: 'Network', location: 'Location', privacy: 'Privacy' },
+  yes: 'Yes', no: 'No', unknown: '—', refresh: 'Refresh',
+  errorTitle: 'Could not retrieve information', errorSub: 'Check your connection and try again.', retry: 'Retry',
+  infoTitle: 'Why should I know my IP?',
+  infoItems: ['Troubleshoot network or connectivity issues', 'Verify that your VPN is active and working', 'Configure firewall rules or remote access', 'Know what information your device shares when browsing', 'Geolocation: verify where you appear to be connecting from'],
+};
+---
+<main style="padding-top:66px;background:#080E1C;min-height:100vh">
+  <section class="relative overflow-hidden border-b border-white/[0.04] px-6 py-16 md:py-[72px]">
+    <div class="pointer-events-none absolute inset-0" style="background:radial-gradient(ellipse 60% 60% at 50% 30%,rgba(37,99,235,.12),transparent 70%)"></div>
+    <div class="pointer-events-none absolute inset-0" style="background-image:linear-gradient(rgba(59,130,246,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.03) 1px,transparent 1px);background-size:50px 50px"></div>
+    <div class="relative z-[2] mx-auto max-w-[760px] text-center">
+      <span class="mb-5 inline-block rounded-full border border-[#3B82F6]/[0.22] bg-[#3B82F6]/[0.08] px-4 py-[5px] font-body text-[11px] font-bold uppercase tracking-[2.5px] text-[#3B82F6]">{T.eyebrow}</span>
+      <h1 class="mb-1 font-display text-[clamp(2.4rem,5vw,4rem)] font-bold leading-[1.05] tracking-tight text-white">{T.h1}</h1>
+      <h2 class="mb-[18px] font-display text-[clamp(1.1rem,2vw,1.5rem)] font-bold leading-[1.3] tracking-tight text-slate-600">{T.h1b}</h2>
+      <p class="mx-auto mb-7 max-w-[520px] font-body text-slate-400">{T.sub}</p>
+
+      <div class="inline-flex items-center gap-3.5 rounded-2xl border border-[#3B82F6]/20 bg-[#3B82F6]/[0.07] px-7 py-[18px]">
+        <div id="ip-loading" class="flex items-center gap-2.5">
+          <svg class="h-5 w-5 animate-spin text-[#3B82F6]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity=".2"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+          <span class="font-body text-sm text-slate-500">{T.loading}</span>
+        </div>
+        <div id="ip-error" class="hidden font-body text-sm text-red-400">{T.errorTitle}</div>
+        <div id="ip-display" class="hidden items-center gap-3.5">
+          <div class="text-left">
+            <div id="ip-type-label" class="mb-0.5 font-body text-[11px] uppercase tracking-wide text-slate-600"></div>
+            <div id="ip-value" class="font-display text-[clamp(1.4rem,3vw,2rem)] font-bold tracking-wide text-white"></div>
+          </div>
+          <button id="ip-copy-btn" class="shrink-0 rounded-[10px] border border-[#3B82F6]/30 bg-[#3B82F6]/[0.15] px-[18px] py-2.5 font-display text-[13px] font-semibold text-white transition-colors">{T.copy}</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-[#060B18] px-6 py-12 md:py-24">
+    <div class="mx-auto max-w-[1080px]">
+      <div id="ip-error-block" class="hidden py-16 text-center">
+        <div class="mb-2 font-display text-lg font-bold text-white">{T.errorTitle}</div>
+        <p class="mb-6 font-body text-slate-500">{T.errorSub}</p>
+        <button id="ip-retry-btn" class="rounded-lg border-none bg-[#3B82F6] px-6 py-2.5 font-display text-sm font-semibold text-white">{T.retry}</button>
+      </div>
+
+      <div id="ip-grid" class="hidden grid-cols-1 gap-4 md:grid-cols-2">
+        <!-- Network -->
+        <div class="overflow-hidden rounded-2xl border border-[#3B82F6]/20 bg-white/[0.025]">
+          <div class="flex items-center gap-2.5 border-b border-white/[0.06] bg-[#3B82F6]/[0.06] px-6 py-4">
+            <span class="text-lg">🌐</span>
+            <span class="font-display text-sm font-bold tracking-wide text-white">{T.sections.network}</span>
+          </div>
+          <div class="px-6 pb-3 pt-1">
+            <div class="ip-row flex items-center justify-between border-b border-white/[0.05] py-3">
+              <span class="mr-4 shrink-0 font-body text-[13px] text-slate-500">{T.labels.ip}</span>
+              <div class="flex items-center gap-2">
+                <span id="row-ip" class="break-all text-right font-body text-sm tracking-wide text-white"></span>
+                <button id="ip-copy-btn-2" class="shrink-0 rounded-md border border-[#3B82F6]/25 bg-[#3B82F6]/[0.12] px-2.5 py-0.5 font-body text-[11px] text-[#3B82F6]">⎘</button>
+              </div>
+            </div>
+            <div class="ip-row flex items-center justify-between border-b border-white/[0.05] py-3"><span class="font-body text-[13px] text-slate-500">{T.labels.type}</span><span id="row-type" class="font-body text-sm text-white"></span></div>
+            <div class="ip-row flex items-center justify-between border-b border-white/[0.05] py-3"><span class="font-body text-[13px] text-slate-500">{T.labels.isp}</span><span id="row-isp" class="text-right font-display text-sm font-semibold text-white"></span></div>
+            <div class="ip-row flex items-center justify-between border-b border-white/[0.05] py-3"><span class="font-body text-[13px] text-slate-500">{T.labels.org}</span><span id="row-org" class="text-right font-display text-sm font-semibold text-white"></span></div>
+            <div class="ip-row flex items-center justify-between border-b border-white/[0.05] py-3"><span class="font-body text-[13px] text-slate-500">{T.labels.asn}</span><span id="row-asn" class="font-body text-sm text-white"></span></div>
+            <div class="ip-row flex items-center justify-between py-3"><span class="font-body text-[13px] text-slate-500">{T.labels.hostname}</span><span id="row-hostname" class="break-all text-right font-body text-sm text-white"></span></div>
+          </div>
+        </div>
+
+        <!-- Location -->
+        <div class="overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.025]">
+          <div class="flex items-center gap-2.5 border-b border-white/[0.06] px-6 py-4">
+            <span class="text-lg">📍</span>
+            <span class="font-display text-sm font-bold tracking-wide text-white">{T.sections.location}</span>
+          </div>
+          <div class="px-6 pb-3 pt-1">
+            <div class="ip-row flex items-center justify-between border-b border-white/[0.05] py-3"><span class="font-body text-[13px] text-slate-500">{T.labels.city}</span><span id="row-city" class="text-right font-display text-sm font-semibold text-white"></span></div>
+            <div class="ip-row flex items-center justify-between border-b border-white/[0.05] py-3"><span class="font-body text-[13px] text-slate-500">{T.labels.region}</span><span id="row-region" class="text-right font-display text-sm font-semibold text-white"></span></div>
+            <div class="ip-row flex items-center justify-between border-b border-white/[0.05] py-3"><span class="font-body text-[13px] text-slate-500">{T.labels.country}</span><span id="row-country" class="text-right font-display text-sm font-semibold text-white"></span></div>
+            <div class="ip-row flex items-center justify-between border-b border-white/[0.05] py-3"><span class="font-body text-[13px] text-slate-500">{T.labels.continent}</span><span id="row-continent" class="text-right font-display text-sm font-semibold text-white"></span></div>
+            <div class="ip-row flex items-center justify-between border-b border-white/[0.05] py-3"><span class="font-body text-[13px] text-slate-500">{T.labels.timezone}</span><span id="row-timezone" class="font-body text-sm text-white"></span></div>
+            <div class="ip-row flex items-center justify-between border-b border-white/[0.05] py-3"><span class="font-body text-[13px] text-slate-500">{T.labels.lat}</span><span id="row-lat" class="font-body text-sm text-white"></span></div>
+            <div class="ip-row flex items-center justify-between py-3"><span class="font-body text-[13px] text-slate-500">{T.labels.lon}</span><span id="row-lon" class="font-body text-sm text-white"></span></div>
+          </div>
+        </div>
+
+        <!-- Privacy -->
+        <div class="overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.025]">
+          <div class="flex items-center gap-2.5 border-b border-white/[0.06] px-6 py-4">
+            <span class="text-lg">🔒</span>
+            <span class="font-display text-sm font-bold tracking-wide text-white">{T.sections.privacy}</span>
+          </div>
+          <div class="px-6 pb-3 pt-1">
+            <div class="ip-row flex items-center justify-between border-b border-white/[0.05] py-3"><span class="font-body text-[13px] text-slate-500">{T.labels.proxy}</span><span id="row-proxy" class="font-display text-sm font-bold"></span></div>
+            <div class="ip-row flex items-center justify-between py-3"><span class="font-body text-[13px] text-slate-500">Tor exit node</span><span id="row-tor" class="font-display text-sm font-bold"></span></div>
+          </div>
+        </div>
+
+        <!-- Refresh + info -->
+        <div class="flex flex-col gap-4">
+          <button id="ip-refresh-btn" class="flex items-center justify-center gap-2 rounded-xl border border-[#3B82F6]/20 bg-[#3B82F6]/[0.08] px-5 py-3.5 font-display text-sm font-semibold text-[#3B82F6] transition-colors hover:bg-[#3B82F6]/[0.16]">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" stroke-linecap="round"/></svg>
+            {T.refresh}
+          </button>
+          <div class="flex-1 rounded-2xl border border-white/[0.07] bg-white/[0.025] px-6 py-5">
+            <div class="mb-3.5 font-display text-sm font-bold text-white">{T.infoTitle}</div>
+            <ul class="flex list-none flex-col gap-2">
+              {T.infoItems.map((item) => (
+                <li class="flex gap-2.5 font-body text-xs leading-relaxed text-slate-500">
+                  <span class="shrink-0 text-[#3B82F6]">›</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script define:vars={{ unknown: T.unknown, yes: T.yes, no: T.no }}>
+  const loadingEl = document.getElementById('ip-loading');
+  const errorEl = document.getElementById('ip-error');
+  const displayEl = document.getElementById('ip-display');
+  const errorBlock = document.getElementById('ip-error-block');
+  const grid = document.getElementById('ip-grid');
+  let currentIp = '';
+
+  function setText(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val ?? unknown;
+  }
+
+  function flagEmoji(code) {
+    if (!code || code.length !== 2) return '';
+    return String.fromCodePoint(...[...code.toUpperCase()].map((c) => 0x1f1e0 - 65 + c.charCodeAt(0)));
+  }
+
+  async function fetchIP() {
+    loadingEl.classList.remove('hidden');
+    errorEl.classList.add('hidden');
+    displayEl.classList.add('hidden');
+    displayEl.classList.remove('flex');
+    errorBlock.classList.add('hidden');
+    grid.classList.add('hidden');
+    grid.classList.remove('grid');
+
+    let data = null;
+    try {
+      const res = await fetch('https://ipwho.is/');
+      const json = await res.json();
+      if (!json.success && !json.ip) throw new Error('api error');
+      data = {
+        ip: json.ip,
+        type: json.type || (json.ip?.includes(':') ? 'IPv6' : 'IPv4'),
+        isp: json.connection?.isp || json.connection?.org || json.org || unknown,
+        org: json.connection?.org || json.org || unknown,
+        asn: json.connection?.asn ? `AS${json.connection.asn}` : unknown,
+        hostname: json.hostname || unknown,
+        city: json.city || unknown,
+        region: json.region || unknown,
+        country: json.country || unknown,
+        countryCode: json.country_code || '',
+        continent: json.continent || unknown,
+        timezone: json.timezone?.id || unknown,
+        lat: json.latitude != null ? json.latitude.toFixed(4) : unknown,
+        lon: json.longitude != null ? json.longitude.toFixed(4) : unknown,
+        proxy: json.security?.proxy || json.security?.vpn || false,
+        tor: json.security?.tor || false,
+      };
+    } catch (_) {
+      try {
+        const r2 = await fetch('https://ipapi.co/json/');
+        const j2 = await r2.json();
+        data = {
+          ip: j2.ip,
+          type: j2.ip?.includes(':') ? 'IPv6' : 'IPv4',
+          isp: j2.org || unknown,
+          org: j2.org || unknown,
+          asn: j2.asn || unknown,
+          hostname: unknown,
+          city: j2.city || unknown,
+          region: j2.region || unknown,
+          country: j2.country_name || unknown,
+          countryCode: j2.country_code || '',
+          continent: unknown,
+          timezone: j2.timezone || unknown,
+          lat: j2.latitude != null ? String(j2.latitude) : unknown,
+          lon: j2.longitude != null ? String(j2.longitude) : unknown,
+          proxy: false,
+          tor: false,
+        };
+      } catch (__) {
+        errorEl.classList.remove('hidden');
+        errorBlock.classList.remove('hidden');
+        loadingEl.classList.add('hidden');
+        return;
+      }
+    }
+
+    loadingEl.classList.add('hidden');
+    displayEl.classList.remove('hidden');
+    displayEl.classList.add('flex');
+    grid.classList.remove('hidden');
+    grid.classList.add('grid');
+
+    currentIp = data.ip;
+    document.getElementById('ip-type-label').textContent = data.type;
+    document.getElementById('ip-value').textContent = data.ip;
+    setText('row-ip', data.ip);
+    setText('row-type', data.type);
+    setText('row-isp', data.isp);
+    setText('row-org', data.org);
+    setText('row-asn', data.asn);
+    setText('row-hostname', data.hostname);
+    setText('row-city', data.city);
+    setText('row-region', data.region);
+    setText('row-country', `${flagEmoji(data.countryCode)} ${data.country}`);
+    setText('row-continent', data.continent);
+    setText('row-timezone', data.timezone);
+    setText('row-lat', data.lat);
+    setText('row-lon', data.lon);
+
+    const proxyEl = document.getElementById('row-proxy');
+    const isProxy = data.proxy || data.tor;
+    proxyEl.textContent = isProxy ? `⚠️ ${yes}` : `✓ ${no}`;
+    proxyEl.style.color = isProxy ? '#F59E0B' : '#22C55E';
+
+    const torEl = document.getElementById('row-tor');
+    torEl.textContent = data.tor ? `⚠️ ${yes}` : `✓ ${no}`;
+    torEl.style.color = data.tor ? '#EF4444' : '#22C55E';
+  }
+
+  function copyIp() {
+    if (!currentIp) return;
+    navigator.clipboard?.writeText(currentIp).catch(() => {});
+  }
+
+  document.getElementById('ip-copy-btn')?.addEventListener('click', copyIp);
+  document.getElementById('ip-copy-btn-2')?.addEventListener('click', copyIp);
+  document.getElementById('ip-refresh-btn')?.addEventListener('click', fetchIP);
+  document.getElementById('ip-retry-btn')?.addEventListener('click', fetchIP);
+
+  fetchIP();
+</script>

@@ -1,0 +1,45 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import LegalPageContent from '@/components/LegalPageContent.astro';
+import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+
+const summary = [
+  { icon: '✅', color: '#22C55E', title: 'Garantía de 7 días', desc: 'Web Hosting y Correo Corporativo nuevos (primera contratación)' },
+  { icon: '✅', color: '#22C55E', title: 'Garantía de 3 días', desc: 'VPS Server nuevos (primera contratación)' },
+  { icon: '❌', color: '#EF4444', title: 'Sin reembolso — M365', desc: 'Microsoft 365: sin reembolso en ningún caso una vez activado' },
+  { icon: '❌', color: '#EF4444', title: 'Sin reembolso', desc: 'Dominios, servicios renovados, servicios que violaron políticas' },
+  { icon: '⚠️', color: '#F59E0B', title: 'Un reembolso por cliente', desc: 'Solo aplicable en la primera contratación de cada tipo de servicio' },
+  { icon: '🚫', color: '#F97316', title: 'Disputas y contracargos', desc: 'Si inicias un contracargo sin agotar el proceso, todos tus servicios serán suspendidos de inmediato' },
+];
+const sections = [
+  { id: 'compromiso', title: '1. Nuestro Compromiso', content: `Terranode se compromete a brindar servicios de alta calidad. Si experimenta algún problema, contáctenos antes de solicitar un reembolso. En la mayoría de los casos, podemos resolver problemas técnicos de manera rápida y efectiva.\n\nEsta política aplica exclusivamente a servicios directamente prestados por Terranode.` },
+  { id: 'periodos', title: '2. Períodos de Garantía de Devolución', content: `A continuación se detallan los períodos de garantía por tipo de servicio:\n\n- Web Hosting (Compartido): 7 días calendario desde la activación.\n- Correo Corporativo (TerraMail): 7 días calendario desde la activación.\n- VPS Server: 3 días calendario desde la activación del servidor.\n- Servidores Dedicados: Sin garantía estándar. Las reclamaciones por defectos de hardware se evaluarán caso a caso dentro de las primeras 72 horas.\n- Desarrollo Web y Sistemas: Se rige por el contrato de servicios firmado entre las partes.\n\n⚠ Microsoft 365 — SIN DERECHO A REEMBOLSO: Las licencias de Microsoft 365 no son reembolsables bajo ninguna circunstancia una vez activadas, dado que Terranode incurre en costos no recuperables ante Microsoft desde el momento de la activación. Al contratar Microsoft 365, el cliente acepta expresamente esta condición.\n\nTranscurrido el período de garantía correspondiente, no se otorgarán reembolsos salvo en los casos excepcionales descritos en la sección 5.` },
+  { id: 'condiciones', title: '3. Condiciones para Solicitar Reembolso', content: `Para que una solicitud sea válida, deben cumplirse todas estas condiciones:\n\n- La solicitud debe presentarse dentro del período de garantía aplicable\n- El servicio debe ser contratado por primera vez (no aplica a renovaciones)\n- No haber solicitado un reembolso previo para el mismo tipo de servicio\n- El servicio no debe haber sido utilizado para violar los Términos y Condiciones\n- No debe existir una disputa o contracargo activo ante la entidad financiera` },
+  { id: 'proceso', title: '4. Proceso de Solicitud', content: `Paso 1: Contacte al soporte en my.terranode.net para intentar resolver el problema antes de solicitar reembolso.\n\nPaso 2: Abra un ticket con el asunto "Solicitud de Reembolso" incluyendo: número de cuenta, servicio involucrado, fecha de contratación y motivo detallado.\n\nPaso 3: Terranode revisará la solicitud y notificará su decisión en un plazo máximo de 7 días hábiles.\n\nPaso 4: Los reembolsos aprobados se procesarán via el método de pago original en 5-15 días hábiles adicionales.` },
+  { id: 'exclusiones', title: '5. Exclusiones — Sin Derecho a Reembolso', content: `No se otorgarán reembolsos en los siguientes casos:\n\n- Dominios: El registro, transferencia y renovación de dominios no son reembolsables bajo ninguna circunstancia.\n- Microsoft 365: Las licencias no son reembolsables una vez activadas. Esta exclusión es absoluta e irrenunciable.\n- Renovaciones: Los servicios renovados no están cubiertos por la garantía.\n- Reembolso previo: Si ya recibió un reembolso para el mismo tipo de servicio.\n- Violación de políticas: Servicios suspendidos por violación de los Términos.\n- Contracargos activos: Si inició una disputa ante su institución financiera.\n- Negligencia del cliente: Pérdida de datos o problemas causados por acciones del cliente.\n- Otras licencias de software de terceros ya activadas.` },
+  { id: 'contracargos', title: '6. Política de Contracargos', content: `Si el cliente inicia un contracargo sin haber agotado el proceso de solicitud de reembolso:\n\n- Todos los servicios activos serán suspendidos inmediatamente\n- El cliente pierde el derecho a solicitar un reembolso directo\n- Terranode presentará evidencia ante el procesador de pagos para impugnar el contracargo\n- Podrá aplicarse una tarifa administrativa de hasta USD 25 por contracargo iniciado` },
+  { id: 'contacto', title: '7. Contacto', content: `Panel de Cliente: https://my.terranode.net\nCorreo: info@terranode.net\nTeléfono: +593 99 819 7150\nGuayaquil, Ecuador\n\nEl equipo de soporte está disponible 24/7.` },
+];
+const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Política de Reembolsos', key: 'refund' }]);
+---
+<BaseLayout
+  locale="es"
+  pageKey="refund"
+  title="Política de Reembolsos — Garantía 7 Días Hosting · Terranode"
+  description="Política de Reembolsos de Terranode: garantía de 7 días en hosting, 3 días en VPS. Microsoft 365 sin reembolso. Conozca el proceso y condiciones."
+  jsonLd={[organizationSchema('es'), breadcrumb]}
+>
+  <LegalPageContent
+    locale="es"
+    title="Política de Reembolsos"
+    badge="Política de Reembolsos"
+    icon="💳"
+    subtitle="Nos comprometemos con su satisfacción. Esta política describe las condiciones bajo las cuales puede solicitar un reembolso."
+    updated="20 de Marzo de 2026"
+    sections={sections}
+    summary={summary}
+    ctaTitle="¿Necesitas solicitar un reembolso?"
+    ctaSub="Abre un ticket y nuestro equipo te ayudará en un plazo máximo de 24 horas hábiles."
+    ctaLabel="Abrir Ticket"
+  />
+</BaseLayout>

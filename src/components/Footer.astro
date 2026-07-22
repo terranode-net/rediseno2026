@@ -40,11 +40,11 @@ const NAV_COLS = [
   {
     title: locale === 'es' ? 'Herramientas' : 'Tools',
     links: [
-      { l: locale === 'es' ? '¿Cuál es mi IP?' : 'What is my IP?', h: `https://www.terranode.net/${locale}/my-ip`, external: true },
-      { l: 'DNS Checker', h: `https://www.terranode.net/${locale}/dns`, external: true },
-      { l: locale === 'es' ? 'Detector de Hosting' : 'Hosting Detector', h: `https://www.terranode.net/${locale}/hosting-detector`, external: true },
-      { l: locale === 'es' ? 'Generador de .htaccess' : '.htaccess Generator', h: `https://www.terranode.net/${locale}/htaccess`, external: true },
-      { l: 'Email & DNS Toolbox', h: `https://www.terranode.net/${locale}/email-tools`, external: true },
+      { l: locale === 'es' ? '¿Cuál es mi IP?' : 'What is my IP?', h: pathFor(locale, 'myip') },
+      { l: 'DNS Checker', h: pathFor(locale, 'dns') },
+      { l: locale === 'es' ? 'Detector de Hosting' : 'Hosting Detector', h: pathFor(locale, 'hostingDetector') },
+      { l: locale === 'es' ? 'Generador de .htaccess' : '.htaccess Generator', h: pathFor(locale, 'htaccess') },
+      { l: 'Email & DNS Toolbox', h: pathFor(locale, 'emailTools') },
     ],
   },
   {
@@ -54,16 +54,16 @@ const NAV_COLS = [
       { l: 'Panel VPS', h: 'https://cloud.terranode.net', external: true },
       { l: locale === 'es' ? 'Crear Cuenta' : 'Sign Up', h: `${ORG.clientPortal}/register`, external: true },
       { l: locale === 'es' ? 'Abrir Ticket' : 'Open Ticket', h: ORG.ticketUrl, external: true },
-      { l: locale === 'es' ? 'Documentación' : 'Docs', h: '/docs' },
+      { l: locale === 'es' ? 'Documentación' : 'Docs', h: `${ORG.clientPortal}/knowledgebase`, external: true },
     ],
   },
   {
     title: 'Legal',
     links: [
-      { l: locale === 'es' ? 'Términos y Condiciones' : 'Terms & Conditions', h: '/terms' },
-      { l: locale === 'es' ? 'Política de Reembolsos' : 'Refund Policy', h: '/refunds' },
-      { l: locale === 'es' ? 'Uso Aceptable' : 'Acceptable Use Policy', h: '/aup' },
-      { l: locale === 'es' ? 'Política de Privacidad' : 'Privacy Policy', h: '/privacy' },
+      { l: locale === 'es' ? 'Términos y Condiciones' : 'Terms & Conditions', h: pathFor(locale, 'terms') },
+      { l: locale === 'es' ? 'Política de Reembolsos' : 'Refund Policy', h: pathFor(locale, 'refund') },
+      { l: locale === 'es' ? 'Uso Aceptable' : 'Acceptable Use Policy', h: `${pathFor(locale, 'terms')}#${locale === 'es' ? 'uso' : 'aup'}` },
+      { l: locale === 'es' ? 'Política de Privacidad' : 'Privacy Policy', h: pathFor(locale, 'privacy') },
     ],
   },
 ];

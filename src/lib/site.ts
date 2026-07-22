@@ -52,13 +52,21 @@ export const PAGE_MAP = {
   blog: { es: 'blog', en: 'blog' },
   devweb: { es: 'desarrollo-web', en: 'web-development' },
   devsistemas: { es: 'desarrollo-sistemas', en: 'systems' },
+  terms: { es: 'terminos-y-condiciones', en: 'terms-and-conditions' },
+  privacy: { es: 'politica-de-privacidad', en: 'privacy-policy' },
+  refund: { es: 'politica-de-reembolso', en: 'refund-policy' },
+  myip: { es: 'my-ip', en: 'my-ip' },
+  dns: { es: 'dns', en: 'dns' },
+  hostingDetector: { es: 'hosting-detector', en: 'hosting-detector' },
+  htaccess: { es: 'htaccess', en: 'htaccess' },
+  emailTools: { es: 'email-tools', en: 'email-tools' },
 } as const;
 
 export type PageKey = keyof typeof PAGE_MAP;
 
 // Páginas que existen como rutas en App.jsx pero aún no tienen contenido propio
 // (se muestran en el menú ya, como pidió el cliente, con una landing "Próximamente").
-export const COMING_SOON: PageKey[] = ['blog'];
+export const COMING_SOON: PageKey[] = [];
 
 export function pathFor(locale: Locale, key: PageKey): string {
   const slug = PAGE_MAP[key][locale];

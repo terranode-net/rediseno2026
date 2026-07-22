@@ -1,0 +1,153 @@
+---
+import { getFullPost, CAT_COLORS } from '@/lib/blogData';
+
+interface Props { locale: 'es' | 'en'; slug: string }
+const { locale, slug } = Astro.props;
+const es = locale === 'es';
+const post = getFullPost(slug);
+const catColor = CAT_COLORS[post.category] || '#3B82F6';
+const blogPrefix = `/${locale}/blog`;
+const hostingHref = `/${locale}/${es ? 'hosting' : 'hosting'}`;
+
+const T = es ? {
+  read: 'de lectura', share: 'Compartir', copied: '¡Copiado!', inArticle: 'En este artículo', hostingTitle: 'Hosting en Ecuador',
+  hostingSub: 'LiteSpeed · cPanel · SSL gratis · DDoS 160 Gbps. Desde $3/mes.', viewPlans: 'Ver planes', tags: 'Tags',
+  ctaTitle: '¿Listo para llevar tu sitio al siguiente nivel?', ctaSub: 'Hosting con LiteSpeed, NVMe y soporte 24/7 desde $3/mes.', ctaBtn: 'Ver planes de hosting',
+  related: 'Artículos relacionados',
+} : {
+  read: 'read', share: 'Share', copied: 'Copied!', inArticle: 'In this article', hostingTitle: 'Hosting in Ecuador',
+  hostingSub: 'LiteSpeed · cPanel · Free SSL · DDoS 160 Gbps. From $3/mo.', viewPlans: 'View plans', tags: 'Tags',
+  ctaTitle: 'Ready to take your site to the next level?', ctaSub: 'LiteSpeed hosting, NVMe and 24/7 support from $3/mo.', ctaBtn: 'View hosting plans',
+  related: 'Related articles',
+};
+---
+<main style="padding-top:66px;background:#080E1C;min-height:100vh">
+  <section class="relative overflow-hidden border-b border-white/[0.05] px-6 py-14">
+    <div class="pointer-events-none absolute inset-0" style={`background:radial-gradient(ellipse 50% 60% at 50% 0%,${catColor}12,transparent 70%)`}></div>
+    <div class="relative z-[2] mx-auto max-w-[780px]">
+      <nav class="mb-6 flex items-center gap-2 font-body text-xs text-slate-600">
+        <a href={blogPrefix} class="text-slate-600 no-underline hover:text-[#60A5FA]">Blog</a>
+        <svg viewBox="0 0 16 16" fill="none" stroke="#2A4060" stroke-width="1.5" class="h-3 w-3"><path d="M6 3l5 5-5 5"/></svg>
+        <span style={`color:${catColor}`}>{post.category}</span>
+      </nav>
+
+      <div class="mb-5 flex flex-wrap items-center gap-2.5">
+        <span class="rounded-full px-2.5 py-[3px] font-body text-[11px] font-bold" style={`color:${catColor};background:${catColor}18;border:1px solid ${catColor}35`}>{post.category}</span>
+        <span class="font-body text-xs text-slate-600">{post.date}</span>
+        <span class="h-[3px] w-[3px] rounded-full bg-slate-700"></span>
+        <span class="font-body text-xs text-slate-600">{post.readTime} {T.read}</span>
+      </div>
+
+      <h1 class="mb-5 font-display text-[clamp(1.7rem,3.5vw,2.8rem)] font-bold leading-[1.15] tracking-tight text-white">{post.title}</h1>
+      <p class="mb-7 font-body text-base leading-relaxed text-slate-400">{post.intro}</p>
+
+      <div class="mb-7 flex flex-wrap gap-1.5">
+        {post.tags.map((tag) => <span class="rounded-full border border-white/[0.07] bg-white/[0.04] px-2.5 py-0.5 font-body text-[11px] text-slate-600">#{tag}</span>)}
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="flex h-[38px] w-[38px] items-center justify-center rounded-full bg-[#3B82F6]/[0.15] font-display text-sm font-bold text-[#3B82F6]">T</div>
+          <div>
+            <div class="font-display text-[13px] font-semibold text-white">{post.author}</div>
+            <div class="font-body text-[11px] text-slate-600">{post.authorRole}</div>
+          </div>
+        </div>
+        <button id="blog-share-btn" type="button" class="flex items-center gap-1.5 rounded-lg border border-white/[0.09] bg-white/[0.04] px-3.5 py-2 font-body text-xs text-slate-500">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-3.5 w-3.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          <span id="blog-share-label">{T.share}</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <div class="mx-auto grid max-w-[1100px] grid-cols-1 gap-10 px-6 py-12 md:py-24 lg:grid-cols-[1fr_280px]">
+    <article>
+      {post.sections.map((sec, i) => (
+        <div id={`section-${i}`} class="mb-9">
+          {sec.h && (
+            <h2 class="mb-3.5 flex items-center gap-2.5 font-display text-[clamp(1.2rem,2vw,1.5rem)] font-bold tracking-tight text-white">
+              <span class="inline-block h-5 w-[3px] shrink-0 rounded-sm bg-[#3B82F6]"></span>
+              {sec.h}
+            </h2>
+          )}
+          <p class="font-body text-[15px] leading-[1.85] text-slate-400">{sec.body}</p>
+        </div>
+      ))}
+
+      <div class="mb-12 mt-2 rounded-xl border border-[#3B82F6]/20 bg-[#3B82F6]/[0.07] p-6">
+        <div class="flex items-start gap-3">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[#3B82F6]/[0.15]">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" class="h-4 w-4"><polyline points="20,6 9,17 4,12" stroke-linecap="round"/></svg>
+          </div>
+          <p class="font-body text-sm leading-relaxed text-slate-400">{post.conclusion}</p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-6 rounded-2xl border border-[#3B82F6]/[0.16] bg-[#0C1525] p-8">
+        <div>
+          <div class="mb-1.5 font-display text-[17px] font-bold text-white">{T.ctaTitle}</div>
+          <p class="font-body text-[13px] text-slate-500">{T.ctaSub}</p>
+        </div>
+        <a href={hostingHref} class="shrink-0 whitespace-nowrap rounded-lg bg-[#3B82F6] px-[22px] py-[11px] font-display text-sm font-semibold text-white no-underline shadow-[0_0_20px_rgba(59,130,246,.25)]">{T.ctaBtn}</a>
+      </div>
+    </article>
+
+    <aside class="flex flex-col gap-5 lg:sticky lg:top-[86px]">
+      <div class="rounded-xl border border-white/[0.07] bg-white/[0.025] p-5">
+        <div class="mb-3.5 font-display text-[13px] font-bold text-white">{T.inArticle}</div>
+        <nav class="flex flex-col gap-2">
+          {post.sections.map((sec, i) => (
+            <a href={`#section-${i}`} class="flex items-start gap-2 font-body text-xs leading-relaxed text-slate-500 no-underline hover:text-[#60A5FA]">
+              <span class="mt-px shrink-0 text-slate-700">{i + 1}.</span>
+              {sec.h}
+            </a>
+          ))}
+        </nav>
+      </div>
+
+      <div class="rounded-xl border border-[#3B82F6]/[0.18] bg-[#3B82F6]/[0.07] p-5">
+        <div class="mb-2 font-display text-[13px] font-bold text-white">{T.hostingTitle}</div>
+        <p class="mb-3.5 font-body text-xs leading-relaxed text-slate-500">{T.hostingSub}</p>
+        <a href={hostingHref} class="block rounded-lg bg-[#3B82F6] py-2 text-center font-display text-[13px] font-semibold text-white no-underline">{T.viewPlans}</a>
+      </div>
+
+      <div class="rounded-xl border border-white/[0.07] bg-white/[0.025] p-5">
+        <div class="mb-3 font-display text-[13px] font-bold text-white">{T.tags}</div>
+        <div class="flex flex-wrap gap-1.5">
+          {post.tags.map((tag) => <a href={`${blogPrefix}?tag=${tag}`} class="rounded-full border border-white/[0.07] bg-white/[0.04] px-2.5 py-1 font-body text-[11px] text-slate-500 no-underline hover:border-[#3B82F6]/40 hover:text-[#60A5FA]">#{tag}</a>)}
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  {post.related.length > 0 && (
+    <section class="border-t border-white/[0.04] bg-[#060B18] px-6 pb-20">
+      <div class="mx-auto max-w-[1100px] pt-14">
+        <h2 class="mb-7 font-display text-[clamp(1.3rem,2vw,1.7rem)] font-bold tracking-tight text-white">{T.related}</h2>
+        <div class="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
+          {post.related.map((r) => {
+            const rc = CAT_COLORS[r.cat] || '#3B82F6';
+            return (
+              <a href={`${blogPrefix}/${r.slug}`} class="block rounded-xl border border-white/[0.07] bg-white/[0.025] p-5 no-underline transition-colors hover:border-[#3B82F6]/30">
+                <span class="rounded-full px-2 py-0.5 font-body text-[10px] font-bold" style={`color:${rc};background:${rc}18;border:1px solid ${rc}35`}>{r.cat}</span>
+                <h3 class="mt-3 font-display text-sm font-semibold leading-snug text-slate-300">{r.title}</h3>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  )}
+</main>
+
+<script define:vars={{ shareLabel: T.share, copiedLabel: T.copied }}>
+  const btn = document.getElementById('blog-share-btn');
+  const label = document.getElementById('blog-share-label');
+  btn?.addEventListener('click', () => {
+    navigator.clipboard?.writeText(window.location.href).then(() => {
+      if (label) label.textContent = copiedLabel;
+      setTimeout(() => { if (label) label.textContent = shareLabel; }, 2000);
+    }).catch(() => {});
+  });
+</script>

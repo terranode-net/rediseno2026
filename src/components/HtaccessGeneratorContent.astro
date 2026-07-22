@@ -1,0 +1,356 @@
+---
+interface Props { locale: 'es' | 'en' }
+const { locale } = Astro.props;
+const es = locale === 'es';
+
+// Las reglas técnicas (código) se mantienen idénticas para ambos idiomas —
+// son archivos de configuración de servidor, no contenido de marketing.
+// Solo se traduce la interfaz (etiquetas, descripciones, botones).
+const RULE_GROUPS = [
+  {
+    id: 'https', icon: '🔒', label: es ? 'HTTPS & Redirecciones' : 'HTTPS & Redirects', color: '#22C55E',
+    rules: [
+      { id: 'force_https', label: es ? 'Forzar HTTPS' : 'Force HTTPS', desc: es ? 'Redirige todo el tráfico HTTP a HTTPS (301 permanente)' : 'Redirects all HTTP traffic to HTTPS (301 permanent)', risk: 'safe', default: true,
+        code: `# ── Force HTTPS ──────────────────────────────────────────\nRewriteEngine On\nRewriteCond %{HTTPS} off\nRewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]` },
+      { id: 'force_www', label: es ? 'Forzar www' : 'Force www', desc: es ? 'Canonicaliza el dominio con www (evita contenido duplicado)' : 'Canonicalizes the domain with www (avoids duplicate content)', risk: 'safe', default: false,
+        code: `# ── Force www ────────────────────────────────────────────\nRewriteEngine On\nRewriteCond %{HTTP_HOST} !^www\\. [NC]\nRewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [R=301,L]` },
+      { id: 'remove_www', label: es ? 'Eliminar www' : 'Remove www', desc: es ? 'Canonicaliza el dominio sin www' : 'Canonicalizes the domain without www', risk: 'safe', default: false, note: es ? '⚠ No activar junto con \'Forzar www\'' : "⚠ Don't enable together with 'Force www'",
+        code: `# ── Remove www ──────────────────────────────────────────\nRewriteEngine On\nRewriteCond %{HTTP_HOST} ^www\\.(.+)$ [NC]\nRewriteRule ^(.*)$ https://%1/$1 [R=301,L]` },
+    ],
+  },
+  {
+    id: 'headers', icon: '🛡️', label: es ? 'Cabeceras de Seguridad (OWASP)' : 'Security Headers (OWASP)', color: '#3B82F6',
+    rules: [
+      { id: 'hsts', label: 'HSTS (HTTP Strict Transport Security)', desc: es ? 'Indica al navegador usar HTTPS durante 1 año. Previene ataques man-in-the-middle' : 'Tells the browser to use HTTPS for 1 year. Prevents man-in-the-middle attacks', risk: 'safe', default: true,
+        code: `# ── HSTS — OWASP A02:2021 ─────────────────────────────────\n<IfModule mod_headers.c>\n  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"\n</IfModule>` },
+      { id: 'xframe', label: 'X-Frame-Options (anti-clickjacking)', desc: es ? 'Previene que tu sitio sea embebido en iframes de otros dominios (clickjacking). OWASP A05' : 'Prevents your site from being embedded in iframes on other domains (clickjacking). OWASP A05', risk: 'safe', default: true,
+        code: `# ── X-Frame-Options — OWASP A05:2021 ─────────────────────\n<IfModule mod_headers.c>\n  Header always set X-Frame-Options "SAMEORIGIN"\n</IfModule>` },
+      { id: 'xcontent', label: 'X-Content-Type-Options (anti-sniffing)', desc: es ? 'Evita que el navegador adivine el tipo MIME, previniendo ataques MIME sniffing' : 'Prevents the browser from guessing MIME types, preventing MIME sniffing attacks', risk: 'safe', default: true,
+        code: `# ── X-Content-Type-Options — OWASP A05:2021 ──────────────\n<IfModule mod_headers.c>\n  Header always set X-Content-Type-Options "nosniff"\n</IfModule>` },
+      { id: 'referrer', label: 'Referrer-Policy (privacidad)', desc: es ? 'Controla qué información de referencia se envía al navegar a otros sitios' : 'Controls what referrer information is sent when navigating to other sites', risk: 'safe', default: true,
+        code: `# ── Referrer-Policy ───────────────────────────────────────\n<IfModule mod_headers.c>\n  Header always set Referrer-Policy "strict-origin-when-cross-origin"\n</IfModule>` },
+      { id: 'permissions', label: 'Permissions-Policy', desc: es ? 'Deshabilita acceso a cámara, micrófono, geolocalización y otras APIs sensibles' : 'Disables access to camera, microphone, geolocation and other sensitive APIs', risk: 'safe', default: true,
+        code: `# ── Permissions-Policy ────────────────────────────────────\n<IfModule mod_headers.c>\n  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=(), fullscreen=(self)"\n</IfModule>` },
+      { id: 'xss', label: 'X-XSS-Protection (legacy browsers)', desc: es ? 'Activa el filtro XSS en navegadores antiguos (IE/Edge legacy)' : 'Enables XSS filter on legacy browsers (old IE/Edge)', risk: 'safe', default: false,
+        code: `# ── X-XSS-Protection (legacy) ────────────────────────────\n<IfModule mod_headers.c>\n  Header always set X-XSS-Protection "1; mode=block"\n</IfModule>` },
+      { id: 'csp', label: 'Content-Security-Policy (CSP básica)', desc: es ? 'Política CSP restrictiva. ⚠ Puede romper scripts externos. Ajusta según tu stack' : '⚠ Restrictive CSP policy. May break external scripts. Adjust to your stack', risk: 'caution', default: false, note: es ? '⚠ Ajustar si usas Google Fonts, Analytics o CDNs externos' : '⚠ Adjust if you use Google Fonts, Analytics or external CDNs',
+        code: `# ── Content-Security-Policy — OWASP A03:2021 ──────────────\n<IfModule mod_headers.c>\n  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self'"\n</IfModule>` },
+    ],
+  },
+  {
+    id: 'attacks', icon: '⚔️', label: es ? 'Bloqueo de Ataques' : 'Attack Blocking', color: '#EF4444',
+    rules: [
+      { id: 'xmlrpc', label: es ? 'Bloquear XML-RPC (WordPress)' : 'Block XML-RPC (WordPress)', desc: es ? 'Neutraliza uno de los vectores de ataque brute-force más comunes en WordPress' : 'Neutralizes one of the most common brute-force attack vectors on WordPress', risk: 'safe', default: true,
+        code: `# ── Block XML-RPC — WordPress Hardening ───────────────\n<Files xmlrpc.php>\n  Order Deny,Allow\n  Deny from all\n</Files>` },
+      { id: 'sql_injection', label: es ? 'Bloquear inyección SQL básica' : 'Block basic SQL injection', desc: 'OWASP A03', risk: 'safe', default: true,
+        code: `# ── Anti SQL Injection — OWASP A03:2021 ──────────────────\nRewriteEngine On\nRewriteCond %{QUERY_STRING} (\\<|%3C).*script.*(\\>|%3E) [NC,OR]\nRewriteCond %{QUERY_STRING} GLOBALS(=|\\[|\\%[0-9A-Z]{0,2}) [OR]\nRewriteCond %{QUERY_STRING} _REQUEST(=|\\[|\\%[0-9A-Z]{0,2}) [OR]\nRewriteCond %{QUERY_STRING} (union|select|insert|drop|delete|update|cast|create|char|convert|alter|declare|order|script|set|md5|benchmark|encode|from|load_file|outfile) [NC,OR]\nRewriteCond %{QUERY_STRING} (;|'|"|%27|%22).*(union|select|insert) [NC]\nRewriteRule .* - [F,L]` },
+      { id: 'xss_query', label: es ? 'Bloquear XSS en query string' : 'Block XSS in query string', desc: 'OWASP A03', risk: 'safe', default: true,
+        code: `# ── Anti XSS in URL — OWASP A03:2021 ─────────────────────\nRewriteEngine On\nRewriteCond %{QUERY_STRING} (<|>|%3C|%3E) [NC,OR]\nRewriteCond %{QUERY_STRING} (javascript|vbscript|onload|onerror|onmouseover|eval|alert) [NC,OR]\nRewriteCond %{QUERY_STRING} (%0a|%0d|%27|%3c|%3e|%00) [NC]\nRewriteRule .* - [F,L]` },
+      { id: 'lfi', label: es ? 'Bloquear LFI/RFI (Path Traversal)' : 'Block LFI/RFI (Path Traversal)', desc: 'OWASP A01', risk: 'safe', default: true,
+        code: `# ── Anti LFI/Path Traversal — OWASP A01:2021 ─────────────\nRewriteEngine On\nRewriteCond %{QUERY_STRING} (\\.\\.\\/|\\.\\.\\\\|%2e%2e%2f|%2e%2e\\/|\\.\\.%2f|%2e\\.%2f) [NC,OR]\nRewriteCond %{QUERY_STRING} (localhost|loopback|127\\.0\\.0\\.1) [NC,OR]\nRewriteCond %{QUERY_STRING} \\.(bash|git|svn|htaccess|htpasswd) [NC]\nRewriteRule .* - [F,L]` },
+      { id: 'user_agents', label: es ? 'Bloquear bots maliciosos y scrapers' : 'Block malicious bots and scrapers', desc: es ? 'Rechaza user-agents de herramientas de hacking y scrapers conocidos' : 'Rejects user-agents from known hacking tools and scrapers', risk: 'safe', default: true,
+        code: `# ── Block Malicious Bots ──────────────────────────────\nRewriteEngine On\nRewriteCond %{HTTP_USER_AGENT} (havij|nikto|sqlmap|masscan|nmap|acunetix|appscan|nessus|openvas|skipfish|w3af|dirbuster|zgrab|gobuster|nuclei|curl/7\\.[0-3]) [NC,OR]\nRewriteCond %{HTTP_USER_AGENT} (python-requests|go-http-client|scrapy|wget|libwww|lwp-trivial|java/) [NC,OR]\nRewriteCond %{HTTP_USER_AGENT} ^(-|$|\\s) [NC]\nRewriteRule .* - [F,L]` },
+      { id: 'shell_upload', label: es ? 'Bloquear ejecución en uploads' : 'Block execution in uploads', desc: es ? 'Impide que archivos PHP/ejecutables en la carpeta uploads sean ejecutados (WebShells)' : 'Prevents PHP/executable files in the uploads folder from running (WebShells)', risk: 'safe', default: true,
+        code: `# ── Block WebShells in Uploads ─────────────────────────\n<IfModule mod_rewrite.c>\n  RewriteEngine On\n  RewriteRule ^wp-content/uploads/.*\\.(php|php5|phtml|pl|py|jsp|asp|aspx|sh|cgi)$ - [F,NC,L]\n</IfModule>` },
+      { id: 'wp_admin', label: es ? 'Proteger wp-admin con IP (WordPress)' : 'Protect wp-admin by IP (WordPress)', desc: es ? 'Restringe el acceso al panel de administración solo a tu IP' : 'Restricts admin panel access to only your IP', risk: 'caution', default: false, note: es ? '⚠ Cambia TU_IP_AQUI por tu IP real. Cuidado con IPs dinámicas' : '⚠ Replace YOUR_IP_HERE with your real IP. Careful with dynamic IPs',
+        code: `# ── Protect wp-admin by IP ──────────────────────────────\n# ⚠ Replace YOUR_IP_HERE with your real IP address\n<Files wp-login.php>\n  Order Deny,Allow\n  Deny from all\n  Allow from YOUR_IP_HERE\n</Files>\n<IfModule mod_rewrite.c>\n  RewriteEngine On\n  RewriteCond %{REQUEST_URI} ^/wp-admin/\n  RewriteCond %{REMOTE_ADDR} !^YOUR_IP_HERE$\n  RewriteRule ^(.*)$ - [F,L]\n</IfModule>` },
+    ],
+  },
+  {
+    id: 'files', icon: '📁', label: es ? 'Protección de Archivos' : 'File Protection', color: '#F59E0B',
+    rules: [
+      { id: 'hide_htaccess', label: es ? 'Ocultar .htaccess y .env' : 'Hide .htaccess and .env', desc: es ? 'Deniega acceso directo a archivos de configuración sensibles' : 'Denies direct access to sensitive configuration files', risk: 'safe', default: true,
+        code: `# ── Protect Configuration Files ────────────────────\n<FilesMatch "(^\\.htaccess|^\\.htpasswd|^\\.env|^\\.git|wp-config\\.php|php\\.ini|composer\\.(json|lock)|package\\.json|yarn\\.lock)">\n  Order Allow,Deny\n  Deny from all\n</FilesMatch>` },
+      { id: 'dir_listing', label: es ? 'Deshabilitar listado de directorios' : 'Disable directory listing', desc: 'OWASP A05', risk: 'safe', default: true,
+        code: `# ── Disable Directory Listing — OWASP A05:2021 ───────\nOptions -Indexes` },
+      { id: 'server_sig', label: es ? 'Ocultar versión del servidor' : 'Hide server version', desc: 'OWASP A05', risk: 'safe', default: true,
+        code: `# ── Hide Server Version — OWASP A05:2021 ─────────\nServerSignature Off\n<IfModule mod_headers.c>\n  Header unset X-Powered-By\n  Header unset Server\n</IfModule>` },
+      { id: 'hotlink', label: es ? 'Prevenir Hotlinking de imágenes' : 'Prevent image hotlinking', desc: es ? 'Evita que otros sitios usen tu ancho de banda cargando tus imágenes directamente' : 'Prevents other sites from using your bandwidth by loading your images directly', risk: 'safe', default: true, note: es ? '✏ Cambia tudominio.com por tu dominio real' : '✏ Replace yourdomain.com with your real domain',
+        code: `# ── Anti Hotlinking ───────────────────────────────────────\nRewriteEngine On\nRewriteCond %{HTTP_REFERER} !^$\nRewriteCond %{HTTP_REFERER} !^https?://(www\\.)?tudominio\\.com [NC]\nRewriteCond %{HTTP_REFERER} !^https?://(www\\.)?google\\. [NC]\nRewriteRule \\.(jpg|jpeg|png|gif|webp|svg|ico)$ - [F,NC,L]` },
+      { id: 'backup_files', label: es ? 'Bloquear archivos de respaldo expuestos' : 'Block exposed backup files', desc: es ? 'Previene acceso a backups (.bak, .old, .zip, .sql) que suelen quedar accidentalmente públicos' : 'Prevents access to backups (.bak, .old, .zip, .sql) commonly left accidentally public', risk: 'safe', default: true,
+        code: `# ── Block Exposed Backups ────────────────────────────\n<FilesMatch "\\.(bak|backup|old|orig|original|php#|php~|php\\.bak|sql|gz|tar|zip|rar|7z|log|swp|tmp)$">\n  Order Allow,Deny\n  Deny from all\n</FilesMatch>` },
+    ],
+  },
+  {
+    id: 'performance', icon: '⚡', label: es ? 'Rendimiento & Caché' : 'Performance & Caching', color: '#A78BFA',
+    rules: [
+      { id: 'gzip', label: 'GZIP', desc: es ? 'Comprime HTML, CSS, JS antes de enviarlos al navegador. Reduce 60-80% el tamaño' : 'Compresses HTML, CSS, JS before sending to the browser. Reduces size by 60-80%', risk: 'safe', default: true,
+        code: `# ── GZIP Compression ───────────────────────────────────────\n<IfModule mod_deflate.c>\n  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript\n  AddOutputFilterByType DEFLATE application/javascript application/x-javascript application/json\n  AddOutputFilterByType DEFLATE application/xml application/xhtml+xml application/rss+xml\n  AddOutputFilterByType DEFLATE image/svg+xml font/ttf font/otf application/font-woff application/font-woff2\n</IfModule>` },
+      { id: 'browser_cache', label: es ? 'Caché del navegador' : 'Browser cache', desc: es ? 'Define tiempos de caché para diferentes tipos de archivos' : 'Sets cache times for different file types', risk: 'safe', default: true,
+        code: `# ── Browser Cache ───────────────────────────────────\n<IfModule mod_expires.c>\n  ExpiresActive On\n  ExpiresByType image/jpg           "access plus 1 year"\n  ExpiresByType image/jpeg          "access plus 1 year"\n  ExpiresByType image/png           "access plus 1 year"\n  ExpiresByType image/webp          "access plus 1 year"\n  ExpiresByType image/gif           "access plus 1 year"\n  ExpiresByType image/svg+xml       "access plus 1 month"\n  ExpiresByType image/x-icon        "access plus 1 year"\n  ExpiresByType text/css            "access plus 1 month"\n  ExpiresByType application/javascript "access plus 1 month"\n  ExpiresByType application/x-javascript "access plus 1 month"\n  ExpiresByType application/font-woff  "access plus 1 year"\n  ExpiresByType application/font-woff2 "access plus 1 year"\n  ExpiresByType text/html           "access plus 1 hour"\n</IfModule>` },
+      { id: 'etag', label: es ? 'Deshabilitar ETags' : 'Disable ETags', desc: es ? 'Elimina los ETags para reducir overhead HTTP' : 'Removes ETags to reduce HTTP overhead', risk: 'safe', default: false,
+        code: `# ── Disable ETags ────────────────────────────────────\nFileETag None\n<IfModule mod_headers.c>\n  Header unset ETag\n</IfModule>` },
+    ],
+  },
+  {
+    id: 'limits', icon: '🚦', label: es ? 'Límites & Rate Limiting' : 'Limits & Rate Limiting', color: '#F97316',
+    rules: [
+      { id: 'request_size', label: es ? 'Limitar tamaño de request (anti-DoS)' : 'Limit request size (anti-DoS)', desc: es ? 'Limita el body de los requests a 10MB' : 'Limits request body to 10MB', risk: 'safe', default: true,
+        code: `# ── Request Size Limit ───────────────────────────\nLimitRequestBody 10485760\n<IfModule mod_headers.c>\n  Header always set X-Content-Type-Options "nosniff"\n</IfModule>` },
+      { id: 'http_methods', label: es ? 'Restringir métodos HTTP' : 'Restrict HTTP methods', desc: es ? 'Solo permite GET, POST y HEAD' : 'Only allows GET, POST and HEAD', risk: 'caution', default: true, note: es ? '⚠ Si usas una API REST en este servidor, no activar' : "⚠ Don't enable if you run a REST API on this server",
+        code: `# ── Restrict HTTP Methods — OWASP A05:2021 ──────────────\n<LimitExcept GET POST HEAD>\n  Order Allow,Deny\n  Deny from all\n</LimitExcept>\nRewriteEngine On\nRewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK) [NC]\nRewriteRule .* - [F,L]` },
+    ],
+  },
+];
+
+const T = es ? {
+  eyebrow: '🛡️ Herramienta gratuita', h1a: 'Generador de', h1b: '.htaccess Blindado',
+  sub1: 'Configura cada regla de seguridad con un switch y obtén un archivo listo para usar, basado en', sub2: 'OWASP Top 10', sub3: 'y mejores prácticas de la industria.',
+  active: 'reglas activas', total: 'reglas totales', categories: 'categorías',
+  domainLabel: 'Tu dominio (para reglas anti-hotlinking)', domainPlaceholder: 'ej: miempresa.com',
+  enableAll: '✅ Activar todo', recommendedOnly: '🛡 Solo recomendadas', disableAll: '🔲 Desactivar todo',
+  activePct: 'activas', verify: '⚠ Verificar', preview: 'Vista previa del .htaccess', lines: 'líneas', rulesLabel: 'reglas',
+  copy: '📋 Copiar .htaccess', copied: '✓ Copiado al portapapeles', download: '⬇ Descargar archivo',
+  beforeTitle: '⚠ Antes de aplicar', beforeBody: 'Siempre haz un backup de tu .htaccess actual antes de reemplazarlo. Prueba en un entorno staging si es posible.',
+  ctaTitle: '¿Quieres hosting con cPanel incluido?', ctaSub: 'LiteSpeed · SSL gratis · DDoS 160 Gbps · Soporte 24/7', ctaBtn: 'Ver planes de Hosting →',
+} : {
+  eyebrow: '🛡️ Free tool', h1a: 'Hardened', h1b: '.htaccess Generator',
+  sub1: 'Configure each security rule with a switch and get a ready-to-use file, based on', sub2: 'OWASP Top 10', sub3: 'and industry best practices.',
+  active: 'active rules', total: 'total rules', categories: 'categories',
+  domainLabel: 'Your domain (for anti-hotlinking rules)', domainPlaceholder: 'e.g: mycompany.com',
+  enableAll: '✅ Enable all', recommendedOnly: '🛡 Recommended only', disableAll: '🔲 Disable all',
+  activePct: 'active', verify: '⚠ Verify', preview: '.htaccess preview', lines: 'lines', rulesLabel: 'rules',
+  copy: '📋 Copy .htaccess', copied: '✓ Copied to clipboard', download: '⬇ Download file',
+  beforeTitle: '⚠ Before applying', beforeBody: 'Always back up your current .htaccess before replacing it. Test in a staging environment if possible.',
+  ctaTitle: 'Want hosting with cPanel included?', ctaSub: 'LiteSpeed · Free SSL · DDoS 160 Gbps · 24/7 Support', ctaBtn: 'See Hosting plans →',
+};
+
+const hostingHref = `/${locale}/hosting`;
+const totalCount = RULE_GROUPS.reduce((s, g) => s + g.rules.length, 0);
+---
+<main style="padding-top:66px;background:#080E1C;min-height:100vh">
+  <section class="relative overflow-hidden border-b border-white/[0.05] px-6 py-16">
+    <div class="pointer-events-none absolute inset-0" style="background:radial-gradient(ellipse 50% 80% at 50% 0%,rgba(37,99,235,.13),transparent 70%)"></div>
+    <div class="relative z-[1] mx-auto max-w-[900px] text-center">
+      <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-[#3B82F6]/[0.22] bg-[#3B82F6]/[0.08] px-4 py-[5px] font-body text-[11px] font-bold uppercase tracking-[2px] text-[#3B82F6]">{T.eyebrow}</div>
+      <h1 class="mb-4 font-display text-[clamp(2rem,5vw,3.2rem)] font-bold leading-[1.05] tracking-tight text-white">{T.h1a} <span class="text-[#3B82F6]">{T.h1b}</span></h1>
+      <p class="mx-auto mb-7 max-w-[600px] font-body text-base leading-[1.75] text-slate-400">{T.sub1} <strong class="text-white">{T.sub2}</strong> {T.sub3}</p>
+      <div class="flex flex-wrap justify-center gap-8">
+        <div class="text-center"><div id="stat-active" class="font-display text-[28px] font-bold leading-none text-[#22C55E]"></div><div class="mt-0.5 font-body text-[11px] text-slate-600">{T.active}</div></div>
+        <div class="text-center"><div class="font-display text-[28px] font-bold leading-none text-[#3B82F6]">{totalCount}</div><div class="mt-0.5 font-body text-[11px] text-slate-600">{T.total}</div></div>
+        <div class="text-center"><div class="font-display text-[28px] font-bold leading-none text-[#A78BFA]">{RULE_GROUPS.length}</div><div class="mt-0.5 font-body text-[11px] text-slate-600">{T.categories}</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="mx-auto grid max-w-[1240px] grid-cols-1 gap-7 px-6 py-10 md:py-24 lg:grid-cols-[1fr_440px]">
+    <!-- LEFT — Controls -->
+    <div class="flex flex-col gap-4">
+      <div class="rounded-2xl border border-white/[0.07] bg-white/[0.025] p-5">
+        <label class="mb-2 block font-body text-[11px] font-bold uppercase tracking-[1.5px] text-slate-600">{T.domainLabel}</label>
+        <input id="ht-domain" type="text" placeholder={T.domainPlaceholder} class="w-full rounded-lg border border-white/10 bg-white/[0.05] px-3.5 py-2.5 font-body text-sm text-white outline-none" />
+      </div>
+
+      <div class="flex flex-wrap gap-2.5">
+        <button id="ht-enable-all" type="button" class="rounded-lg border border-[#22C55E]/25 bg-[#22C55E]/10 px-3.5 py-[7px] font-body text-xs text-[#22C55E]">{T.enableAll}</button>
+        <button id="ht-recommended" type="button" class="rounded-lg border border-[#3B82F6]/20 bg-[#3B82F6]/[0.08] px-3.5 py-[7px] font-body text-xs text-[#3B82F6]">{T.recommendedOnly}</button>
+        <button id="ht-disable-all" type="button" class="rounded-lg border border-white/[0.08] bg-white/[0.04] px-3.5 py-[7px] font-body text-xs text-slate-400">{T.disableAll}</button>
+      </div>
+
+      {RULE_GROUPS.map((group) => (
+        <div class="overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.025]">
+          <div class="flex items-center justify-between border-b border-white/[0.05] bg-white/[0.02] px-5 py-3.5">
+            <div class="flex items-center gap-2.5">
+              <span class="text-lg">{group.icon}</span>
+              <span class="font-display text-sm font-bold text-white">{group.label}</span>
+            </div>
+            <span class="ht-group-count rounded-full px-2.5 py-0.5 font-body text-[11px]" data-group={group.id} style={`color:${group.color};background:${group.color}15;border:1px solid ${group.color}30`}></span>
+          </div>
+          <div>
+            {group.rules.map((rule, idx) => (
+              <div class="ht-rule-row flex cursor-pointer items-start gap-3.5 px-5 py-3.5" style={idx > 0 ? 'border-top:1px solid rgba(255,255,255,.04)' : ''} data-rule={rule.id}>
+                <button type="button" class="ht-switch relative h-6 w-11 shrink-0 rounded-xl border-none" data-rule={rule.id} data-risk={rule.risk} aria-label={rule.label}>
+                  <span class="ht-switch-knob absolute top-[3px] h-[18px] w-[18px] rounded-full shadow-sm transition-[left]"></span>
+                </button>
+                <div class="min-w-0 flex-1">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="ht-rule-label font-display text-[13px] font-semibold">{rule.label}</span>
+                    {rule.risk === 'caution' && <span class="shrink-0 rounded-full border border-[#F59E0B]/20 bg-[#F59E0B]/10 px-2 py-0.5 font-body text-[10px] text-[#F59E0B]">{T.verify}</span>}
+                  </div>
+                  <p class="mt-1 font-body text-xs leading-relaxed text-slate-600">{rule.desc}</p>
+                  {rule.note && <p class="ht-rule-note mt-1 hidden font-body text-[11px] leading-tight text-[#F59E0B]">{rule.note}</p>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- RIGHT — Output -->
+    <div class="flex flex-col gap-3.5 lg:sticky lg:top-[86px]">
+      <div class="rounded-2xl border border-white/[0.07] bg-white/[0.025] p-4.5">
+        <div class="mb-1 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="h-3 w-3 rounded-full bg-[#EF4444]"></div>
+            <div class="h-3 w-3 rounded-full bg-[#F59E0B]"></div>
+            <div class="h-3 w-3 rounded-full bg-[#22C55E]"></div>
+            <span class="ml-2 font-body text-[11px] text-slate-600">.htaccess</span>
+          </div>
+          <span id="ht-rules-count" class="font-body text-[11px] text-slate-600"></span>
+        </div>
+      </div>
+
+      <div class="overflow-hidden rounded-2xl border border-[#3B82F6]/20 bg-[#0A0F1E]">
+        <div class="flex items-center justify-between border-b border-[#3B82F6]/[0.12] bg-[#3B82F6]/[0.06] px-4 py-3">
+          <span class="font-body text-[11px] font-bold text-[#3B82F6]">{T.preview}</span>
+          <span id="ht-lines-count" class="font-body text-[10px] text-slate-600"></span>
+        </div>
+        <pre id="ht-code" class="m-0 max-h-[420px] overflow-y-auto overflow-x-hidden whitespace-pre-wrap break-words p-4 font-mono text-[10px] leading-relaxed text-slate-400"></pre>
+      </div>
+
+      <div class="flex flex-col gap-2.5">
+        <button id="ht-copy-btn" class="w-full rounded-[10px] border-none bg-[#3B82F6] p-3.5 font-display text-sm font-bold text-white shadow-[0_0_24px_rgba(59,130,246,.25)] transition-colors">{T.copy}</button>
+        <button id="ht-download-btn" class="w-full rounded-[10px] border border-white/10 bg-white/[0.04] p-3 font-display text-sm font-semibold text-slate-400">{T.download}</button>
+      </div>
+
+      <div class="rounded-xl border border-[#F59E0B]/20 bg-[#F59E0B]/[0.06] p-4">
+        <div class="mb-1 font-display text-xs font-bold text-[#F59E0B]">{T.beforeTitle}</div>
+        <p class="m-0 font-body text-[11px] leading-relaxed text-slate-600">{T.beforeBody}</p>
+      </div>
+
+      <div class="rounded-xl border border-[#3B82F6]/[0.15] bg-[#3B82F6]/[0.06] px-4.5 py-4 text-center">
+        <div class="mb-1 font-display text-[13px] font-bold text-white">{T.ctaTitle}</div>
+        <p class="mb-3 font-body text-[11px] leading-relaxed text-slate-600">{T.ctaSub}</p>
+        <a href={hostingHref} class="block rounded-lg bg-[#3B82F6] p-2.5 font-display text-[13px] font-bold text-white no-underline">{T.ctaBtn}</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script define:vars={{ RULE_GROUPS, T }}>
+  const GR = '#22C55E', YW = '#F59E0B';
+  const enabled = {};
+  RULE_GROUPS.forEach((g) => g.rules.forEach((r) => { enabled[r.id] = r.default; }));
+
+  const domainInput = document.getElementById('ht-domain');
+  const codeEl = document.getElementById('ht-code');
+  const linesCountEl = document.getElementById('ht-lines-count');
+  const rulesCountEl = document.getElementById('ht-rules-count');
+  const statActiveEl = document.getElementById('stat-active');
+  const copyBtn = document.getElementById('ht-copy-btn');
+  const downloadBtn = document.getElementById('ht-download-btn');
+
+  function updateSwitchVisual(id) {
+    const btn = document.querySelector(`.ht-switch[data-rule="${id}"]`);
+    const knob = btn?.querySelector('.ht-switch-knob');
+    const label = document.querySelector(`.ht-rule-label[data-rule]`);
+    const row = document.querySelector(`.ht-rule-row[data-rule="${id}"]`);
+    const labelEl = row?.querySelector('.ht-rule-label');
+    const noteEl = row?.querySelector('.ht-rule-note');
+    const on = enabled[id];
+    const risk = btn?.dataset.risk;
+    const color = risk === 'caution' ? YW : GR;
+    if (btn) {
+      btn.style.background = on ? color : 'rgba(255,255,255,.1)';
+      btn.style.boxShadow = on ? `0 0 10px ${color}44` : 'none';
+    }
+    if (knob) {
+      knob.style.left = on ? '23px' : '3px';
+      knob.style.background = on ? '#fff' : 'rgba(255,255,255,.4)';
+    }
+    if (row) row.style.background = on ? 'rgba(59,130,246,.03)' : 'transparent';
+    if (labelEl) labelEl.style.color = on ? '#fff' : '#6B8CAE';
+    if (noteEl) noteEl.classList.toggle('hidden', !on);
+  }
+
+  function updateGroupCounts() {
+    RULE_GROUPS.forEach((g) => {
+      const el = document.querySelector(`.ht-group-count[data-group="${g.id}"]`);
+      if (el) el.textContent = `${g.rules.filter((r) => enabled[r.id]).length}/${g.rules.length} ${T.activePct}`;
+    });
+  }
+
+  function generate() {
+    const d = domainInput.value.trim() || (T === T ? 'tudominio.com' : 'tudominio.com');
+    const date = new Date().toLocaleDateString('es-EC', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    let out = `# Hardened .htaccess — Generated by Terranode\n# https://terranode.net · ${date}\n# Based on OWASP Top 10 and industry best practices\n# WARNING: Test in staging before applying to production\n# WARNING: Back up your current .htaccess before replacing it\n\n`;
+    RULE_GROUPS.forEach((group) => {
+      const active = group.rules.filter((r) => enabled[r.id]);
+      if (active.length === 0) return;
+      out += `\n# ${'='.repeat(60)}\n# ${group.icon}  ${group.label.toUpperCase()}\n# ${'='.repeat(60)}\n\n`;
+      active.forEach((rule) => {
+        let code = rule.code;
+        if (rule.id === 'hotlink') code = code.replace(/tudominio\.com/g, d);
+        out += code + '\n\n';
+      });
+    });
+    out += `\n# ── End of Terranode Hardened .htaccess ─────────────────\n`;
+    return out;
+  }
+
+  function render() {
+    const htaccess = generate();
+    const lines = htaccess.split('\n');
+    codeEl.innerHTML = lines
+      .map((line) => {
+        let color = '#94a3b8';
+        if (line.startsWith('#') && line.includes('==')) color = '#3B82F6';
+        else if (line.startsWith('#')) color = '#4A6A88';
+        else if (/^(RewriteRule|RewriteCond|Header|Options|Order|Deny|Allow|FilesMatch|Files|IfModule|LimitExcept|FileETag|ExpiresByType|ExpiresActive|AddOutputFilterByType|LimitRequestBody|ServerSignature)/.test(line)) color = '#60A5FA';
+        else if (line.includes('[F') || line.includes('[R=301') || line.includes('Deny from')) color = '#F87171';
+        else if (line.includes('https://') || line.includes('Header always set')) color = '#34D399';
+        const esc = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return `<span style="color:${color};display:block">${esc || ' '}</span>`;
+      })
+      .join('');
+    linesCountEl.textContent = `${lines.length} ${T.lines}`;
+    const activeCount = Object.values(enabled).filter(Boolean).length;
+    rulesCountEl.textContent = `${activeCount} ${T.rulesLabel}`;
+    statActiveEl.textContent = activeCount;
+    updateGroupCounts();
+    return htaccess;
+  }
+
+  document.querySelectorAll('.ht-switch').forEach((btn) => {
+    const id = btn.dataset.rule;
+    btn.addEventListener('click', () => {
+      enabled[id] = !enabled[id];
+      updateSwitchVisual(id);
+      render();
+    });
+  });
+  document.querySelectorAll('.ht-rule-row').forEach((row) => {
+    row.addEventListener('click', (e) => {
+      if (e.target.closest('.ht-switch')) return;
+      const id = row.dataset.rule;
+      enabled[id] = !enabled[id];
+      updateSwitchVisual(id);
+      render();
+    });
+  });
+
+  document.getElementById('ht-enable-all').addEventListener('click', () => {
+    RULE_GROUPS.forEach((g) => g.rules.forEach((r) => { enabled[r.id] = true; updateSwitchVisual(r.id); }));
+    render();
+  });
+  document.getElementById('ht-recommended').addEventListener('click', () => {
+    RULE_GROUPS.forEach((g) => g.rules.forEach((r) => { enabled[r.id] = r.risk === 'safe' && r.default; updateSwitchVisual(r.id); }));
+    render();
+  });
+  document.getElementById('ht-disable-all').addEventListener('click', () => {
+    RULE_GROUPS.forEach((g) => g.rules.forEach((r) => { enabled[r.id] = false; updateSwitchVisual(r.id); }));
+    render();
+  });
+  domainInput.addEventListener('input', render);
+
+  copyBtn.addEventListener('click', () => {
+    const text = generate();
+    navigator.clipboard?.writeText(text).then(() => {
+      copyBtn.textContent = T.copied;
+      copyBtn.style.background = GR;
+      setTimeout(() => { copyBtn.textContent = T.copy; copyBtn.style.background = '#3B82F6'; }, 2500);
+    }).catch(() => {});
+  });
+  downloadBtn.addEventListener('click', () => {
+    const blob = new Blob([generate()], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = '.htaccess';
+    a.click();
+  });
+
+  // Init
+  RULE_GROUPS.forEach((g) => g.rules.forEach((r) => updateSwitchVisual(r.id)));
+  render();
+</script>
