@@ -6,7 +6,7 @@ export function organizationSchema(locale: Locale) {
     '@type': 'Organization',
     '@id': `${SITE_URL}/#organization`,
     name: BRAND,
-    legalName: ORG.legalName,
+    legalName: locale === 'es' ? ORG.legalNameEC : ORG.legalNameUS,
     url: SITE_URL,
     logo: `${SITE_URL}/logo.png`,
     image: `${SITE_URL}/og/og-default.png`,
@@ -16,10 +16,7 @@ export function organizationSchema(locale: Locale) {
     sameAs: ORG.sameAs,
     address: {
       '@type': 'PostalAddress',
-      streetAddress: ORG.address.streetAddress,
       addressLocality: ORG.address.addressLocality,
-      addressRegion: ORG.address.addressRegion,
-      postalCode: ORG.address.postalCode,
       addressCountry: ORG.address.addressCountry,
     },
     contactPoint: [
@@ -34,8 +31,8 @@ export function organizationSchema(locale: Locale) {
     ],
     description:
       locale === 'es'
-        ? 'Terranode es un proveedor de infraestructura cloud, VPS, hosting y servidores dedicados con presencia en Ecuador, Estados Unidos y Reino Unido.'
-        : 'Terranode is a cloud infrastructure provider offering VPS, hosting and dedicated servers with presence in Ecuador, the United States and the United Kingdom.',
+        ? 'Terranode es un proveedor de infraestructura cloud, VPS, hosting y servidores dedicados con presencia en Ecuador y Estados Unidos.'
+        : 'Terranode is a cloud infrastructure provider offering VPS, hosting and dedicated servers with presence in Ecuador and the United States.',
   };
 }
 
@@ -96,7 +93,7 @@ export function serviceSchema(locale: Locale, opts: {
     name: opts.name,
     description: opts.description,
     provider: { '@id': `${SITE_URL}/#organization` },
-    areaServed: opts.areaServed ?? ['EC', 'US', 'GB', 'CO', 'PE', 'MX', 'CL', 'AR'],
+    areaServed: opts.areaServed ?? ['EC', 'US', 'CO', 'PE', 'MX', 'CL', 'AR'],
     url: alternatesFor(opts.pageKey)[locale],
   };
 }

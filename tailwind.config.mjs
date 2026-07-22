@@ -36,8 +36,8 @@ export default {
         },
       },
       fontFamily: {
-        display: ['"Clash Display"', 'system-ui', 'sans-serif'],
-        body: ['"General Sans"', 'system-ui', 'sans-serif'],
+        display: ['"Instrument Sans"', 'system-ui', 'sans-serif'],
+        body: ['"Metrophobic"', 'system-ui', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
       },
       backgroundImage: {

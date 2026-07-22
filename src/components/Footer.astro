@@ -14,7 +14,7 @@ const t = {
     status: 'Estado de la Red',
     tickets: 'Centro de Soporte',
     rights: 'Todos los derechos reservados.',
-    legal: 'Antes conocida como Vsphost — evolucionamos para servir a más países.',
+    legal: 'Terranode S.A.S. (Ecuador) · Terranode LLC (EE. UU.)',
   },
   en: {
     tagline: 'High-performance cloud infrastructure for businesses that can\u2019t afford downtime.',
@@ -25,7 +25,7 @@ const t = {
     status: 'Network Status',
     tickets: 'Support Center',
     rights: 'All rights reserved.',
-    legal: 'Formerly known as Vsphost — we evolved to serve more countries.',
+    legal: 'Terranode S.A.S. (Ecuador) · Terranode LLC (USA)',
   },
 }[locale];
 ---
@@ -60,7 +60,7 @@ const t = {
         <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">{t.resources}</h3>
         <ul class="mt-4 space-y-2.5 text-sm text-slate-300">
           <li><a href={ORG.clientPortal} target="_blank" rel="noopener" class="hover:text-white transition-colors">{t.portal}</a></li>
-          <li><a href={`${ORG.clientPortal}/submitticket.php`} target="_blank" rel="noopener" class="hover:text-white transition-colors">{t.tickets}</a></li>
+          <li><a href={ORG.ticketUrl} target="_blank" rel="noopener" class="hover:text-white transition-colors">{t.tickets}</a></li>
         </ul>
       </div>
     </div>

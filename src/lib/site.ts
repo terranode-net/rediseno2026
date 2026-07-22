@@ -4,17 +4,18 @@ export const BRAND = 'Terranode';
 
 export const ORG = {
   legalName: 'Terranode',
-  // TODO: confirma razón social / RUC si quieres incluirlo en el schema LocalBusiness
+  legalNameEC: 'Terranode S.A.S.',
+  legalNameUS: 'Terranode LLC',
   foundingYear: '2023',
-  formerName: 'Vsphost',
-  email: 'hola@terranode.net', // TODO: reemplazar por el correo real
-  phone: '+593-000-000-000', // TODO: reemplazar por el teléfono real (formato E.164)
-  whatsapp: 'https://wa.me/593000000000', // TODO
+  email: 'ventas@terranode.net',
+  phone: '+593 99 819 7150',
+  phoneHref: 'tel:+593998197150',
+  whatsappSupport: 'https://wa.link/nooz4l',
+  whatsappSales: 'https://wa.link/03c1ug',
+  discord: 'https://discord.com/invite/VAAQ6rDXRE',
+  ticketUrl: 'https://my.terranode.net/submitticket',
   address: {
-    streetAddress: 'Av. Principal', // TODO
     addressLocality: 'Guayaquil',
-    addressRegion: 'Guayas',
-    postalCode: '090150', // TODO
     addressCountry: 'EC',
   },
   sameAs: [
@@ -22,6 +23,7 @@ export const ORG = {
     'https://twitter.com/terranode',
     'https://www.linkedin.com/company/terranode',
     'https://www.instagram.com/terranode',
+    'https://discord.com/invite/VAAQ6rDXRE',
   ],
   clientPortal: 'https://my.terranode.net',
 };

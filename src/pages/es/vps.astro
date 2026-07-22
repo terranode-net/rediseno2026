@@ -13,7 +13,7 @@ import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, product
 const faqs = [
   { q: '¿Qué es un VPS y en qué se diferencia del hosting compartido?', a: 'Un VPS (Servidor Privado Virtual) te da recursos de CPU, RAM y almacenamiento reservados solo para ti, con acceso root completo. A diferencia del hosting compartido, tu rendimiento no depende de otros sitios en el mismo servidor.' },
   { q: '¿Los VPS de Terranode usan almacenamiento NVMe?', a: 'Sí, todos nuestros planes VPS incluyen almacenamiento NVMe por defecto, hasta 10 veces más rápido que un SSD tradicional en operaciones de lectura y escritura.' },
-  { q: '¿Puedo elegir la ubicación de mi VPS?', a: 'Sí. Ofrecemos VPS en Guayaquil (Ecuador), Los Ángeles (EE.UU.) y Londres (Reino Unido), para que elijas la menor latencia según dónde esté tu audiencia.' },
+  { q: '¿Puedo elegir la ubicación de mi VPS?', a: 'Sí. Ofrecemos VPS en Guayaquil (Ecuador), Los Ángeles, Houston, Ashburn, Chicago y Utah (EE.UU.), para que elijas la menor latencia según dónde esté tu audiencia.' },
   { q: '¿Qué panel de control o virtualización usan?', a: 'Usamos virtualización KVM, que ofrece aislamiento completo de recursos y te permite instalar el sistema operativo y panel de control que prefieras (cPanel, Plesk o sin panel).' },
   { q: '¿Puedo escalar mi VPS si mi proyecto crece?', a: 'Sí, puedes escalar CPU, RAM y almacenamiento en minutos desde el panel de cliente, o migrar a un servidor dedicado si tu proyecto lo requiere.' },
 ];
@@ -30,7 +30,7 @@ const breadcrumb = breadcrumbSchema('es', [
 ]);
 const service = serviceSchema('es', {
   name: 'VPS NVMe',
-  description: 'Servidores privados virtuales con almacenamiento NVMe, virtualización KVM y ubicaciones en Ecuador, Estados Unidos y Reino Unido.',
+  description: 'Servidores privados virtuales con almacenamiento NVMe, virtualización KVM y ubicaciones en Ecuador y Estados Unidos.',
   pageKey: 'vps',
   serviceType: 'VPS Hosting',
 });
@@ -45,11 +45,11 @@ const products = productPlanSchema(plans.map(p => ({
   locale="es"
   pageKey="vps"
   title="VPS NVMe en Ecuador desde $5/mes | Terranode"
-  description="Contrata un VPS con almacenamiento NVMe, virtualización KVM y ubicaciones en Ecuador, EE.UU. y Reino Unido. Planes desde $5/mes con soporte 24/7."
+  description="Contrata un VPS con almacenamiento NVMe, virtualización KVM y ubicaciones en Ecuador y EE.UU. Planes desde $5/mes con soporte 24/7."
   jsonLd={[organizationSchema('es'), breadcrumb, service, ...products, faqSchema(faqs)]}
 >
   <Hero
-    eyebrow="VPS · Guayaquil · Los Ángeles · Londres"
+    eyebrow="VPS · Guayaquil · Los Ángeles · Ashburn"
     title="VPS NVMe con"
     highlight="recursos 100% dedicados"
     description="Despliega en minutos con acceso root completo, discos NVMe ultrarrápidos y virtualización KVM. Elige la región más cercana a tus usuarios."
@@ -88,7 +88,7 @@ const products = productPlanSchema(plans.map(p => ({
     <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       <FeatureCard icon="bolt" title="NVMe de fábrica" description="Sin discos mecánicos ni SSD SATA: NVMe en todos los planes, sin costo extra." />
       <FeatureCard icon="shield" title="DDoS incluido" description="Protección de hasta 160 Gbps activa por defecto en toda la red." />
-      <FeatureCard icon="globe" title="3 ubicaciones" description="Guayaquil, Los Ángeles y Londres para optimizar la latencia de tus usuarios." />
+      <FeatureCard icon="globe" title="6 ubicaciones" description="Guayaquil, Los Ángeles, Houston, Ashburn, Chicago y Utah para optimizar la latencia de tus usuarios." />
       <FeatureCard icon="server" title="Acceso root completo" description="Instala el stack que necesites: Docker, Node, PHP, bases de datos, lo que sea." />
       <FeatureCard icon="chart" title="Escalado sin downtime" description="Aumenta CPU, RAM o disco desde el panel sin reinstalar nada." />
       <FeatureCard icon="support" title="Soporte real 24/7" description="Ingenieros disponibles todos los días del año, en español." />

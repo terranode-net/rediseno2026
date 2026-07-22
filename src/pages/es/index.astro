@@ -2,19 +2,21 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Hero from '@/components/Hero.astro';
 import TrustBar from '@/components/TrustBar.astro';
+import NetMap from '@/components/NetMap.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import FeatureCard from '@/components/FeatureCard.astro';
-import Testimonial from '@/components/Testimonial.astro';
+import TestimonialCarousel from '@/components/TestimonialCarousel.astro';
 import CTASection from '@/components/CTASection.astro';
 import FAQAccordion from '@/components/FAQAccordion.astro';
+import FeaturedServicesPricing from '@/components/FeaturedServicesPricing.astro';
 import { pathFor } from '@/lib/site';
 import { organizationSchema, websiteSchema, faqSchema } from '@/lib/schema';
 
 const faqs = [
-  { q: '¿Qué diferencia a Terranode de otros proveedores de hosting en Ecuador?', a: 'Combinamos infraestructura NVMe de alto rendimiento, protección DDoS de hasta 160 Gbps y soporte técnico en español 24/7, con ubicaciones en Ecuador, Estados Unidos y Reino Unido para que elijas la latencia ideal según tu audiencia.' },
+  { q: '¿Qué diferencia a Terranode de otros proveedores de hosting en Ecuador?', a: 'Combinamos infraestructura NVMe de alto rendimiento, protección DDoS de hasta 160 Gbps y soporte técnico en español 24/7, con ubicaciones en Ecuador y Estados Unidos para que elijas la latencia ideal según tu audiencia.' },
   { q: '¿Puedo migrar mi sitio o servidor actual sin perder tiempo de actividad?', a: 'Sí. Nuestro equipo se encarga de la migración completa (archivos, bases de datos y correo) coordinando el corte de DNS para minimizar el tiempo fuera de línea, normalmente a menos de unos minutos.' },
   { q: '¿Ofrecen soporte técnico en español las 24 horas?', a: 'Sí, contamos con soporte técnico 24/7 en español e inglés vía ticket, chat y correo, además de asesoría comercial para ayudarte a elegir el plan correcto.' },
-  { q: '¿Trabajan con empresas fuera de Ecuador?', a: 'Sí. Aunque nacimos en Ecuador, hoy damos servicio a clientes en toda Latinoamérica, Estados Unidos y Europa gracias a nuestra red multi-región.' },
+  { q: '¿Trabajan con empresas fuera de Ecuador?', a: 'Sí. Aunque nacimos en Ecuador, hoy damos servicio a clientes en toda Latinoamérica y Estados Unidos gracias a nuestra red multi-región.' },
 ];
 ---
 <BaseLayout
@@ -35,11 +37,13 @@ const faqs = [
       { value: '160 Gbps', label: 'Mitigación DDoS' },
       { value: '99.9%', label: 'Uptime garantizado' },
       { value: '24/7', label: 'Soporte en español' },
-      { value: '3', label: 'Regiones: EC · US · UK' },
+      { value: '6', label: 'Ubicaciones EC · US' },
     ]}
   />
 
-  <TrustBar items={['NVMe en todos los planes', 'Partner Microsoft 365', 'Soporte 24/7 en español', 'Datacenters en Guayaquil, EE.UU. y Reino Unido']} />
+  <TrustBar items={['NVMe en todos los planes', 'Partner Microsoft 365', 'Soporte 24/7 en español', 'Datacenters en Guayaquil, EE.UU. (LA, Houston, Ashburn, Chicago, Utah)']} />
+
+  <NetMap locale="es" />
 
   <section class="container-page py-20 md:py-28">
     <SectionHeading
@@ -55,6 +59,25 @@ const faqs = [
     </div>
   </section>
 
+  <section class="py-20 md:py-28">
+    <div class="container-page">
+      <SectionHeading
+        eyebrow="Precios"
+        title="Nuestros servicios destacados"
+        description="Precios de referencia por servicio. Cotiza exactamente lo que necesitas en un mensaje."
+      />
+      <div class="mt-14">
+        <FeaturedServicesPricing items={[
+          { icon: 'server', name: 'VPS NVMe', price: '$5', period: '/mes', description: 'KVM, NVMe y despliegue en minutos.', href: pathFor('es','vps'), ctaLabel: 'Ver planes' },
+          { icon: 'cloud', name: 'Hosting', price: '$4', period: '/mes', description: 'LiteSpeed + NVMe para WordPress.', href: pathFor('es','hosting'), ctaLabel: 'Ver planes' },
+          { icon: 'shield', name: 'Servidores Dedicados', price: '$79', period: '/mes', description: 'Hardware Intel Xeon 100% para ti.', href: pathFor('es','dedicados'), ctaLabel: 'Ver planes' },
+          { icon: 'lock', name: 'Terramail', price: '$2', period: '/mes', description: 'Correo corporativo con tu dominio.', href: pathFor('es','terramail'), ctaLabel: 'Ver planes' },
+          { icon: 'globe', name: 'Microsoft 365', price: '$6', period: '/usuario', description: 'Implementación por Partner Microsoft.', href: pathFor('es','m365'), ctaLabel: 'Ver planes' },
+        ]} />
+      </div>
+    </div>
+  </section>
+
   <section class="bg-surface py-20 md:py-28">
     <div class="container-page">
       <SectionHeading
@@ -65,7 +88,7 @@ const faqs = [
       <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <FeatureCard icon="bolt" title="Almacenamiento NVMe" description="Hasta 10 veces más rápido que SSD tradicional en lectura/escritura." />
         <FeatureCard icon="shield" title="DDoS 160 Gbps" description="Mitigación de ataques en tiempo real sin afectar la latencia de tu tráfico legítimo." />
-        <FeatureCard icon="globe" title="Red multi-región" description="Guayaquil, Los Ángeles y Londres: elige la ubicación más cercana a tus usuarios." />
+        <FeatureCard icon="globe" title="Red multi-región" description="Guayaquil, Los Ángeles, Houston, Ashburn, Chicago y Utah: elige la ubicación más cercana a tus usuarios." />
         <FeatureCard icon="support" title="Soporte humano 24/7" description="Sin bots ni respuestas automáticas: ingenieros reales resolviendo tu ticket." />
         <FeatureCard icon="chart" title="Escalabilidad sin fricción" description="Crece de VPS a servidor dedicado sin migraciones dolorosas." />
         <FeatureCard icon="lock" title="Backups y seguridad" description="Copias de respaldo programadas y hardening de seguridad incluido." />
@@ -75,17 +98,24 @@ const faqs = [
 
   <section class="container-page py-20 md:py-28">
     <SectionHeading eyebrow="Clientes" title="Empresas que ya confían en nuestra infraestructura" />
-    <div class="mt-14 grid gap-6 md:grid-cols-2">
-      <Testimonial
-        quote="Contraté el servicio de correo corporativo con Office 365 de la mano de Terranode porque supe que son Partner de Microsoft. En menos de un día ya tenía toda mi empresa usando correo en la nube."
-        author="Ángel Gabriel"
-        role="Cliente Terramail + M365"
-      />
-      <Testimonial
-        quote="Me desarrollaron el sitio web para mi negocio y sin duda quedé encantada con el trabajo. El soporte es muy ameno y te ayudan en todo, sin duda el mejor hosting en Ecuador."
-        author="Lady Rivera"
-        role="Cliente Hosting"
-      />
+    <div class="mt-14">
+      <TestimonialCarousel items={[
+        {
+          quote: 'Contraté el servicio de correo corporativo con Office 365 de la mano de Terranode porque supe que son Partner de Microsoft. En menos de un día ya tenía toda mi empresa usando correo en la nube.',
+          author: 'Ángel Gabriel',
+          role: 'Cliente Terramail + M365',
+        },
+        {
+          quote: 'Me desarrollaron el sitio web para mi negocio y sin duda quedé encantada con el trabajo. El soporte es muy ameno y te ayudan en todo, sin duda el mejor hosting en Ecuador.',
+          author: 'Lady Rivera',
+          role: 'Cliente Hosting',
+        },
+        {
+          quote: 'El soporte es muy ameno y te ayudan en todo, sin duda el mejor hosting en Ecuador que puedo recomendar.',
+          author: 'Cliente verificado',
+          role: 'Reseña de Google',
+        },
+      ]} />
     </div>
   </section>
 
