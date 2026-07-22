@@ -1,23 +1,16 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import LegalPageContent from '@/components/LegalPageContent.astro';
+import { TERMS_EN, UPDATED_EN } from '@/lib/legalData';
 import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
 
-const sections = [
-  { id: 'acceptance', title: '1. Acceptance', content: `By accessing or using any Terranode service, you agree to these Terms and Conditions governed by the laws of Ecuador.` },
-  { id: 'payments', title: '2. Payments & Renewals', content: `All prices are in USD. Services are billed in advance and auto-renew unless cancelled 24 hours before renewal.\n\nVPS and Dedicated Servers are permanently and irreversibly destroyed upon cancellation — all data, snapshots and configurations are lost. Terranode cannot recover any data after destruction. The client is solely responsible for backing up data before cancellation.\n\nChargebacks result in immediate service suspension and may incur an administrative fee.` },
-  { id: 'aup', title: '3. Acceptable Use', content: `Prohibited: spam, malware, DDoS attacks, child sexual abuse material (zero tolerance), fraud, intellectual property violations, unauthorized cryptocurrency mining, reselling without written authorization.` },
-  { id: 'liability', title: '4. Limitation of Liability', content: `Terranode's total liability is limited to the amount paid during the three months preceding the claim. Services are provided "as is" without warranties.` },
-  { id: 'law', title: '5. Governing Law', content: `These terms are governed by the laws of the Republic of Ecuador. Disputes shall be submitted to the courts of Guayaquil, Ecuador.` },
-  { id: 'contact', title: '6. Contact', content: `Terranode S.A.S\nSupport: https://my.terranode.net\nEmail: info@terranode.net\nPhone: +593 99 819 7150\nGuayaquil, Ecuador` },
-];
 const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'Terms and Conditions', key: 'terms' }]);
 ---
 <BaseLayout
   locale="en"
   pageKey="terms"
-  title="Terms and Conditions of Service · Terranode"
-  description="Terms and Conditions for using Terranode S.A.S Cloud Infrastructure services. Please read before contracting any service."
+  title="Terms and Conditions · Terranode"
+  description="Terms and Conditions for using Terranode Cloud Infrastructure services. Please read this agreement before contracting any service."
   jsonLd={[organizationSchema('en'), breadcrumb]}
 >
   <LegalPageContent
@@ -25,8 +18,10 @@ const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name
     title="Terms and Conditions of Service"
     badge="Legal Document"
     icon="⚖️"
-    subtitle="Please read this agreement carefully before contracting or using any Terranode service."
-    updated="March 20, 2026"
-    sections={sections}
+    subtitle="Please read this agreement carefully before contracting or using any Terranode service. By using our services, you accept the following terms."
+    updated={UPDATED_EN}
+    sections={TERMS_EN}
+    requestBtn="Open Support Ticket"
+    requestUrl="https://my.terranode.net"
   />
 </BaseLayout>

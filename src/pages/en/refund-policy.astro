@@ -1,30 +1,16 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import LegalPageContent from '@/components/LegalPageContent.astro';
+import { REFUND_EN, REFUND_SUMMARY_EN, UPDATED_EN } from '@/lib/legalData';
 import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
 
-const summary = [
-  { icon: '✅', color: '#22C55E', title: '7-day Guarantee', desc: 'New Web Hosting and Corporate Email (first-time purchase)' },
-  { icon: '✅', color: '#22C55E', title: '3-day Guarantee', desc: 'New VPS Server (first-time purchase)' },
-  { icon: '❌', color: '#EF4444', title: 'No Refund — M365', desc: 'Microsoft 365: no refund under any circumstance once activated' },
-  { icon: '❌', color: '#EF4444', title: 'No Refund', desc: 'Domains, renewed services, policy violations' },
-  { icon: '⚠️', color: '#F59E0B', title: 'One refund per client', desc: 'Only applicable on first purchase of each service type' },
-  { icon: '🚫', color: '#F97316', title: 'Disputes & Chargebacks', desc: 'Initiating a chargeback without exhausting the refund process results in immediate service suspension' },
-];
-const sections = [
-  { id: 'commitment', title: '1. Our Commitment', content: `Terranode is committed to providing high-quality services. Please contact support before requesting a refund. This policy applies exclusively to services directly provided by Terranode.` },
-  { id: 'periods', title: '2. Money-Back Periods', content: `- Web Hosting (Shared): 7 calendar days from activation.\n- Corporate Email (TerraMail): 7 calendar days from activation.\n- VPS Server: 3 calendar days from server activation.\n- Dedicated Servers: No standard guarantee. Hardware defect claims evaluated within 72 hours.\n- Web/Systems Development: Governed by the signed service contract.\n\n⚠ Microsoft 365 — NO REFUND: Microsoft 365 licenses are non-refundable under any circumstances once activated, as Terranode incurs non-recoverable costs with Microsoft from activation. By purchasing M365, the client expressly accepts this condition.` },
-  { id: 'exclusions', title: '3. Exclusions — No Refund', content: `No refunds for: domain registrations; Microsoft 365 licenses (non-refundable under any circumstance); renewed services; policy violations; active chargebacks; data loss due to client negligence; activated third-party software licenses.` },
-  { id: 'chargebacks', title: '4. Chargeback Policy', content: `Initiating a chargeback without exhausting the refund process results in: immediate suspension of all services; loss of right to a direct refund; submission of evidence to contest the chargeback; and an administrative fee of up to USD 25 per chargeback.` },
-  { id: 'contact', title: '5. Contact', content: `Client Panel: https://my.terranode.net\nEmail: info@terranode.net\nPhone: +593 99 819 7150\nGuayaquil, Ecuador — Support available 24/7.` },
-];
 const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'Refund Policy', key: 'refund' }]);
 ---
 <BaseLayout
   locale="en"
   pageKey="refund"
-  title="Refund Policy — 7-Day Hosting Guarantee · Terranode"
-  description="Terranode Refund Policy: 7-day guarantee on hosting, 3-day on VPS. Microsoft 365 is non-refundable once activated."
+  title="Refund Policy · Terranode"
+  description="Terranode Refund Policy: 7-day guarantee on hosting and email, 3-day on VPS. Learn the conditions and request process."
   jsonLd={[organizationSchema('en'), breadcrumb]}
 >
   <LegalPageContent
@@ -32,10 +18,10 @@ const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name
     title="Refund Policy"
     badge="Refund Policy"
     icon="💳"
-    subtitle="We are committed to your satisfaction. This policy describes the conditions under which you may request a refund."
-    updated="March 20, 2026"
-    sections={sections}
-    summary={summary}
+    subtitle="We are committed to your satisfaction. This policy describes the conditions under which you may request a refund for services contracted with Terranode."
+    updated={UPDATED_EN}
+    sections={REFUND_EN}
+    summary={REFUND_SUMMARY_EN}
     ctaTitle="Need to request a refund?"
     ctaSub="Open a support ticket and our team will assist you within 24 business hours."
     ctaLabel="Open Ticket"
