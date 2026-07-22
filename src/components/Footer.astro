@@ -1,5 +1,5 @@
 ---
-import { NAV, ORG, pathFor, type Locale } from '@/lib/site';
+import { SERVICES_NAV, TOP_NAV, COMING_SOON, ORG, pathFor, type Locale } from '@/lib/site';
 
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
@@ -42,8 +42,13 @@ const t = {
       <div>
         <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">{t.services}</h3>
         <ul class="mt-4 space-y-2.5 text-sm text-slate-300">
-          {NAV.filter(n => n.key !== 'nosotros' && n.key !== 'contacto').map((item) => (
-            <li><a href={pathFor(locale, item.key)} class="hover:text-white transition-colors">{item.label[locale]}</a></li>
+          {SERVICES_NAV.map((item) => (
+            <li>
+              <a href={pathFor(locale, item.key)} class="transition-colors hover:text-white">
+                {item.label[locale]}
+                {COMING_SOON.includes(item.key) && <span class="ml-1.5 text-[10px] text-slate-600">({locale === 'es' ? 'pronto' : 'soon'})</span>}
+              </a>
+            </li>
           ))}
         </ul>
       </div>
@@ -51,8 +56,14 @@ const t = {
       <div>
         <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">{t.company}</h3>
         <ul class="mt-4 space-y-2.5 text-sm text-slate-300">
-          <li><a href={pathFor(locale, 'nosotros')} class="hover:text-white transition-colors">{NAV.find(n=>n.key==='nosotros')?.label[locale]}</a></li>
-          <li><a href={pathFor(locale, 'contacto')} class="hover:text-white transition-colors">{NAV.find(n=>n.key==='contacto')?.label[locale]}</a></li>
+          {TOP_NAV.map((item) => (
+            <li>
+              <a href={pathFor(locale, item.key)} class="transition-colors hover:text-white">
+                {item.label[locale]}
+                {COMING_SOON.includes(item.key) && <span class="ml-1.5 text-[10px] text-slate-600">({locale === 'es' ? 'pronto' : 'soon'})</span>}
+              </a>
+            </li>
+          ))}
         </ul>
       </div>
 

@@ -12,9 +12,10 @@ interface Props {
   description: string;
   ogImage?: string;
   jsonLd?: Record<string, any> | Record<string, any>[];
+  noindex?: boolean;
 }
 
-const { locale, pageKey, title, description, ogImage, jsonLd } = Astro.props;
+const { locale, pageKey, title, description, ogImage, jsonLd, noindex } = Astro.props;
 ---
 <!doctype html>
 <html lang={LOCALES[locale].htmlLang}>
@@ -24,7 +25,7 @@ const { locale, pageKey, title, description, ogImage, jsonLd } = Astro.props;
     <link rel="apple-touch-icon" href="/favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <Seo locale={locale} pageKey={pageKey} title={title} description={description} ogImage={ogImage} jsonLd={jsonLd} />
+    <Seo locale={locale} pageKey={pageKey} title={title} description={description} ogImage={ogImage} jsonLd={jsonLd} noindex={noindex} />
     <slot name="head" />
   </head>
   <body>

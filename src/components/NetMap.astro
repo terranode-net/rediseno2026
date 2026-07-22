@@ -1,4 +1,6 @@
 ---
+import { MAP_DOTS } from '@/lib/mapDots';
+
 interface Props {
   locale: 'es' | 'en';
 }
@@ -101,11 +103,7 @@ const arcs = CONNS.map(([a, b], ci) => {
             <filter id="gm"><feGaussianBlur stdDeviation="0.9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
           </defs>
 
-          {Array.from({ length: 420 }).map((_, i) => {
-            const x = (i * 13) % 147;
-            const y = (Math.floor(i / 11) * 3.1) % 70;
-            return <circle cx={x} cy={y} r="0.22" fill="#152848" />;
-          })}
+          <g set:html={MAP_DOTS.replace(/fill="#27272a"/g, 'fill="#1a3058"')} />
 
           {arcs.map((arc, ci) => (
             <g>

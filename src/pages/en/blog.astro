@@ -1,0 +1,13 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ComingSoon from '@/components/ComingSoon.astro';
+---
+<BaseLayout
+  locale="en"
+  pageKey="blog"
+  title="Blog | Terranode"
+  description="Articles about hosting, VPS, dedicated servers and technical best practices. Coming soon."
+  noindex={true}
+>
+  <ComingSoon locale="en" pageKey="blog" eyebrow="Blog" title="We're building the blog" description="Soon you'll find technical guides, product updates and best practices about hosting, VPS and dedicated servers here." />
+</BaseLayout>
