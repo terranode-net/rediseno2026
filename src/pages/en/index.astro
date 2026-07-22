@@ -1,135 +1,40 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Hero from '@/components/Hero.astro';
-import TrustBar from '@/components/TrustBar.astro';
-import NetMap from '@/components/NetMap.astro';
-import SectionHeading from '@/components/SectionHeading.astro';
-import FeatureCard from '@/components/FeatureCard.astro';
-import TestimonialCarousel from '@/components/TestimonialCarousel.astro';
-import CTASection from '@/components/CTASection.astro';
-import FAQAccordion from '@/components/FAQAccordion.astro';
-import FeaturedServicesPricing from '@/components/FeaturedServicesPricing.astro';
-import { pathFor } from '@/lib/site';
-import { organizationSchema, websiteSchema, faqSchema } from '@/lib/schema';
+import HomeContent from '@/components/HomeContent.astro';
+import { pathFor, SITE_URL, BRAND } from '@/lib/site';
+import { organizationSchema, websiteSchema, productPlanSchema, breadcrumbSchema } from '@/lib/schema';
 
-const faqs = [
-  { q: 'What makes Terranode different from other hosting providers?', a: 'We combine high-performance NVMe infrastructure, DDoS protection up to 160 Gbps, and 24/7 technical support, with locations in Ecuador and the United States so you can pick the ideal latency for your audience.' },
-  { q: 'Can I migrate my current site or server without downtime?', a: 'Yes. Our team handles the full migration (files, databases and email) and coordinates the DNS cutover to minimize downtime, typically down to a few minutes.' },
-  { q: 'Do you offer 24/7 technical support?', a: 'Yes, we provide 24/7 technical support in English and Spanish via ticket, chat and email, plus sales guidance to help you pick the right plan.' },
-  { q: 'Do you work with companies outside Ecuador?', a: 'Yes. While we started in Ecuador, we now serve clients across Latin America and the United States through our multi-region network.' },
+const plans = [
+  { name: 'Web Hosting', price: '3', description: 'Optimized hosting with LiteSpeed, CloudLinux and daily automatic backups.', url: pathFor('en', 'hosting') },
+  { name: 'VPS NVMe', price: '10', description: 'NVMe DDR4 virtual servers with deployment in under 60 seconds.', url: pathFor('en', 'vps') },
+  { name: 'Dedicated Server', price: '120', description: 'Exclusive Intel Xeon hardware with NVMe storage and maximum stability.', url: pathFor('en', 'dedicados') },
 ];
+
+const itemList = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Web Hosting', url: `${SITE_URL}${pathFor('en', 'hosting')}` },
+    { '@type': 'ListItem', position: 2, name: 'VPS Server', url: `${SITE_URL}${pathFor('en', 'vps')}` },
+    { '@type': 'ListItem', position: 3, name: 'Dedicated Servers', url: `${SITE_URL}${pathFor('en', 'dedicados')}` },
+    { '@type': 'ListItem', position: 4, name: 'Microsoft 365', url: `${SITE_URL}${pathFor('en', 'm365')}` },
+  ],
+};
+
+const reviews = [
+  { '@context': 'https://schema.org', '@type': 'Review', reviewBody: 'Performance and reliability have been exceptional. Incredible loading speeds since migrating to Terranode.', author: { '@type': 'Person', name: 'Eduardo Marín' }, itemReviewed: { '@id': `${SITE_URL}/#organization` }, reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' } },
+  { '@context': 'https://schema.org', '@type': 'Review', reviewBody: 'Exceptional hosting service with reliable performance. Developer support is excellent and any question is resolved quickly.', author: { '@type': 'Person', name: 'Joel Lozano' }, itemReviewed: { '@id': `${SITE_URL}/#organization` }, reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' } },
+  { '@context': 'https://schema.org', '@type': 'Review', reviewBody: 'We migrated our entire infrastructure to Terranode and the process was flawless. Minimum latency in Ecuador.', author: { '@type': 'Person', name: 'Carlos Vélez' }, itemReviewed: { '@id': `${SITE_URL}/#organization` }, reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' } },
+];
+
+const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }]);
 ---
 <BaseLayout
   locale="en"
   pageKey="home"
   title="Terranode | Hosting, VPS & Dedicated Servers"
-  description="High-performance cloud infrastructure with 160 Gbps DDoS protection, NVMe storage and 24/7 support. VPS, hosting, dedicated servers and Microsoft 365 across Ecuador and the world."
-  jsonLd={[organizationSchema('en'), websiteSchema('en'), faqSchema(faqs)]}
+  description="Deploy your server in 60 seconds. High-performance cloud infrastructure with DDoS 160 Gbps, NVMe and 24/7 support. VPS from $10, Hosting from $3, Dedicated from $120."
+  jsonLd={[organizationSchema('en'), websiteSchema('en'), breadcrumb, itemList, ...productPlanSchema(plans), ...reviews]}
 >
-  <Hero
-    eyebrow="Cloud infrastructure • Ecuador · LATAM · Global"
-    title="Infrastructure that"
-    highlight="never lets you down"
-    description="VPS, hosting and dedicated servers with NVMe storage, 160 Gbps DDoS protection and 24/7 support. The technical foundation your business needs to grow without surprises."
-    primaryCta={{ label: 'See VPS plans', href: pathFor('en','vps') }}
-    secondaryCta={{ label: 'Talk to an advisor', href: pathFor('en','contacto') }}
-    stats={[
-      { value: '160 Gbps', label: 'DDoS mitigation' },
-      { value: '99.9%', label: 'Guaranteed uptime' },
-      { value: '24/7', label: 'Human support' },
-      { value: '6', label: 'Locations EC · US' },
-    ]}
-  />
-
-  <TrustBar items={['NVMe on every plan', 'Microsoft 365 Partner', '24/7 support', 'Datacenters in Guayaquil, US (LA, Houston, Ashburn, Chicago, Utah)']} />
-
-  <NetMap locale="en" />
-
-  <section class="container-page py-20 md:py-28">
-    <SectionHeading
-      eyebrow="What we do"
-      title="Everything your infrastructure needs, under one roof"
-      description="From your first VPS to a cluster of dedicated servers — we scale with you without you ever changing providers."
-    />
-    <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-      <FeatureCard icon="server" title="NVMe VPS" description="Virtual servers with guaranteed resources, KVM virtualization and deployment in minutes." />
-      <FeatureCard icon="cloud" title="Web Hosting" description="LiteSpeed hosting optimized for WordPress and high-traffic applications." />
-      <FeatureCard icon="shield" title="Dedicated Servers" description="Intel Xeon hardware 100% dedicated to your operation, for maximum stability." />
-      <FeatureCard icon="lock" title="Terramail" description="Professional corporate email, secure and with excellent deliverability." />
-    </div>
-  </section>
-
-  <section class="py-20 md:py-28">
-    <div class="container-page">
-      <SectionHeading
-        eyebrow="Pricing"
-        title="Our featured services"
-        description="Reference pricing per service. Get an exact quote for what you need in one message."
-      />
-      <div class="mt-14">
-        <FeaturedServicesPricing items={[
-          { icon: 'server', name: 'NVMe VPS', price: '$5', period: '/mo', description: 'KVM, NVMe and deployment in minutes.', href: pathFor('en','vps'), ctaLabel: 'See plans' },
-          { icon: 'cloud', name: 'Hosting', price: '$4', period: '/mo', description: 'LiteSpeed + NVMe for WordPress.', href: pathFor('en','hosting'), ctaLabel: 'See plans' },
-          { icon: 'shield', name: 'Dedicated Servers', price: '$79', period: '/mo', description: 'Intel Xeon hardware, 100% yours.', href: pathFor('en','dedicados'), ctaLabel: 'See plans' },
-          { icon: 'lock', name: 'Terramail', price: '$2', period: '/mo', description: 'Business email on your domain.', href: pathFor('en','terramail'), ctaLabel: 'See plans' },
-          { icon: 'globe', name: 'Microsoft 365', price: '$6', period: '/user', description: 'Implemented by a Microsoft Partner.', href: pathFor('en','m365'), ctaLabel: 'See plans' },
-        ]} />
-      </div>
-    </div>
-  </section>
-
-  <section class="bg-surface py-20 md:py-28">
-    <div class="container-page">
-      <SectionHeading
-        eyebrow="Why Terranode"
-        title="Enterprise-grade performance and security"
-        description="We design every layer of our network for businesses that can't afford downtime."
-      />
-      <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <FeatureCard icon="bolt" title="NVMe storage" description="Up to 10x faster than traditional SSD in read/write performance." />
-        <FeatureCard icon="shield" title="160 Gbps DDoS" description="Real-time attack mitigation without impacting legitimate traffic latency." />
-        <FeatureCard icon="globe" title="Multi-region network" description="Guayaquil, Los Angeles, Houston, Ashburn, Chicago and Utah: choose the location closest to your users." />
-        <FeatureCard icon="support" title="24/7 human support" description="No bots or canned replies — real engineers resolving your ticket." />
-        <FeatureCard icon="chart" title="Frictionless scaling" description="Grow from VPS to dedicated server without painful migrations." />
-        <FeatureCard icon="lock" title="Backups & security" description="Scheduled backups and security hardening included." />
-      </div>
-    </div>
-  </section>
-
-  <section class="container-page py-20 md:py-28">
-    <SectionHeading eyebrow="Clients" title="Businesses that already trust our infrastructure" />
-    <div class="mt-14">
-      <TestimonialCarousel items={[
-        {
-          quote: 'I hired the corporate email service with Office 365 through Terranode because I found out they\u2019re a Microsoft Partner. In less than a day my whole company was already using cloud email.',
-          author: 'Angel Gabriel',
-          role: 'Terramail + M365 client',
-        },
-        {
-          quote: 'They built my business website and I was thrilled with the work. Support is friendly and helpful with everything — hands down the best hosting provider I\u2019ve used.',
-          author: 'Lady Rivera',
-          role: 'Hosting client',
-        },
-        {
-          quote: 'Support is really friendly and they help you with everything — without a doubt the best hosting in Ecuador I could recommend.',
-          author: 'Verified client',
-          role: 'Google review',
-        },
-      ]} />
-    </div>
-  </section>
-
-  <section class="container-page pb-20 md:pb-28">
-    <SectionHeading eyebrow="FAQ" title="Answers before you get started" />
-    <div class="mt-12">
-      <FAQAccordion items={faqs} />
-    </div>
-  </section>
-
-  <CTASection
-    title="Your infrastructure deserves to be in the best hands"
-    description="Tell us what you need and an engineer will recommend the exact plan — no strings attached."
-    primaryCta={{ label: 'Get a quote', href: pathFor('en','contacto') }}
-    secondaryCta={{ label: 'See dedicated servers', href: pathFor('en','dedicados') }}
-  />
+  <HomeContent locale="en" />
 </BaseLayout>

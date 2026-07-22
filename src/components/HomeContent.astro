@@ -1,0 +1,359 @@
+---
+import NetMap from '@/components/NetMap.astro';
+import TestimonialsCarouselHome from '@/components/TestimonialsCarouselHome.astro';
+import { pathFor, ORG } from '@/lib/site';
+
+interface Props {
+  locale: 'es' | 'en';
+}
+const { locale } = Astro.props;
+const BL = '#3B82F6';
+
+const PRICING = {
+  es: [
+    { name: 'Web Hosting', tag: null, price: '$3', period: '/mes', tagline: 'Para sitios y blogs', cta: 'Ver planes', href: pathFor('es', 'hosting'), feats: ['cPanel incluido', 'LiteSpeed + CloudLinux', 'Backups diarios', 'SSL gratis', '1 Click WordPress', 'Soporte 24/7'] },
+    { name: 'VPS NVMe', tag: 'Popular', price: '$10', period: '/mes', tagline: 'Para proyectos de alto tráfico', cta: 'Ver planes', href: pathFor('es', 'vps'), feats: ['NVMe DDR4', 'Full root access', 'Deploy en 60s', 'DDoS 160 Gbps', 'Snapshots', 'Soporte 24/7'] },
+    { name: 'Dedicado', tag: null, price: '$120', period: '/mes', tagline: 'Hardware exclusivo garantizado', cta: 'Ver planes', href: pathFor('es', 'dedicados'), feats: ['Intel Xeon E5', 'RAM DDR4 ECC', 'NVMe RAID', '10 Gbps uplink', 'IPMI remoto', 'Soporte 24/7'] },
+    { name: 'Desarrollo Web', tag: null, price: 'Custom', period: '', tagline: 'Sitios y apps a medida', cta: 'Cotizar ahora', href: pathFor('es', 'contacto'), feats: ['React / Next.js', 'WordPress / WooCommerce', 'SEO técnico', 'Diseño responsivo', 'Mantenimiento', 'Soporte dedicado'] },
+  ],
+  en: [
+    { name: 'Web Hosting', tag: null, price: '$3', period: '/mo', tagline: 'For personal sites & blogs', cta: 'View plans', href: pathFor('en', 'hosting'), feats: ['cPanel included', 'LiteSpeed + CloudLinux', 'Daily backups', 'Free SSL', '1 Click WordPress', '24/7 Support'] },
+    { name: 'VPS NVMe', tag: 'Popular', price: '$10', period: '/mo', tagline: 'For high-traffic projects', cta: 'View plans', href: pathFor('en', 'vps'), feats: ['NVMe DDR4', 'Full root access', 'Deploy in 60s', 'DDoS 160 Gbps', 'Snapshots', '24/7 Support'] },
+    { name: 'Dedicated', tag: null, price: '$120', period: '/mo', tagline: 'Guaranteed exclusive hardware', cta: 'View plans', href: pathFor('en', 'dedicados'), feats: ['Intel Xeon E5', 'DDR4 ECC RAM', 'NVMe RAID', '10 Gbps uplink', 'Remote IPMI', '24/7 Support'] },
+    { name: 'Web Development', tag: null, price: 'Custom', period: '', tagline: 'Websites & apps on demand', cta: 'Get a quote', href: pathFor('en', 'contacto'), feats: ['React / Next.js', 'WordPress / WooCommerce', 'Technical SEO', 'Responsive design', 'Maintenance', 'Dedicated support'] },
+  ],
+}[locale];
+
+const TH = {
+  es: {
+    hero: { eyebrow: 'Infraestructura Cloud · Activa Globalmente', h1: 'Despliega tu servidor en 60 segundos.', h2: 'Escala sin límites.', sub: 'Infraestructura cloud de alto rendimiento con DDoS 160 Gbps, NVMe, y soporte técnico 24/7. Tu negocio, siempre en línea.', cta1: 'Ver planes', cta2: 'Hablar con un experto', u1: '99.9%', l1: 'Uptime SLA', u2: '160 Gbps', l2: 'DDoS', u3: '24/7', l3: 'Soporte' },
+    svc: { label: 'Nuestros servicios', h: 'Soluciones para cada proyecto', sub: 'Desde hosting compartido hasta hardware dedicado, tenemos la infraestructura que tu negocio necesita.', go: 'Ver planes →',
+      items: [
+        { k: 'hosting', n: 'Web Hosting', d: 'Hosting optimizado con LiteSpeed, CloudLinux y backups automáticos diarios.', href: pathFor('es', 'hosting') },
+        { k: 'vps', n: 'VPS Server', d: 'Servidores virtuales NVMe DDR4 con despliegue en menos de 60 segundos.', href: pathFor('es', 'vps') },
+        { k: 'dedicated', n: 'Servidores Dedicados', d: 'Hardware exclusivo Intel Xeon con almacenamiento NVMe y máxima estabilidad.', href: pathFor('es', 'dedicados') },
+        { k: 'm365', n: 'Microsoft 365', d: 'Suite completa con Teams, OneDrive, Exchange y soporte local en español.', href: pathFor('es', 'm365') },
+      ] },
+    pricing: { label: 'PRECIOS', h: 'Nuestros servicios destacados', sub: 'Servicios y ofertas pensados para tu negocio' },
+    net: { label: 'Nuestra Red', h: 'Infraestructura robusta que no falla', sub: 'Red diseñada con redundancia total usando hardware Brocade, Juniper y Cisco. Conectividad dedicada de 10 Gbps por servidor.', f1: 'Redundancia N+1 en todos los componentes críticos de red', f2: 'Certificaciones SOC 1 Tipo II y SOC 2 Tipo II', f3: 'Monitoreo proactivo 24/7, respuesta en menos de 5 minutos', btn: 'Conoce nuestra infraestructura' },
+    feat: { label: '¿Por qué Terranode?', h: 'Lo que nos distingue',
+      items: [
+        { k: 'cpu', t: 'Hardware Empresarial', d: 'Procesadores Intel Xeon, RAM DDR4 y discos NVMe para máximo rendimiento.' },
+        { k: 'shield', t: 'DDoS 160 Gbps', d: 'Mitigación automática sin interrupciones ni configuraciones manuales.' },
+        { k: 'headset', t: 'Soporte 24/7', d: 'Equipo técnico siempre disponible con respuesta en menos de 1 hora.' },
+        { k: 'pulse', t: '99.9% Uptime', d: 'Infraestructura redundante que garantiza disponibilidad continua.' },
+        { k: 'bolt', t: 'Activación Inmediata', d: 'Tu servidor en producción en minutos con aprovisionamiento automático.' },
+        { k: 'db', t: 'Backups Automáticos', d: 'Copias de seguridad diarias incluidas para que nunca pierdas tus datos.' },
+        { k: 'code', t: 'Desarrollo a Medida', d: 'Construimos sitios, apps y plataformas adaptadas a tus objetivos y tecnología actual.' },
+        { k: 'users', t: 'Soporte Corporativo', d: 'Gestión de cuentas dedicada, SLA garantizado y canal directo con el equipo técnico.' },
+      ] },
+    test: { label: 'Testimonios', h: 'Lo que dicen nuestros clientes',
+      items: [
+        { n: 'Eduardo Marín', s: 'seoefectivo.com', av: 'EM', q: 'El rendimiento y la fiabilidad han sido excepcionales. Velocidades de carga increíbles desde que migré a Terranode.' },
+        { n: 'Joel Lozano', s: 'joellozano.net', av: 'JL', q: 'Servicio excepcional con rendimiento confiable. El soporte para desarrolladores es excelente y resuelven cualquier duda rápidamente.' },
+        { n: 'Miguel Pallo', s: 'teusweb.com', av: 'MP', q: 'Desde que cambié a Terranode mi sitio tiene un rendimiento excepcional. El equipo brinda asistencia inmediata cuando la necesito.' },
+        { n: 'Carlos Vélez', s: 'digitecnia.com', av: 'CV', q: 'Migramos toda nuestra infraestructura a Terranode y el proceso fue impecable. Latencia mínima en Ecuador.' },
+        { n: 'Ana Ríos', s: 'anarios.dev', av: 'AR', q: 'El VPS NVMe es increíblemente rápido. Mis aplicaciones Node.js nunca han corrido tan bien. Soporte muy profesional.' },
+      ] },
+    cta: { h: '¿Listo para comenzar?', sub: 'Únete a cientos de empresas que confían en Terranode.', b1: 'Ver todos los planes', b2: 'Contactar ventas' },
+  },
+  en: {
+    hero: { eyebrow: 'Cloud Infrastructure · Live Globally', h1: 'Deploy your server in 60 seconds.', h2: 'Scale without limits.', sub: 'High-performance cloud infrastructure with DDoS 160 Gbps, NVMe, and 24/7 technical support. Your business, always online.', cta1: 'View plans', cta2: 'Talk to an expert', u1: '99.9%', l1: 'Uptime SLA', u2: '160 Gbps', l2: 'DDoS', u3: '24/7', l3: 'Support' },
+    svc: { label: 'Our services', h: 'Solutions for every project', sub: 'From shared hosting to dedicated hardware, we have the infrastructure your business needs.', go: 'View plans →',
+      items: [
+        { k: 'hosting', n: 'Web Hosting', d: 'Optimized hosting with LiteSpeed, CloudLinux and daily automatic backups.', href: pathFor('en', 'hosting') },
+        { k: 'vps', n: 'VPS Server', d: 'NVMe DDR4 virtual servers with deployment in under 60 seconds.', href: pathFor('en', 'vps') },
+        { k: 'dedicated', n: 'Dedicated Servers', d: 'Exclusive Intel Xeon hardware with NVMe storage and maximum stability.', href: pathFor('en', 'dedicados') },
+        { k: 'm365', n: 'Microsoft 365', d: 'Full suite with Teams, OneDrive, Exchange and local support.', href: pathFor('en', 'm365') },
+      ] },
+    pricing: { label: 'PRICING', h: 'Our featured services', sub: 'Services & offerings we think will fit your needs' },
+    net: { label: 'Our Network', h: 'Robust infrastructure that never fails', sub: 'Network designed with full redundancy using Brocade, Juniper and Cisco hardware. Dedicated 10 Gbps connectivity per server.', f1: 'N+1 redundancy on all critical network components', f2: 'SOC 1 Type II and SOC 2 Type II certifications', f3: 'Proactive 24/7 monitoring, response in under 5 minutes', btn: 'Learn about our infrastructure' },
+    feat: { label: 'Why Terranode?', h: 'What sets us apart',
+      items: [
+        { k: 'cpu', t: 'Enterprise Hardware', d: 'Intel Xeon processors, DDR4 RAM and NVMe drives for maximum performance.' },
+        { k: 'shield', t: 'DDoS 160 Gbps', d: 'Automatic mitigation without interruptions or manual configurations.' },
+        { k: 'headset', t: '24/7 Support', d: 'Technical team always available with response in under 1 hour.' },
+        { k: 'pulse', t: '99.9% Uptime', d: 'Redundant infrastructure that guarantees continuous availability.' },
+        { k: 'bolt', t: 'Instant Setup', d: 'Your server in production in minutes with automatic provisioning.' },
+        { k: 'db', t: 'Automatic Backups', d: 'Daily backups included so you never lose your data.' },
+        { k: 'code', t: 'Custom Development', d: 'We build sites, apps and platforms tailored to your goals and current technology stack.' },
+        { k: 'users', t: 'Corporate Support', d: 'Dedicated account management, guaranteed SLA and direct channel with the technical team.' },
+      ] },
+    test: { label: 'Testimonials', h: 'What our clients say',
+      items: [
+        { n: 'Eduardo Marín', s: 'seoefectivo.com', av: 'EM', q: 'Performance and reliability have been exceptional. Incredible loading speeds since migrating to Terranode.' },
+        { n: 'Joel Lozano', s: 'joellozano.net', av: 'JL', q: 'Exceptional hosting service with reliable performance. Developer support is excellent and any question is resolved quickly.' },
+        { n: 'Miguel Pallo', s: 'teusweb.com', av: 'MP', q: 'Since switching to Terranode, my site has exceptional performance. Support is always there when needed.' },
+        { n: 'Carlos Vélez', s: 'digitecnia.com', av: 'CV', q: 'We migrated our entire infrastructure to Terranode and the process was flawless. Minimum latency in Ecuador.' },
+        { n: 'Ana Ríos', s: 'anarios.dev', av: 'AR', q: "The NVMe VPS is incredibly fast. My Node.js apps have never run this well. Very professional technical support." },
+      ] },
+    cta: { h: 'Ready to get started?', sub: 'Join hundreds of companies that trust Terranode for their digital infrastructure.', b1: 'View all plans', b2: 'Contact sales' },
+  },
+}[locale];
+
+const t = TH;
+const BRANDS = ['LiteSpeed', 'CloudLinux', 'Acronis', 'Microsoft', 'Cloudflare', 'Virtualizor', 'cPanel', 'Imunify360'];
+
+const SVC_ICONS: Record<string, string> = {
+  hosting: '<path d="M4 4h16v6H4zM4 14h16v6H4z"/><circle cx="7.5" cy="7" r=".6" fill="currentColor"/><circle cx="7.5" cy="17" r=".6" fill="currentColor"/>',
+  vps: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h10M7 13h6"/>',
+  dedicated: '<rect x="2" y="3" width="20" height="7" rx="1.5"/><rect x="2" y="14" width="20" height="7" rx="1.5"/><circle cx="6" cy="6.5" r=".6" fill="currentColor"/><circle cx="6" cy="17.5" r=".6" fill="currentColor"/>',
+  m365: '<rect x="3" y="4" width="8" height="8" rx="1"/><rect x="13" y="4" width="8" height="8" rx="1"/><rect x="13" y="14" width="8" height="8" rx="1"/><rect x="3" y="14" width="8" height="8" rx="1"/>',
+};
+
+const FEAT_ICONS: Record<string, string> = {
+  cpu: '<rect x="6" y="6" width="12" height="12" rx="1.5"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/>',
+  shield: '<path d="M12 2 4 5v6c0 5.25 3.5 9.5 8 11 4.5-1.5 8-5.75 8-11V5z"/><path d="m9 12 2 2 4-4"/>',
+  headset: '<path d="M3 13a9 9 0 0 1 18 0"/><path d="M21 13v4a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h3ZM3 13v4a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2H3Z"/>',
+  pulse: '<path d="M3 12h4l2-8 4 16 2-8h6"/>',
+  bolt: '<path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/>',
+  db: '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.66 3.58 3 8 3s8-1.34 8-3V5"/><path d="M4 12c0 1.66 3.58 3 8 3s8-1.34 8-3"/>',
+  code: '<path d="m9 18-6-6 6-6M15 6l6 6-6 6"/>',
+  users: '<circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.5" cy="8.5" r="2.4"/><path d="M15 14.1c2.9.3 5 2.4 5 5.9"/>',
+};
+
+const HOME_STATS_RIGHT = [
+  { l: 'CPU Usage', v: '31%', p: 31, c: '#3B82F6' },
+  { l: 'RAM · 4.8 / 8 GB', v: '60%', p: 60, c: '#8B5CF6' },
+  { l: 'NVMe · 38 / 120 GB', v: '32%', p: 32, c: '#06B6D4' },
+  { l: 'Bandwidth · 1.7 / 5 TB', v: '34%', p: 34, c: '#10B981' },
+];
+const HOME_META = [
+  { k: 'Uptime', v: '99.99%' },
+  { k: 'Ping', v: '15ms' },
+  { k: locale === 'es' ? 'Puerto' : 'Port', v: '10 Gbps' },
+  { k: 'IPs', v: 'IPv4+IPv6' },
+];
+const NET_STATS = [
+  { l: locale === 'es' ? 'Puertos de red' : 'Network ports', v: '10 Gbps' },
+  { l: 'DDoS Protection', v: '160 Gbps' },
+  { l: locale === 'es' ? 'Latencia media' : 'Average latency', v: '< 5ms' },
+  { l: 'Uptime SLA', v: '99.9%' },
+  { l: locale === 'es' ? 'Certificación' : 'Certification', v: 'SOC 2 II' },
+  { l: 'Hardware', v: 'Cisco / Juniper' },
+];
+---
+<main class="bg-[#080E1C]">
+  <!-- HERO -->
+  <section aria-label="Hero" class="relative flex min-h-[92vh] items-center overflow-hidden pt-20">
+    <div class="pointer-events-none absolute inset-0" style="background:radial-gradient(ellipse 55% 60% at 62% 42%,rgba(37,99,235,.13),transparent 70%)"></div>
+    <div class="pointer-events-none absolute inset-0" style="background-image:linear-gradient(rgba(59,130,246,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.04) 1px,transparent 1px);background-size:50px 50px"></div>
+    <div class="relative z-10 mx-auto w-full max-w-[1160px] px-6 lg:px-8">
+      <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-[68px]">
+        <div style="animation:fadeUp .7s ease both">
+          <p class="mb-6 inline-flex items-center gap-2.5 rounded-full border border-[#3B82F6]/20 bg-[#3B82F6]/[0.08] px-[18px] py-[7px] font-body text-xs font-bold uppercase tracking-[2px] text-slate-300">
+            <span class="inline-block h-2 w-2 shrink-0 rounded-full bg-[#22C55E] shadow-[0_0_8px_#22C55E]" style="animation:blink 2s infinite"></span>
+            {t.hero.eyebrow}
+            <span class="rounded-full bg-[#22C55E]/[0.15] px-2 py-0.5 font-display text-[11px] font-bold text-[#22C55E]">{locale === 'es' ? 'EN LÍNEA' : 'ONLINE'}</span>
+          </p>
+          <h1 class="mb-2.5 font-display text-[clamp(2.2rem,4.8vw,3.8rem)] font-bold leading-[1.1] tracking-tight text-white">{t.hero.h1}</h1>
+          <h2 class="mb-6 font-display text-[clamp(1.4rem,3vw,2.2rem)] font-semibold leading-[1.2] tracking-tight text-slate-400">{t.hero.h2}</h2>
+          <p class="mb-9 max-w-[480px] font-body text-base leading-relaxed text-slate-400">{t.hero.sub}</p>
+          <div class="mb-12 flex flex-wrap gap-3">
+            <a href={`${pathFor(locale, 'vps')}#planes`} class="inline-flex items-center rounded-lg border-none bg-[#3B82F6] px-7 py-[13px] font-display text-[15px] font-semibold text-white shadow-[0_0_24px_rgba(59,130,246,.28)] transition-colors hover:bg-[#2563EB]">{t.hero.cta1}</a>
+            <a href={ORG.whatsappSupport} target="_blank" rel="noopener noreferrer" class="inline-flex items-center rounded-lg border border-white/[0.14] bg-transparent px-7 py-[13px] font-body text-[15px] text-slate-300 transition-colors hover:text-white" style="border-color:rgba(255,255,255,.14)">{t.hero.cta2}</a>
+          </div>
+          <div class="flex flex-wrap gap-9">
+            {[[t.hero.u1, t.hero.l1], [t.hero.u2, t.hero.l2], [t.hero.u3, t.hero.l3]].map(([v, l]) => (
+              <div>
+                <div class="font-display text-[22px] font-bold text-white">{v}</div>
+                <div class="mt-[3px] font-body text-xs text-slate-500">{l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Server card -->
+        <div style="animation:fadeUp .7s .15s ease both">
+          <div class="overflow-hidden rounded-2xl border border-[#3B82F6]/[0.18] bg-[#0C1525] shadow-[0_0_60px_rgba(37,99,235,.12)]">
+            <div class="flex items-center justify-between border-b border-white/[0.06] px-5 py-3.5">
+              <div class="flex items-center gap-2">
+                <div class="h-2.5 w-2.5 rounded-full bg-[#22C55E] shadow-[0_0_6px_#22C55E]" style="animation:blink 2.5s infinite"></div>
+                <span class="font-display text-[13px] font-semibold text-white">VPS-Nginx-01-Houston</span>
+              </div>
+              <span class="font-body text-[11px] text-[#22C55E]">Online</span>
+            </div>
+            <div class="p-5">
+              {HOME_STATS_RIGHT.map((r) => (
+                <div class="mb-3.5">
+                  <div class="mb-1.5 flex justify-between font-body text-xs text-slate-500">
+                    <span>{r.l}</span><span class="text-slate-400">{r.v}</span>
+                  </div>
+                  <div class="h-1 rounded-full bg-white/[0.06]"><div class="h-full rounded-full" style={`width:${r.p}%;background:${r.c}`}></div></div>
+                </div>
+              ))}
+              <div class="mt-4 grid grid-cols-2 gap-2 border-t border-white/[0.05] pt-3.5">
+                {HOME_META.map((i) => (
+                  <div class="rounded-lg bg-white/[0.02] px-3 py-2.5">
+                    <div class="mb-0.5 font-body text-[10px] text-slate-500">{i.k}</div>
+                    <div class="font-display text-[13px] font-semibold text-white">{i.v}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div class="flex items-center justify-between border-t border-white/[0.05] px-5 py-2.5">
+              <span class="font-body text-[11px] text-slate-500">DDoS Protection active</span>
+              <div class="flex items-center gap-1.5">
+                <div class="h-[5px] w-[5px] rounded-full bg-[#3B82F6]" style="animation:blink 1.5s infinite"></div>
+                <span class="font-body text-[11px] text-[#3B82F6]">160 Gbps</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="overflow-hidden border-y border-white/[0.04] py-4">
+    <div class="mx-auto flex max-w-[1160px] items-center px-6 lg:px-8">
+      <div class="mr-6 shrink-0 whitespace-nowrap border-r border-white/[0.07] pr-6 font-body text-[11px] uppercase tracking-[2px] text-slate-600">{locale === 'es' ? 'Powered by' : 'Powered by'}</div>
+      <div class="flex-1 overflow-hidden">
+        <div class="flex w-max gap-12" style="animation:marquee 24s linear infinite">
+          {[...BRANDS, ...BRANDS].map((b) => (
+            <span class="shrink-0 whitespace-nowrap font-display text-sm font-semibold text-slate-600">{b}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section aria-label="Services" class="mx-auto max-w-[1160px] px-6 py-24 lg:px-8">
+    <header class="an mb-12 text-center">
+      <p class="mb-3 font-body text-xs font-bold uppercase tracking-[2px] text-[#3B82F6]">{t.svc.label}</p>
+      <h2 class="mb-3 font-display text-[clamp(1.8rem,3vw,2.4rem)] font-bold tracking-tight text-white">{t.svc.h}</h2>
+      <p class="mx-auto max-w-[520px] font-body text-slate-400">{t.svc.sub}</p>
+    </header>
+    <div class="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
+      {t.svc.items.map((s, i) => (
+        <a href={s.href} class={`an ch d${i + 1} block rounded-2xl border border-white/[0.07] bg-white/[0.025] p-6 no-underline transition-colors hover:border-[#3B82F6]/30`}>
+          <div class="mb-4 flex h-[46px] w-[46px] items-center justify-center rounded-xl bg-[#3B82F6]/[0.12]">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="h-[22px] w-[22px]" set:html={SVC_ICONS[s.k]}></svg>
+          </div>
+          <h3 class="mb-2 font-display text-base font-semibold text-white">{s.n}</h3>
+          <p class="mb-4 font-body text-[13px] leading-relaxed text-slate-400">{s.d}</p>
+          <span class="font-body text-[13px] font-bold text-[#3B82F6]">{t.svc.go}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- MAP -->
+  <NetMap locale={locale} />
+
+  <!-- PRICING -->
+  <section aria-label="Pricing" class="border-t border-white/[0.04] bg-[#060B18] px-6 py-24 lg:px-8">
+    <div class="mx-auto max-w-[1160px]">
+      <header class="an mb-11">
+        <p class="mb-3 font-body text-xs font-bold uppercase tracking-[2px] text-[#3B82F6]">{t.pricing.label}</p>
+        <div class="flex flex-wrap items-baseline gap-x-3.5 gap-y-0">
+          <h2 class="mb-0 font-display text-[clamp(1.8rem,3vw,2.4rem)] font-bold tracking-tight text-white">{t.pricing.h}</h2>
+          <span class="font-display text-[clamp(1.1rem,2vw,1.6rem)] font-semibold tracking-tight text-slate-600">{t.pricing.sub}</span>
+        </div>
+      </header>
+      <div class="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
+        {PRICING.map((plan, i) => {
+          const isPopular = plan.tag === 'Popular';
+          return (
+            <article class={`an ch d${i + 1} relative flex flex-col rounded-2xl p-6`} style={`background:${isPopular ? 'rgba(59,130,246,.07)' : 'rgba(255,255,255,.025)'};border:1px solid ${isPopular ? 'rgba(59,130,246,.4)' : 'rgba(255,255,255,.07)'}`}>
+              {isPopular && <div class="absolute right-4 top-4 rounded-full bg-[#3B82F6] px-2.5 py-0.5 font-display text-[11px] font-bold text-white">Popular</div>}
+              <div class="mb-2.5 font-display text-base font-semibold text-white">{plan.name}</div>
+              <div class="mb-1.5 flex items-baseline gap-1">
+                <span class="font-display font-bold tracking-tight text-white" style={`font-size:${plan.price === 'Custom' ? '26px' : '34px'}`}>{plan.price}</span>
+                {plan.period && <span class="font-body text-xs text-slate-500">{plan.period}</span>}
+              </div>
+              <p class="mb-[18px] font-body text-xs leading-relaxed text-slate-500">{plan.tagline}</p>
+              <a href={plan.href} class="mb-5 block rounded-lg py-2.5 text-center font-display text-[13px] font-semibold text-white no-underline transition-colors" style={`background:${isPopular ? '#3B82F6' : 'transparent'};border:1px solid ${isPopular ? 'transparent' : 'rgba(255,255,255,.14)'}`}>{plan.cta}</a>
+              <ul class="mt-auto flex list-none flex-col gap-2">
+                {plan.feats.map((f) => (
+                  <li class="flex items-start gap-2 font-body text-xs text-slate-400">
+                    <svg viewBox="0 0 12 12" fill="none" class="mt-0.5 h-3 w-3 shrink-0 text-[#3B82F6]"><polyline points="2,6 5,9 10,3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- NETWORK INFO -->
+  <section aria-label="Network" class="px-6 py-24 lg:px-8">
+    <div class="mx-auto grid max-w-[1160px] grid-cols-1 items-center gap-16 lg:grid-cols-2 lg:gap-20">
+      <div class="an">
+        <p class="mb-3 font-body text-xs font-bold uppercase tracking-[2px] text-[#3B82F6]">{t.net.label}</p>
+        <h2 class="mb-4 font-display text-[clamp(1.8rem,3vw,2.4rem)] font-bold tracking-tight text-white">{t.net.h}</h2>
+        <p class="mb-[26px] font-body leading-relaxed text-slate-400">{t.net.sub}</p>
+        <ul class="mb-[30px] flex list-none flex-col gap-3">
+          {[t.net.f1, t.net.f2, t.net.f3].map((f) => (
+            <li class="flex items-start gap-3">
+              <div class="mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-[#3B82F6]/[0.14]">
+                <svg viewBox="0 0 12 12" fill="none" stroke="#3B82F6" stroke-width="2.2" class="h-2 w-2"><polyline points="2,6 5,9 10,3"/></svg>
+              </div>
+              <span class="font-body text-sm text-slate-400">{f}</span>
+            </li>
+          ))}
+        </ul>
+        <a href={pathFor(locale, 'nosotros')} class="inline-block rounded-lg border border-white/[0.14] bg-transparent px-5 py-2.5 font-body text-sm text-slate-300 no-underline transition-colors hover:text-white">{t.net.btn}</a>
+      </div>
+      <div class="an d2 grid grid-cols-2 gap-2.5">
+        {NET_STATS.map((r) => (
+          <div class="rounded-xl border border-white/[0.07] bg-white/[0.025] p-[18px]">
+            <p class="mb-1.5 font-body text-[11px] text-slate-500">{r.l}</p>
+            <p class="font-display text-lg font-bold text-white">{r.v}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section aria-label="Features" class="border-y border-white/[0.05] bg-white/[0.012] px-6 py-24 lg:px-8">
+    <div class="mx-auto max-w-[1160px]">
+      <header class="an mb-12 text-center">
+        <p class="mb-3 font-body text-xs font-bold uppercase tracking-[2px] text-[#3B82F6]">{t.feat.label}</p>
+        <h2 class="font-display text-[clamp(1.8rem,3vw,2.4rem)] font-bold tracking-tight text-white">{t.feat.h}</h2>
+      </header>
+      <div class="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))">
+        {t.feat.items.map((f, i) => (
+          <article class={`an ch d${(i % 6) + 1} rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6`}>
+            <div class="mb-3.5 flex h-11 w-11 items-center justify-center rounded-xl bg-[#3B82F6]/10">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="h-[22px] w-[22px]" set:html={FEAT_ICONS[f.k]}></svg>
+            </div>
+            <h3 class="mb-1.5 font-display text-[15px] font-semibold text-white">{f.t}</h3>
+            <p class="font-body text-[13px] leading-relaxed text-slate-400">{f.d}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section aria-label="Testimonials" class="mx-auto max-w-[1160px] px-6 py-24 lg:px-8">
+    <header class="an mb-11 text-center">
+      <p class="mb-3 font-body text-xs font-bold uppercase tracking-[2px] text-[#3B82F6]">{t.test.label}</p>
+      <h2 class="font-display text-[clamp(1.8rem,3vw,2.4rem)] font-bold tracking-tight text-white">{t.test.h}</h2>
+    </header>
+    <div class="an">
+      <TestimonialsCarouselHome items={t.test.items} />
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section aria-label="CTA" class="mx-auto max-w-[1160px] px-6 pb-24 lg:px-8">
+    <div class="an relative overflow-hidden rounded-[20px] border border-[#3B82F6]/[0.18] bg-[#0C1525] px-6 py-16 text-center sm:px-12">
+      <div class="pointer-events-none absolute inset-0" style="background:radial-gradient(ellipse 60% 70% at 50% 50%,rgba(37,99,235,.09),transparent 70%)"></div>
+      <div class="relative z-10">
+        <h2 class="mb-4 font-display text-[clamp(1.8rem,3vw,2.4rem)] font-bold tracking-tight text-white">{t.cta.h}</h2>
+        <p class="mx-auto mb-8 max-w-[460px] font-body text-slate-400">{t.cta.sub}</p>
+        <div class="flex flex-wrap justify-center gap-3.5">
+          <a href={`${pathFor(locale, 'vps')}#planes`} class="rounded-lg border-none bg-[#3B82F6] px-7 py-3 font-display text-[15px] font-semibold text-white no-underline shadow-[0_0_24px_rgba(59,130,246,.28)] transition-colors hover:bg-[#2563EB]">{t.cta.b1}</a>
+          <a href={pathFor(locale, 'contacto')} class="rounded-lg border border-white/[0.14] bg-transparent px-7 py-3 font-body text-[15px] text-slate-300 no-underline transition-colors hover:text-white">{t.cta.b2}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
