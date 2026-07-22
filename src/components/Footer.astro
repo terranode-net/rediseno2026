@@ -1,88 +1,133 @@
 ---
-import { SERVICES_NAV, TOP_NAV, COMING_SOON, ORG, pathFor, type Locale } from '@/lib/site';
+import { pathFor, ORG, type Locale } from '@/lib/site';
 
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
+const p = locale === 'es' ? '/es' : '/en';
 
 const t = {
   es: {
-    tagline: 'Infraestructura cloud de alto rendimiento para negocios que no pueden permitirse caídas.',
-    company: 'Empresa',
-    services: 'Servicios',
-    resources: 'Soporte',
-    portal: 'Portal de Cliente',
-    status: 'Estado de la Red',
-    tickets: 'Centro de Soporte',
-    rights: 'Todos los derechos reservados.',
-    legal: 'Terranode S.A.S. (Ecuador) · Terranode LLC (EE. UU.)',
+    tag: 'Infraestructura cloud de calidad superior para empresas en todo el mundo.',
+    rights: '© 2025 Terranode · Todos los derechos reservados · Anteriormente Vsphost (2018–2024)',
   },
   en: {
-    tagline: 'High-performance cloud infrastructure for businesses that can\u2019t afford downtime.',
-    company: 'Company',
-    services: 'Services',
-    resources: 'Support',
-    portal: 'Client Portal',
-    status: 'Network Status',
-    tickets: 'Support Center',
-    rights: 'All rights reserved.',
-    legal: 'Terranode S.A.S. (Ecuador) · Terranode LLC (USA)',
+    tag: 'Superior quality cloud infrastructure for businesses worldwide.',
+    rights: '© 2025 Terranode · All rights reserved · Formerly Vsphost (2018–2024)',
   },
 }[locale];
+
+const NAV_COLS = [
+  {
+    title: locale === 'es' ? 'Compañía' : 'Company',
+    links: [
+      { l: locale === 'es' ? 'Inicio' : 'Home', h: pathFor(locale, 'home') },
+      { l: locale === 'es' ? 'Nosotros' : 'About', h: pathFor(locale, 'nosotros') },
+      { l: 'Blog', h: pathFor(locale, 'blog') },
+      { l: locale === 'es' ? 'Contacto' : 'Contact', h: pathFor(locale, 'contacto') },
+      { l: 'Status', h: 'https://status.terranode.net', external: true },
+    ],
+  },
+  {
+    title: locale === 'es' ? 'Servicios' : 'Services',
+    links: [
+      { l: 'Web Hosting', h: pathFor(locale, 'hosting') },
+      { l: 'VPS Server', h: pathFor(locale, 'vps') },
+      { l: locale === 'es' ? 'Dedicados' : 'Dedicated', h: pathFor(locale, 'dedicados') },
+      { l: 'Correo Corp.', h: pathFor(locale, 'terramail') },
+      { l: 'Microsoft 365', h: pathFor(locale, 'm365') },
+    ],
+  },
+  {
+    title: locale === 'es' ? 'Accesos Rápidos' : 'Quick Access',
+    links: [
+      { l: 'Panel Cliente', h: ORG.clientPortal, external: true },
+      { l: 'Panel VPS', h: 'https://cloud.terranode.net', external: true },
+      { l: locale === 'es' ? 'Crear Cuenta' : 'Sign Up', h: `${ORG.clientPortal}/register`, external: true },
+      { l: locale === 'es' ? 'Abrir Ticket' : 'Open Ticket', h: ORG.ticketUrl, external: true },
+      { l: locale === 'es' ? 'Documentación' : 'Docs', h: '/docs' },
+    ],
+  },
+  {
+    title: 'Legal',
+    links: [
+      { l: locale === 'es' ? 'Términos y Condiciones' : 'Terms & Conditions', h: '/terms' },
+      { l: locale === 'es' ? 'Política de Reembolsos' : 'Refund Policy', h: '/refunds' },
+      { l: locale === 'es' ? 'Uso Aceptable' : 'Acceptable Use Policy', h: '/aup' },
+      { l: locale === 'es' ? 'Política de Privacidad' : 'Privacy Policy', h: '/privacy' },
+    ],
+  },
+];
+const SOCIAL_LINKS = [
+  { label: 'Discord', href: ORG.discord },
+  { label: 'Twitter', href: ORG.sameAs.find((u) => u.includes('twitter')) ?? '#' },
+  { label: 'LinkedIn', href: ORG.sameAs.find((u) => u.includes('linkedin')) ?? '#' },
+];
 ---
-<footer class="relative overflow-hidden bg-ink text-white">
-  <div class="absolute inset-0 bg-grid-fade pointer-events-none"></div>
-  <div class="container-page relative py-16">
-    <div class="grid grid-cols-2 gap-10 md:grid-cols-5">
-      <div class="col-span-2">
-        <img src="/logo.png" alt="Terranode" class="h-8 w-auto" width="190" height="38" />
-        <p class="mt-4 max-w-xs text-sm leading-relaxed text-slate-400">{t.tagline}</p>
-        <p class="mt-4 text-xs text-slate-500">{t.legal}</p>
-      </div>
-
+<footer role="contentinfo" class="border-t border-white/[0.05] bg-[#040810]">
+  <div class="mx-auto max-w-[1160px]">
+    <!-- Desktop: 5-col grid -->
+    <div class="hidden grid-cols-[1.6fr_1fr_1fr_1fr_1fr] gap-10 border-b border-white/[0.04] px-6 py-14 lg:grid lg:px-8">
       <div>
-        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">{t.services}</h3>
-        <ul class="mt-4 space-y-2.5 text-sm text-slate-300">
-          {SERVICES_NAV.map((item) => (
-            <li>
-              <a href={pathFor(locale, item.key)} class="transition-colors hover:text-white">
-                {item.label[locale]}
-                {COMING_SOON.includes(item.key) && <span class="ml-1.5 text-[10px] text-slate-600">({locale === 'es' ? 'pronto' : 'soon'})</span>}
-              </a>
-            </li>
+        <a href={pathFor(locale, 'home')} class="mb-4 inline-flex items-center gap-2.5 no-underline">
+          <img src="/logo-mark.png" alt="Terranode" class="h-8 w-auto" width="63" height="77" />
+          <div>
+            <div class="font-display text-[17px] font-bold leading-tight text-white">Terranode</div>
+            <div class="font-body text-[8px] uppercase tracking-[2px] text-[#3B82F6]">Cloud Infrastructure</div>
+          </div>
+        </a>
+        <p class="mb-5 font-body text-[13px] leading-[1.75] text-slate-500">{t.tag}</p>
+        <div class="flex flex-wrap gap-2">
+          {SOCIAL_LINKS.map((s) => (
+            <a href={s.href} target="_blank" rel="noopener" class="rounded-md border border-white/[0.09] px-3 py-1.5 font-body text-xs text-slate-500 no-underline transition-colors hover:text-[#60A5FA]">
+              {s.label}
+            </a>
           ))}
-        </ul>
+        </div>
       </div>
 
-      <div>
-        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">{t.company}</h3>
-        <ul class="mt-4 space-y-2.5 text-sm text-slate-300">
-          {TOP_NAV.map((item) => (
-            <li>
-              <a href={pathFor(locale, item.key)} class="transition-colors hover:text-white">
-                {item.label[locale]}
-                {COMING_SOON.includes(item.key) && <span class="ml-1.5 text-[10px] text-slate-600">({locale === 'es' ? 'pronto' : 'soon'})</span>}
-              </a>
-            </li>
+      {NAV_COLS.map((col) => (
+        <nav aria-label={col.title}>
+          <h4 class="mb-4 font-display text-xs font-bold uppercase tracking-[1.5px] text-white">{col.title}</h4>
+          {col.links.map((lk) => (
+            <a href={lk.h} target={lk.external ? '_blank' : undefined} rel={lk.external ? 'noopener' : undefined} class="mb-[11px] block font-body text-[13px] leading-[1.4] text-slate-500 no-underline transition-colors hover:text-[#60A5FA]">{lk.l}</a>
           ))}
-        </ul>
-      </div>
+        </nav>
+      ))}
+    </div>
 
-      <div>
-        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">{t.resources}</h3>
-        <ul class="mt-4 space-y-2.5 text-sm text-slate-300">
-          <li><a href={ORG.clientPortal} target="_blank" rel="noopener" class="hover:text-white transition-colors">{t.portal}</a></li>
-          <li><a href={ORG.ticketUrl} target="_blank" rel="noopener" class="hover:text-white transition-colors">{t.tickets}</a></li>
-        </ul>
+    <!-- Mobile: brand + 2x2 grid -->
+    <div class="border-b border-white/[0.04] px-6 pt-10 lg:hidden">
+      <div class="mb-8">
+        <a href={pathFor(locale, 'home')} class="mb-4 inline-flex items-center gap-2.5 no-underline">
+          <img src="/logo-mark.png" alt="Terranode" class="h-8 w-auto" width="63" height="77" />
+          <div>
+            <div class="font-display text-[17px] font-bold leading-tight text-white">Terranode</div>
+            <div class="font-body text-[8px] uppercase tracking-[2px] text-[#3B82F6]">Cloud Infrastructure</div>
+          </div>
+        </a>
+        <p class="mb-4 font-body text-[13px] leading-[1.75] text-slate-500">{t.tag}</p>
+        <div class="flex flex-wrap gap-2">
+          {SOCIAL_LINKS.map((s) => (
+            <a href={s.href} target="_blank" rel="noopener" class="rounded-md border border-white/[0.09] px-3 py-1.5 font-body text-xs text-slate-500 no-underline">
+              {s.label}
+            </a>
+          ))}
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-x-5 gap-y-7 pb-8">
+        {NAV_COLS.map((col) => (
+          <nav aria-label={col.title}>
+            <h4 class="mb-4 font-display text-xs font-bold uppercase tracking-[1.5px] text-white">{col.title}</h4>
+            {col.links.map((lk) => (
+              <a href={lk.h} target={lk.external ? '_blank' : undefined} rel={lk.external ? 'noopener' : undefined} class="mb-[11px] block font-body text-[13px] leading-[1.4] text-slate-500 no-underline">{lk.l}</a>
+            ))}
+          </nav>
+        ))}
       </div>
     </div>
 
-    <div class="mt-14 flex flex-col gap-4 border-t border-white/10 pt-6 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-      <p>&copy; {new Date().getFullYear()} Terranode. {t.rights}</p>
-      <div class="flex gap-4">
-        {ORG.sameAs.map((url) => (
-          <a href={url} target="_blank" rel="noopener" class="hover:text-white transition-colors">{new URL(url).hostname.replace('www.','').split('.')[0]}</a>
-        ))}
-      </div>
+    <div class="flex flex-wrap items-center justify-between gap-2.5 px-6 py-5 lg:px-8">
+      <small class="font-body text-xs text-slate-600">{t.rights}</small>
     </div>
   </div>
 </footer>

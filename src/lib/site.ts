@@ -70,14 +70,14 @@ export function alternatesFor(key: PageKey) {
   };
 }
 
-// Submenú "Servicios" (dropdown en el header)
+// Submenú "Servicios" (dropdown en el header) — grupo Infraestructura
 export const SERVICES_NAV: { key: PageKey; label: { es: string; en: string } }[] = [
   { key: 'vps', label: { es: 'VPS', en: 'VPS' } },
   { key: 'hosting', label: { es: 'Hosting', en: 'Hosting' } },
   { key: 'dedicados', label: { es: 'Servidores Dedicados', en: 'Dedicated Servers' } },
   { key: 'terramail', label: { es: 'Correo / Terramail', en: 'Email / Terramail' } },
   { key: 'm365', label: { es: 'Microsoft 365', en: 'Microsoft 365' } },
-  { key: 'devweb', label: { es: 'Desarrollo Web', en: 'Web Development' } },
+  { key: 'devweb', label: { es: 'Diseño Web & E-Commerce', en: 'Web Design & E-Commerce' } },
   { key: 'devsistemas', label: { es: 'Desarrollo de Sistemas', en: 'Systems Development' } },
 ];
 

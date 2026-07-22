@@ -1,109 +1,42 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Hero from '@/components/Hero.astro';
-import SectionHeading from '@/components/SectionHeading.astro';
-import PricingCard from '@/components/PricingCard.astro';
-import FeatureCard from '@/components/FeatureCard.astro';
-import ComparisonTable from '@/components/ComparisonTable.astro';
-import FAQAccordion from '@/components/FAQAccordion.astro';
-import CTASection from '@/components/CTASection.astro';
-import { pathFor, ORG } from '@/lib/site';
+import VPSContent from '@/components/VPSContent.astro';
+import { pathFor, SITE_URL } from '@/lib/site';
 import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
 
 const faqs = [
-  { q: '¿Qué es un VPS y en qué se diferencia del hosting compartido?', a: 'Un VPS (Servidor Privado Virtual) te da recursos de CPU, RAM y almacenamiento reservados solo para ti, con acceso root completo. A diferencia del hosting compartido, tu rendimiento no depende de otros sitios en el mismo servidor.' },
-  { q: '¿Los VPS de Terranode usan almacenamiento NVMe?', a: 'Sí, todos nuestros planes VPS incluyen almacenamiento NVMe por defecto, hasta 10 veces más rápido que un SSD tradicional en operaciones de lectura y escritura.' },
-  { q: '¿Puedo elegir la ubicación de mi VPS?', a: 'Sí. Ofrecemos VPS en Guayaquil (Ecuador), Los Ángeles, Houston, Ashburn, Chicago y Utah (EE.UU.), para que elijas la menor latencia según dónde esté tu audiencia.' },
-  { q: '¿Qué panel de control o virtualización usan?', a: 'Usamos virtualización KVM, que ofrece aislamiento completo de recursos y te permite instalar el sistema operativo y panel de control que prefieras (cPanel, Plesk o sin panel).' },
-  { q: '¿Puedo escalar mi VPS si mi proyecto crece?', a: 'Sí, puedes escalar CPU, RAM y almacenamiento en minutos desde el panel de cliente, o migrar a un servidor dedicado si tu proyecto lo requiere.' },
+  { q: '¿Puedo reinstalar el SO desde el panel?', a: 'Sí. Desde VirtFusion puedes reinstalar el SO en cualquier momento en menos de 5 minutos.' },
+  { q: '¿Los backups están incluidos?', a: 'Los backups automáticos son opcionales. Puedes crear snapshots manuales desde el panel.' },
+  { q: '¿Todos los planes están en todas las regiones?', a: 'No. Los planes de mayor capacidad (TNS-07, TNS-08) solo están en Ashburn. Selecciona tu región para ver los planes disponibles.' },
+  { q: '¿Puedo escalar mi plan más adelante?', a: 'Sí. Actualiza a un plan mayor desde el panel de cliente sin migración ni tiempo de inactividad.' },
+  { q: '¿Qué es Full Root Access?', a: 'Acceso SSH root completo: instala cualquier software, modifica configuraciones del kernel y controla todo.' },
 ];
 
 const plans = [
-  { name: 'Velocity', tagline: 'Ideal para proyectos personales y de arranque', price: '$5', period: '/mes', specs: ['2 vCPU dedicados', '4 GB RAM', '40 GB NVMe', '2 TB de transferencia', 'Puerto 1 Gbps · 1 IPv4', 'Virtualización KVM'] },
-  { name: 'Momentum', tagline: 'Para sitios y apps en crecimiento', price: '$12', period: '/mes', featured: true, specs: ['4 vCPU dedicados', '8 GB RAM', '80 GB NVMe', '4 TB de transferencia', 'Puerto 1 Gbps · 1 IPv4', 'Backups semanales incluidos'] },
-  { name: 'Apex', tagline: 'Cargas de trabajo exigentes y multi-sitio', price: '$24', period: '/mes', specs: ['8 vCPU dedicados', '16 GB RAM', '160 GB NVMe', '8 TB de transferencia', 'Puerto 1 Gbps · 1 IPv4', 'Soporte prioritario 24/7'] },
+  { name: 'TNS-01', price: '2.99', description: '1 vCPU, 1 GB RAM, 25 GB NVMe, 1 TB de transferencia.', url: `${SITE_URL}/es/store/tns-01` },
+  { name: 'TNS-02', price: '5.00', description: '1 vCPU, 2 GB RAM, 30 GB NVMe, 2 TB de transferencia.', url: `${SITE_URL}/es/store/tns-02` },
+  { name: 'TNS-03', price: '9.00', description: '2 vCPU, 4 GB RAM, 40 GB NVMe, 3 TB de transferencia.', url: `${SITE_URL}/es/store/tns-03` },
+  { name: 'TNS-04', price: '18.50', description: '4 vCPU, 8 GB RAM, 80 GB NVMe, 5 TB de transferencia.', url: `${SITE_URL}/es/store/tns-04` },
+  { name: 'TNS-05', price: '25.00', description: '6 vCPU, 12 GB RAM, 120 GB NVMe, 6 TB de transferencia.', url: `${SITE_URL}/es/store/tns-05` },
+  { name: 'TNS-06', price: '35.00', description: '8 vCPU, 16 GB RAM, 150 GB NVMe, 7 TB de transferencia.', url: `${SITE_URL}/es/store/tns-06` },
+  { name: 'TNS-07', price: '75.00', description: '16 vCPU, 32 GB RAM, 320 GB NVMe, 8 TB de transferencia.', url: `${SITE_URL}/es/store/tns-07` },
+  { name: 'TNS-08', price: '155.00', description: '22 vCPU, 64 GB RAM, 1024 GB NVMe, 10 TB de transferencia.', url: `${SITE_URL}/es/store/tns-08` },
 ];
 
-const breadcrumb = breadcrumbSchema('es', [
-  { name: 'Inicio', key: 'home' },
-  { name: 'VPS', key: 'vps' },
-]);
+const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'VPS', key: 'vps' }]);
 const service = serviceSchema('es', {
   name: 'VPS NVMe',
-  description: 'Servidores privados virtuales con almacenamiento NVMe, virtualización KVM y ubicaciones en Ecuador y Estados Unidos.',
+  description: 'Servidores privados virtuales con virtualización KVM, almacenamiento NVMe y despliegue en 60 segundos, con datacenters en Ashburn, Los Ángeles, Chicago, Houston y Guayaquil.',
   pageKey: 'vps',
   serviceType: 'VPS Hosting',
 });
-const products = productPlanSchema(plans.map(p => ({
-  name: `VPS ${p.name}`,
-  price: p.price.replace('$',''),
-  description: p.tagline,
-  url: `${pathFor('es','vps')}`,
-})));
 ---
 <BaseLayout
   locale="es"
   pageKey="vps"
-  title="VPS NVMe en Ecuador desde $5/mes | Terranode"
-  description="Contrata un VPS con almacenamiento NVMe, virtualización KVM y ubicaciones en Ecuador y EE.UU. Planes desde $5/mes con soporte 24/7."
-  jsonLd={[organizationSchema('es'), breadcrumb, service, ...products, faqSchema(faqs)]}
+  title="VPS NVMe desde $2.99/mes | 5 Regiones | Terranode"
+  description="Servidores VPS con virtualización KVM, NVMe DDR4 y deploy en 60 segundos. 8 planes desde $2.99/mes. Elige tu región: Ashburn, Los Ángeles, Chicago, Houston o Guayaquil."
+  jsonLd={[organizationSchema('es'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
 >
-  <Hero
-    eyebrow="VPS · Guayaquil · Los Ángeles · Ashburn"
-    title="VPS NVMe con"
-    highlight="recursos 100% dedicados"
-    description="Despliega en minutos con acceso root completo, discos NVMe ultrarrápidos y virtualización KVM. Elige la región más cercana a tus usuarios."
-    primaryCta={{ label: 'Elegir mi plan', href: pathFor('es','contacto') }}
-    secondaryCta={{ label: 'Ver servidores dedicados', href: pathFor('es','dedicados') }}
-  />
-
-  <section class="container-page py-20 md:py-28">
-    <SectionHeading eyebrow="Planes VPS" title="Un plan para cada etapa de tu proyecto" description="Todos los planes incluyen NVMe, ancho de banda generoso y despliegue inmediato." />
-    <div class="mt-14 grid gap-6 lg:grid-cols-3">
-      {plans.map((p) => (
-        <PricingCard name={`VPS ${p.name}`} tagline={p.tagline} price={p.price} period={p.period} featured={p.featured} specs={p.specs} ctaLabel="Contratar ahora" ctaHref={pathFor('es','contacto')} />
-      ))}
-    </div>
-    <p class="mt-6 text-center text-xs text-slate-400">Precios de referencia. Escríbenos para una cotización según tus recursos exactos.</p>
-  </section>
-
-  <section class="bg-surface py-20 md:py-28">
-    <div class="container-page">
-      <SectionHeading eyebrow="Comparativa" title="Especificaciones técnicas por plan" />
-      <div class="mt-12">
-        <ComparisonTable
-          headers={['Plan', 'vCPU', 'RAM', 'Almacenamiento', 'Transferencia', 'Precio']}
-          rows={[
-            ['Velocity', '2', '4 GB', '40 GB NVMe', '2 TB', '$5/mes'],
-            ['Momentum', '4', '8 GB', '80 GB NVMe', '4 TB', '$12/mes'],
-            ['Apex', '8', '16 GB', '160 GB NVMe', '8 TB', '$24/mes'],
-          ]}
-        />
-      </div>
-    </div>
-  </section>
-
-  <section class="container-page py-20 md:py-28">
-    <SectionHeading eyebrow="Por qué elegir nuestro VPS" title="Construido para rendimiento constante" />
-    <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      <FeatureCard icon="bolt" title="NVMe de fábrica" description="Sin discos mecánicos ni SSD SATA: NVMe en todos los planes, sin costo extra." />
-      <FeatureCard icon="shield" title="DDoS incluido" description="Protección de hasta 160 Gbps activa por defecto en toda la red." />
-      <FeatureCard icon="globe" title="6 ubicaciones" description="Guayaquil, Los Ángeles, Houston, Ashburn, Chicago y Utah para optimizar la latencia de tus usuarios." />
-      <FeatureCard icon="server" title="Acceso root completo" description="Instala el stack que necesites: Docker, Node, PHP, bases de datos, lo que sea." />
-      <FeatureCard icon="chart" title="Escalado sin downtime" description="Aumenta CPU, RAM o disco desde el panel sin reinstalar nada." />
-      <FeatureCard icon="support" title="Soporte real 24/7" description="Ingenieros disponibles todos los días del año, en español." />
-    </div>
-  </section>
-
-  <section class="container-page pb-20 md:pb-28">
-    <SectionHeading eyebrow="Preguntas frecuentes" title="Todo sobre nuestros VPS" />
-    <div class="mt-12"><FAQAccordion items={faqs} /></div>
-  </section>
-
-  <CTASection
-    title="¿No sabes qué plan de VPS elegir?"
-    description="Cuéntanos tu proyecto y te recomendamos los recursos exactos que necesitas — sin sobrevender."
-    primaryCta={{ label: 'Hablar con un ingeniero', href: pathFor('es','contacto') }}
-    secondaryCta={{ label: 'Portal de cliente', href: ORG.clientPortal }}
-  />
+  <VPSContent locale="es" />
 </BaseLayout>
