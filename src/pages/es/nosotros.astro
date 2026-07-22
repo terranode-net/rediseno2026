@@ -1,10 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Hero from '@/components/Hero.astro';
-import SectionHeading from '@/components/SectionHeading.astro';
-import FeatureCard from '@/components/FeatureCard.astro';
-import CTASection from '@/components/CTASection.astro';
-import { pathFor } from '@/lib/site';
+import AboutContent from '@/components/AboutContent.astro';
 import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
 
 const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Nosotros', key: 'nosotros' }]);
@@ -12,46 +8,9 @@ const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { na
 <BaseLayout
   locale="es"
   pageKey="nosotros"
-  title="Nosotros | La historia detrás de Terranode"
-  description="Conoce la historia de Terranode S.A.S.: un proveedor de infraestructura cloud con presencia en Ecuador y Estados Unidos."
+  title="Nosotros | Terranode S.A.S. — Infraestructura Cloud desde 2016"
+  description="Desde 2016 en Ecuador: 6+ ubicaciones, 1,500+ servidores desplegados y 12,000+ buzones migrados. Conoce la historia y los valores de Terranode."
   jsonLd={[organizationSchema('es'), breadcrumb]}
 >
-  <Hero
-    eyebrow="Nuestra historia"
-    title="Infraestructura construida"
-    highlight="con raíces en Ecuador"
-    description="Terranode nació en Ecuador y hoy opera como Terranode S.A.S. en Ecuador y Terranode LLC en Estados Unidos, sirviendo a clientes en toda Latinoamérica y el mundo."
-    primaryCta={{ label: 'Habla con nuestro equipo', href: pathFor('es','contacto') }}
-  />
-
-  <section class="container-page py-20 md:py-28">
-    <div class="mx-auto max-w-2xl">
-      <SectionHeading eyebrow="Nuestro origen" title="Crecimos escuchando a quienes nos usan todos los días" align="left" />
-      <div class="mt-8 space-y-5 text-slate-600 leading-relaxed">
-        <p>Terranode comenzó como un proyecto enfocado en dar a negocios de habla hispana acceso a infraestructura cloud confiable, sin la fricción de proveedores internacionales que no hablan tu idioma ni entienden tu contexto.</p>
-        <p>Con el tiempo sumamos un equipo de ingenieros distribuido en distintos países, ampliamos nuestra red a múltiples datacenters en Estados Unidos —Los Ángeles, Houston, Ashburn, Chicago y Utah— además de nuestra infraestructura en Guayaquil, Ecuador. Hoy operamos formalmente como <strong>Terranode S.A.S.</strong> en Ecuador y <strong>Terranode LLC</strong> en Estados Unidos.</p>
-        <p>Seguimos operando con la misma filosofía desde el primer día: la satisfacción del cliente es nuestra prioridad número uno. Por eso trabajamos todos los días para ofrecer servicios de calidad, soporte técnico excepcional y soluciones a la medida de cada negocio.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="bg-surface py-20 md:py-28">
-    <div class="container-page">
-      <SectionHeading eyebrow="Lo que nos define" title="Los principios detrás de cada servidor que gestionamos" />
-      <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <FeatureCard icon="globe" title="Alcance global, trato local" description="Servimos a Ecuador, Latinoamérica, Estados Unidos y Europa, sin perder la cercanía del soporte en español." />
-        <FeatureCard icon="shield" title="Infraestructura de nivel empresarial" description="La misma tecnología que usan proveedores globales, con un equipo que responde de verdad." />
-        <FeatureCard icon="support" title="Personas, no tickets" description="Detrás de cada respuesta hay un ingeniero que entiende tu problema, no un script." />
-        <FeatureCard icon="chart" title="Crecemos contigo" description="De tu primer VPS a un clúster de servidores dedicados, sin que tengas que cambiar de proveedor." />
-        <FeatureCard icon="lock" title="Seguridad como base" description="DDoS, backups y hardening no son un extra: vienen incluidos en cómo construimos cada servicio." />
-        <FeatureCard icon="bolt" title="Mejora constante" description="Invertimos continuamente en NVMe, red y automatización para que sientas la diferencia." />
-      </div>
-    </div>
-  </section>
-
-  <CTASection
-    title="¿Quieres conocer al equipo detrás de tu infraestructura?"
-    description="Escríbenos y con gusto te contamos más sobre cómo trabajamos y por qué tantos negocios confían en nosotros."
-    primaryCta={{ label: 'Contáctanos', href: pathFor('es','contacto') }}
-  />
+  <AboutContent locale="es" />
 </BaseLayout>

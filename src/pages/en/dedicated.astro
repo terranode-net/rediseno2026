@@ -1,100 +1,30 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Hero from '@/components/Hero.astro';
-import SectionHeading from '@/components/SectionHeading.astro';
-import PricingCard from '@/components/PricingCard.astro';
-import FeatureCard from '@/components/FeatureCard.astro';
-import ComparisonTable from '@/components/ComparisonTable.astro';
-import FAQAccordion from '@/components/FAQAccordion.astro';
-import CTASection from '@/components/CTASection.astro';
-import { pathFor, ORG } from '@/lib/site';
+import DedicatedContent from '@/components/DedicatedContent.astro';
+import { SITE_URL } from '@/lib/site';
 import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
 
 const faqs = [
-  { q: 'What is the difference between a dedicated server and a VPS?', a: 'A dedicated server gives you the entire physical hardware, without sharing resources with anyone else. It offers the highest performance and isolation for critical or resource-intensive workloads.' },
-  { q: 'Do dedicated servers include DDoS protection?', a: 'Yes, every dedicated server includes up to 100 Gbps of inbound DDoS mitigation at no extra cost.' },
-  { q: 'Can I customize my server\u2019s hardware?', a: 'Yes, we can adjust RAM, storage (SSD/NVMe), RAID and bandwidth to your specific needs. Contact us for a custom configuration.' },
-  { q: 'Which datacenters host your dedicated servers?', a: 'We operate dedicated servers in Ecuador and the United States, with 1 Gbps connectivity and IPv4/IPv6 addressing included.' },
+  { q: 'How long does it take to provision the server?', a: 'Dedicated servers typically provision in 24-48 business hours.' },
+  { q: 'Can I install any operating system?', a: 'Yes. We offer a wide range of pre-installed OSes, or you can upload your own ISO.' },
+  { q: 'What is IPMI access?', a: 'It lets you manage the server remotely even if the OS is unresponsive: virtual KVM console, forced reboot and more.' },
+  { q: 'Can I configure RAID from the panel?', a: 'Yes, RAID 1, 5 and 10 automatically with no manual intervention.' },
+  { q: 'Do plans include additional IPs?', a: 'Every server includes 1 IPv4 and IPv6. Additional /29 blocks available.' },
 ];
-
 const plans = [
-  { name: 'Xeon E3', tagline: 'Ideal for personal projects', price: '$79', period: '/mo', specs: ['Intel Xeon E3-1230 V5 @ 3.4GHz', '4 cores / 8 threads', '32 GB RAM', '1 TB SSD', '1 Gbps · IPv4 + IPv6'] },
-  { name: 'Xeon E5 Dual', tagline: 'For growing projects', price: '$149', period: '/mo', featured: true, specs: ['2x Intel Xeon E5-2680 V4 @ 2.4GHz', '28 cores / 56 threads', '128 GB RAM', '1 TB SSD', '1 Gbps · Unmetered transfer'] },
-  { name: 'Xeon Gold', tagline: 'Scalable, high-traffic projects', price: '$249', period: '/mo', specs: ['2x Intel Xeon Gold 6138 @ 2.0GHz', '40 cores / 80 threads', '256 GB RAM', 'Configurable NVMe', '1 Gbps · IPv4 + IPv6'] },
+  { name: 'Intel Xeon E3-1230 V5', price: '47.99', description: '4 cores/8 threads, 32 GB DDR4, 1 TB SSD, 1 Gbps.', url: `${SITE_URL}/en/store/dedicated-e3` },
+  { name: 'Intel Xeon Dual E5-2680 V4', price: '94.99', description: '28 cores/56 threads, 128 GB DDR4, 1 TB SSD, 1 Gbps.', url: `${SITE_URL}/en/store/dedicated-e5` },
+  { name: 'Intel Xeon Dual Gold 6138', price: '149.99', description: '40 cores/80 threads, 256 GB DDR4, 2 TB NVMe, 10 Gbps.', url: `${SITE_URL}/en/store/dedicated-gold` },
 ];
-
 const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'Dedicated Servers', key: 'dedicados' }]);
-const service = serviceSchema('en', {
-  name: 'Dedicated Servers',
-  description: 'Dedicated servers with Intel Xeon processors, DDoS protection and 1 Gbps connectivity in Ecuador and the United States.',
-  pageKey: 'dedicados',
-  serviceType: 'Dedicated Server Hosting',
-});
-const products = productPlanSchema(plans.map(p => ({ name: `Server ${p.name}`, price: p.price.replace('$',''), description: p.tagline, url: pathFor('en','dedicados') })));
+const service = serviceSchema('en', { name: 'Dedicated Servers', description: 'Exclusive Intel Xeon hardware with NVMe storage and remote IPMI.', pageKey: 'dedicados', serviceType: 'Dedicated Server Hosting' });
 ---
 <BaseLayout
   locale="en"
   pageKey="dedicados"
-  title="Intel Xeon Dedicated Servers | Terranode"
-  description="Dedicated servers with Intel Xeon processors, up to 256 GB RAM, DDoS protection and 1 Gbps connectivity. Maximum performance, zero shared resources."
-  jsonLd={[organizationSchema('en'), breadcrumb, service, ...products, faqSchema(faqs)]}
+  title="Intel Xeon Dedicated Servers from $47.99/mo | Terranode"
+  description="Dedicated servers with Intel Xeon, ECC DDR4 RAM, Enterprise NVMe, remote IPMI and DDoS 160 Gbps. From $47.99/mo."
+  jsonLd={[organizationSchema('en'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
 >
-  <Hero
-    eyebrow="Dedicated Servers · Intel Xeon"
-    title="All the hardware,"
-    highlight="only for you"
-    description="Enterprise-grade performance, stability and security with Intel Xeon processors 100% dedicated to your operation."
-    primaryCta={{ label: 'See all servers', href: pathFor('en','contacto') }}
-    secondaryCta={{ label: 'Custom configuration', href: pathFor('en','contacto') }}
-  />
-
-  <section class="container-page py-20 md:py-28">
-    <SectionHeading eyebrow="Configurations" title="From personal project to enterprise cluster" />
-    <div class="mt-14 grid gap-6 lg:grid-cols-3">
-      {plans.map((p) => (
-        <PricingCard name={p.name} tagline={p.tagline} price={p.price} period={p.period} featured={p.featured} specs={p.specs} ctaLabel="Request a quote" ctaHref={pathFor('en','contacto')} />
-      ))}
-    </div>
-    <p class="mt-6 text-center text-xs text-slate-400">Custom configurations available on request.</p>
-  </section>
-
-  <section class="bg-surface py-20 md:py-28">
-    <div class="container-page">
-      <SectionHeading eyebrow="Comparison" title="Specs by server" />
-      <div class="mt-12">
-        <ComparisonTable
-          headers={['Server', 'CPU', 'Cores', 'RAM', 'Storage', 'Price']}
-          rows={[
-            ['Xeon E3', 'E3-1230 V5 @ 3.4GHz', '4c / 8t', '32 GB', '1 TB SSD', '$79/mo'],
-            ['Xeon E5 Dual', '2x E5-2680 V4 @ 2.4GHz', '28c / 56t', '128 GB', '1 TB SSD', '$149/mo'],
-            ['Xeon Gold', '2x Gold 6138 @ 2.0GHz', '40c / 80t', '256 GB', 'Config. NVMe', '$249/mo'],
-          ]}
-        />
-      </div>
-    </div>
-  </section>
-
-  <section class="container-page py-20 md:py-28">
-    <SectionHeading eyebrow="Why go dedicated" title="When performance isn\u2019t negotiable" />
-    <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      <FeatureCard icon="server" title="Exclusive hardware" description="No noisy neighbors — every resource on the server is yours alone." />
-      <FeatureCard icon="shield" title="100 Gbps DDoS" description="Attack mitigation at the network layer, before traffic reaches your server." />
-      <FeatureCard icon="globe" title="IPv4 + IPv6" description="Addressing included, with expandable space as your project grows." />
-      <FeatureCard icon="chart" title="Sustained high performance" description="Ideal for databases, ERPs, gaming and mission-critical applications." />
-      <FeatureCard icon="lock" title="Security & isolation" description="Full hardware control to meet compliance requirements." />
-      <FeatureCard icon="support" title="Optional management" description="We can manage your server for you: patching, monitoring and hardening." />
-    </div>
-  </section>
-
-  <section class="container-page pb-20 md:pb-28">
-    <SectionHeading eyebrow="FAQ" title="Everything about our dedicated servers" />
-    <div class="mt-12"><FAQAccordion items={faqs} /></div>
-  </section>
-
-  <CTASection
-    title="Let\u2019s design the exact configuration you need"
-    description="Tell us your expected workload and we\u2019ll put together a tailored hardware proposal."
-    primaryCta={{ label: 'Request a quote', href: pathFor('en','contacto') }}
-    secondaryCta={{ label: 'Client portal', href: ORG.clientPortal }}
-  />
+  <DedicatedContent locale="en" />
 </BaseLayout>

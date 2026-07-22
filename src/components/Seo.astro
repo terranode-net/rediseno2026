@@ -31,9 +31,9 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 <link rel="canonical" href={canonical} />
 
 <!-- hreflang: cada idioma apunta a su propia página, + x-default -->
-<link rel="alternate" hreflang="es-EC" href={alt.es} />
-<link rel="alternate" hreflang="en-US" href={alt.en} />
-<link rel="alternate" hreflang="x-default" href={alt.es} />
+<link rel="alternate" hreflang="es" href={alt.es} />
+<link rel="alternate" hreflang="en" href={alt.en} />
+<link rel="alternate" hreflang="x-default" href={`${SITE_URL}/`} />
 
 <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'} />
 <meta name="viewport" content="width=device-width, initial-scale=1" />

@@ -8,11 +8,11 @@ const p = locale === 'es' ? '/es' : '/en';
 const t = {
   es: {
     tag: 'Infraestructura cloud de calidad superior para empresas en todo el mundo.',
-    rights: '© 2025 Terranode · Todos los derechos reservados · Anteriormente Vsphost (2018–2024)',
+    rights: '© 2025 Terranode · Todos los derechos reservados.',
   },
   en: {
     tag: 'Superior quality cloud infrastructure for businesses worldwide.',
-    rights: '© 2025 Terranode · All rights reserved · Formerly Vsphost (2018–2024)',
+    rights: '© 2025 Terranode · All rights reserved.',
   },
 }[locale];
 
@@ -35,6 +35,16 @@ const NAV_COLS = [
       { l: locale === 'es' ? 'Dedicados' : 'Dedicated', h: pathFor(locale, 'dedicados') },
       { l: 'Correo Corp.', h: pathFor(locale, 'terramail') },
       { l: 'Microsoft 365', h: pathFor(locale, 'm365') },
+    ],
+  },
+  {
+    title: locale === 'es' ? 'Herramientas' : 'Tools',
+    links: [
+      { l: locale === 'es' ? '¿Cuál es mi IP?' : 'What is my IP?', h: `https://www.terranode.net/${locale}/my-ip`, external: true },
+      { l: 'DNS Checker', h: `https://www.terranode.net/${locale}/dns`, external: true },
+      { l: locale === 'es' ? 'Detector de Hosting' : 'Hosting Detector', h: `https://www.terranode.net/${locale}/hosting-detector`, external: true },
+      { l: locale === 'es' ? 'Generador de .htaccess' : '.htaccess Generator', h: `https://www.terranode.net/${locale}/htaccess`, external: true },
+      { l: 'Email & DNS Toolbox', h: `https://www.terranode.net/${locale}/email-tools`, external: true },
     ],
   },
   {
@@ -66,7 +76,7 @@ const SOCIAL_LINKS = [
 <footer role="contentinfo" class="border-t border-white/[0.05] bg-[#040810]">
   <div class="mx-auto max-w-[1160px]">
     <!-- Desktop: 5-col grid -->
-    <div class="hidden grid-cols-[1.6fr_1fr_1fr_1fr_1fr] gap-10 border-b border-white/[0.04] px-6 py-14 lg:grid lg:px-8">
+    <div class="hidden grid-cols-[1.3fr_1fr_1fr_1fr_1fr_1fr] gap-8 border-b border-white/[0.04] px-6 py-14 lg:grid lg:px-8">
       <div>
         <a href={pathFor(locale, 'home')} class="mb-4 inline-flex items-center gap-2.5 no-underline">
           <img src="/logo-mark.png" alt="Terranode" class="h-8 w-auto" width="63" height="77" />

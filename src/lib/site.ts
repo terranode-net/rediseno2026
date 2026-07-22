@@ -15,15 +15,18 @@ export const ORG = {
   discord: 'https://discord.com/invite/VAAQ6rDXRE',
   ticketUrl: 'https://my.terranode.net/submitticket',
   address: {
+    streetAddress: 'Edificio City Offices',
     addressLocality: 'Guayaquil',
+    addressRegion: 'Guayas',
+    postalCode: '090150',
     addressCountry: 'EC',
   },
+  geo: { latitude: -2.1437644, longitude: -79.9104008 },
+  hasMap: 'https://www.google.com/maps?cid=12881806615684494307',
   sameAs: [
-    'https://www.facebook.com/terranode',
     'https://twitter.com/terranode',
-    'https://www.linkedin.com/company/terranode',
-    'https://www.instagram.com/terranode',
-    'https://discord.com/invite/VAAQ6rDXRE',
+    'https://linkedin.com/company/terranode',
+    'https://discord.gg/terranode',
   ],
   clientPortal: 'https://my.terranode.net',
 };
@@ -55,7 +58,7 @@ export type PageKey = keyof typeof PAGE_MAP;
 
 // Páginas que existen como rutas en App.jsx pero aún no tienen contenido propio
 // (se muestran en el menú ya, como pidió el cliente, con una landing "Próximamente").
-export const COMING_SOON: PageKey[] = ['blog', 'devweb', 'devsistemas'];
+export const COMING_SOON: PageKey[] = ['blog'];
 
 export function pathFor(locale: Locale, key: PageKey): string {
   const slug = PAGE_MAP[key][locale];

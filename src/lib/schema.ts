@@ -16,9 +16,18 @@ export function organizationSchema(locale: Locale) {
     sameAs: ORG.sameAs,
     address: {
       '@type': 'PostalAddress',
+      streetAddress: ORG.address.streetAddress,
       addressLocality: ORG.address.addressLocality,
+      addressRegion: ORG.address.addressRegion,
+      postalCode: ORG.address.postalCode,
       addressCountry: ORG.address.addressCountry,
     },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: ORG.geo.latitude,
+      longitude: ORG.geo.longitude,
+    },
+    hasMap: ORG.hasMap,
     contactPoint: [
       {
         '@type': 'ContactPoint',

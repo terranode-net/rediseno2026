@@ -1,84 +1,30 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Hero from '@/components/Hero.astro';
-import SectionHeading from '@/components/SectionHeading.astro';
-import PricingCard from '@/components/PricingCard.astro';
-import FeatureCard from '@/components/FeatureCard.astro';
-import FAQAccordion from '@/components/FAQAccordion.astro';
-import CTASection from '@/components/CTASection.astro';
-import { pathFor, ORG } from '@/lib/site';
+import HostingContent from '@/components/HostingContent.astro';
+import { SITE_URL } from '@/lib/site';
 import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
 
 const faqs = [
-  { q: '¿Qué es el hosting LiteSpeed y por qué es más rápido?', a: 'LiteSpeed es un servidor web que reemplaza a Apache/NGINX con mejor rendimiento y un caché nativo (LSCache) especialmente optimizado para WordPress, lo que reduce los tiempos de carga hasta en un 50%.' },
-  { q: '¿El hosting incluye certificado SSL?', a: 'Sí, todos los planes de hosting incluyen certificado SSL gratuito con renovación automática, sin costo adicional.' },
-  { q: '¿Puedo alojar múltiples sitios en un solo plan?', a: 'Depende del plan. Nuestros planes Business y superiores permiten múltiples dominios; te ayudamos a elegir el que se ajuste a la cantidad de sitios que administras.' },
-  { q: '¿Hacen migración gratuita desde mi proveedor actual?', a: 'Sí, migramos tu sitio, base de datos y correo sin costo adicional, coordinando el cambio de DNS para minimizar el tiempo de inactividad.' },
+  { q: '¿Puedo migrar mi sitio actual a Terranode?', a: 'Sí. Ofrecemos migración gratuita desde cualquier proveedor. Nuestro equipo gestiona todo el proceso, incluyendo archivos, base de datos y correos, sin tiempo de inactividad.' },
+  { q: '¿El SSL está incluido en todos los planes?', a: 'Sí. Todos los planes incluyen certificados SSL Let\u2019s Encrypt gratuitos e ilimitados. Se renuevan automáticamente.' },
+  { q: '¿Cuántas cuentas de correo puedo crear?', a: 'Todos los planes incluyen correos ilimitados.' },
+  { q: '¿Qué pasa si supero el límite de almacenamiento?', a: 'Recibirás una notificación antes de alcanzar el límite y puedes actualizar tu plan en cualquier momento.' },
+  { q: '¿Tienen soporte para e-commerce?', a: 'Sí. Puedes instalar WooCommerce, Prestashop, Magento o cualquier otro CMS con 1 clic.' },
 ];
-
 const plans = [
-  { name: 'Starter', tagline: 'Para tu primer sitio web', price: '$4', period: '/mes', specs: ['1 sitio web', '10 GB NVMe', 'SSL gratis', 'LiteSpeed + LSCache', 'Backups semanales'] },
-  { name: 'Business', tagline: 'El más elegido por agencias', price: '$9', period: '/mes', featured: true, specs: ['Hasta 5 sitios web', '40 GB NVMe', 'SSL gratis ilimitado', 'CDN incluido', 'Backups diarios'] },
-  { name: 'Pro', tagline: 'Tráfico alto y e-commerce', price: '$18', period: '/mes', specs: ['Sitios ilimitados', '100 GB NVMe', 'Recursos dedicados', 'Staging incluido', 'Soporte prioritario'] },
+  { name: 'Plan 8 GB', price: '3.33', description: '8 GB NVMe, 40 GB de banda ancha, 5 bases de datos, correos ilimitados.', url: `${SITE_URL}/es/store/hosting-8gb` },
+  { name: 'Plan 14 GB', price: '5.33', description: '14 GB NVMe, 70 GB de banda ancha, 7 bases de datos, correos ilimitados.', url: `${SITE_URL}/es/store/hosting-14gb` },
+  { name: 'Plan 35 GB', price: '14.58', description: '35 GB NVMe, 175 GB de banda ancha, 17 bases de datos, correos ilimitados.', url: `${SITE_URL}/es/store/hosting-35gb` },
 ];
-
 const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Hosting', key: 'hosting' }]);
-const service = serviceSchema('es', {
-  name: 'Web Hosting LiteSpeed',
-  description: 'Hosting web con LiteSpeed, NVMe y SSL gratuito, optimizado para WordPress y sitios de alto tráfico.',
-  pageKey: 'hosting',
-  serviceType: 'Web Hosting',
-});
-const products = productPlanSchema(plans.map(p => ({ name: `Hosting ${p.name}`, price: p.price.replace('$',''), description: p.tagline, url: pathFor('es','hosting') })));
+const service = serviceSchema('es', { name: 'Web Hosting Ecuador', description: 'Hosting web profesional con LiteSpeed, CloudLinux y cPanel. SSL gratis, backups diarios.', pageKey: 'hosting', serviceType: 'Web Hosting' });
 ---
 <BaseLayout
   locale="es"
   pageKey="hosting"
-  title="Hosting Web en Ecuador con LiteSpeed y NVMe | Terranode"
-  description="Hosting web rápido y seguro con LiteSpeed, almacenamiento NVMe, SSL gratis y soporte 24/7. Ideal para WordPress y tiendas en línea."
-  jsonLd={[organizationSchema('es'), breadcrumb, service, ...products, faqSchema(faqs)]}
+  title="Web Hosting en Ecuador desde $40/año | LiteSpeed + cPanel | Terranode"
+  description="Hosting web con LiteSpeed, CloudLinux, cPanel y SSL gratis. Planes desde $40/año, migración gratuita y soporte 24/7."
+  jsonLd={[organizationSchema('es'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
 >
-  <Hero
-    eyebrow="Web Hosting · LiteSpeed · NVMe"
-    title="Hosting que carga"
-    highlight="en milisegundos"
-    description="LiteSpeed + NVMe + CDN: la combinación perfecta para que tu WordPress, tienda online o landing page vuele, sin que tengas que tocar servidores."
-    primaryCta={{ label: 'Ver planes de hosting', href: pathFor('es','contacto') }}
-    secondaryCta={{ label: 'Migración gratuita', href: pathFor('es','contacto') }}
-  />
-
-  <section class="container-page py-20 md:py-28">
-    <SectionHeading eyebrow="Planes de Hosting" title="Hosting optimizado para WordPress y e-commerce" />
-    <div class="mt-14 grid gap-6 lg:grid-cols-3">
-      {plans.map((p) => (
-        <PricingCard name={`Hosting ${p.name}`} tagline={p.tagline} price={p.price} period={p.period} featured={p.featured} specs={p.specs} ctaLabel="Contratar ahora" ctaHref={pathFor('es','contacto')} />
-      ))}
-    </div>
-  </section>
-
-  <section class="bg-surface py-20 md:py-28">
-    <div class="container-page">
-      <SectionHeading eyebrow="Ventajas" title="Construido para velocidad y seguridad" />
-      <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <FeatureCard icon="bolt" title="LiteSpeed + LSCache" description="Hasta 50% más rápido que Apache tradicional, con caché nativo para WordPress." />
-        <FeatureCard icon="lock" title="SSL gratuito" description="Certificado SSL con renovación automática en todos los planes." />
-        <FeatureCard icon="shield" title="Protección DDoS" description="Tu sitio protegido por la misma red que blinda nuestros servidores dedicados." />
-        <FeatureCard icon="server" title="Almacenamiento NVMe" description="Discos NVMe en todos los planes de hosting, sin costo adicional." />
-        <FeatureCard icon="globe" title="CDN incluido" description="Contenido servido desde el punto más cercano a cada visitante." />
-        <FeatureCard icon="support" title="Migración sin costo" description="Nosotros movemos tu sitio actual, tú solo confirmas que todo luce bien." />
-      </div>
-    </div>
-  </section>
-
-  <section class="container-page pb-20 md:pb-28">
-    <SectionHeading eyebrow="Preguntas frecuentes" title="Todo sobre nuestro hosting" />
-    <div class="mt-12"><FAQAccordion items={faqs} /></div>
-  </section>
-
-  <CTASection
-    title="Lleva tu sitio a un hosting que sí rinde"
-    description="Migración gratuita, sin tiempo de inactividad perceptible y soporte real cuando lo necesites."
-    primaryCta={{ label: 'Empezar ahora', href: pathFor('es','contacto') }}
-    secondaryCta={{ label: 'Portal de cliente', href: ORG.clientPortal }}
-  />
+  <HostingContent locale="es" />
 </BaseLayout>

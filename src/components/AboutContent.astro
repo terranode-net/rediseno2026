@@ -1,0 +1,281 @@
+---
+interface Props { locale: 'es' | 'en' }
+const { locale } = Astro.props;
+const es = locale === 'es';
+
+const t = es ? {
+  eyebrow: 'Desde 2016',
+  h1: 'Descubre Nuestro Viaje:',
+  h1b: 'Innovación y Compromiso',
+  sub: 'Descubre cómo la innovación y el compromiso constante han definido nuestro crecimiento desde Ecuador al mundo.',
+  statLabel: 'Lo Que Hacemos',
+  statH: 'Construyendo un Mundo en la Nube',
+  statSub: 'Más que números, son historias de éxito y compromiso con tu experiencia en la nube.',
+  stats: [
+    { val: '6+', label: 'Ubicaciones Disponibles' },
+    { val: '1,500+', label: 'Servidores Desplegados' },
+    { val: '12,000+', label: 'Buzones de Correos Migrados' },
+    { val: '99.9%', label: 'Uptime' },
+  ],
+  histLabel: 'Nuestra Historia',
+  histH: 'Evolución y Renovación: La Trayectoria de Terranode',
+  histP1: 'Desde 2016, hemos estado a la vanguardia de la tecnología, ofreciendo una amplia gama de soluciones informáticas que incluyen desarrollo de software, mantenimiento de equipos y capacitación en herramientas tecnológicas. Inicialmente operando bajo un nombre diferente en el mercado ecuatoriano, nuestra empresa tomó un nuevo rumbo en 2018.',
+  histP2: 'Ese año, nos integramos a un grupo tecnológico regional y evolucionamos hacia un modelo 100% orientado a servicios virtuales (Virtual Service Provider). Este cambio reflejó nuestro compromiso con la provisión de servicios completamente virtuales, eliminando la necesidad de inversiones en hardware por parte de nuestros clientes.',
+  histP3: 'En julio de 2023, adaptándonos a nuestra expansión global y buscando una imagen más fresca, evolucionamos a Terranode. Este nuevo nombre simboliza nuestro crecimiento y nuestra continua adaptación a las necesidades tecnológicas del futuro.',
+  timeline: [
+    { year: '2016', title: 'Fundación', desc: 'Inicio de operaciones como empresa de tecnología en Ecuador: desarrollo de software, mantenimiento y capacitación.' },
+    { year: '2018', title: 'Expansión', desc: 'Integración a un grupo tecnológico regional y evolución hacia un modelo de Proveedor de Servicios Virtuales. Expansión a servicios 100% virtuales.' },
+    { year: '2023', title: 'Terranode', desc: 'Evolución a Terranode en julio 2023. Expansión global con datacenters en EE.UU. y continua innovación en infraestructura cloud.' },
+  ],
+  pillarLabel: 'Forjando el Futuro',
+  pillarH: 'Con Responsabilidad y Tecnología',
+  pillars: [
+    { icon: 'shield', title: 'Compromiso', body: 'En Terranode, estamos dedicados a superar las expectativas de nuestros clientes en cada interacción. Nuestro compromiso se centra en proporcionar soluciones de hosting altamente confiables y seguras, optimizadas para ofrecer el máximo rendimiento y flexibilidad. La confianza que nuestros clientes depositan en nosotros es el motor que impulsa nuestra innovación y excelencia.' },
+    { icon: 'bolt', title: 'Innovación y Tecnología', body: 'Terranode está a la vanguardia de la innovación en servicios de hosting y tecnologías relacionadas. Implementamos las últimas tecnologías y desarrollamos nuevas soluciones que establecen estándares en la industria. Desde servidores de alta eficiencia hasta software de gestión intuitivo, cada elemento está diseñado para proporcionar seguridad, escalabilidad y rendimiento.' },
+    { icon: 'leaf', title: 'Social y Ambiental', body: 'Estamos profundamente comprometidos con la responsabilidad social y la sostenibilidad ambiental. Adoptamos prácticas ecológicas en nuestras operaciones, desde la optimización de la eficiencia energética en nuestros centros de datos hasta el apoyo a iniciativas comunitarias que promueven la tecnología y la educación.' },
+  ],
+  ctaH: '¿Listo para unirte?',
+  ctaSub: 'Conoce nuestra infraestructura y empieza a crecer con Terranode hoy.',
+  ctaB1: 'Ver planes',
+  ctaB2: 'Contactarnos',
+  identityLabel: 'Nuestra Identidad',
+  identityH: 'Construidos en Ecuador, operando globalmente',
+  identity: [
+    { icon: 'shield', title: 'Confianza ante todo', body: 'Desde 2016 brindamos servicios a cientos de clientes en Ecuador y Latinoamérica con transparencia total.' },
+    { icon: 'pulse', title: 'Disponibilidad 24/7', body: 'Nuestros sistemas y equipo humano están siempre activos. Sin ventanas de mantenimiento sorpresa, sin excusas.' },
+    { icon: 'users', title: 'Equipo local', body: 'Soporte en español con tiempo de respuesta menor a 1 hora. Entendemos tu negocio y tu cultura.' },
+  ],
+} : {
+  eyebrow: 'Since 2016',
+  h1: 'Discover Our Journey:',
+  h1b: 'Innovation & Commitment',
+  sub: 'Discover how innovation and constant commitment have defined our growth from Ecuador to the world.',
+  statLabel: 'What We Do',
+  statH: 'Building a World in the Cloud',
+  statSub: 'More than numbers, they are stories of success and commitment to your cloud experience.',
+  stats: [
+    { val: '6+', label: 'Available Locations' },
+    { val: '1,500+', label: 'Servers Deployed' },
+    { val: '12,000+', label: 'Mailboxes Migrated' },
+    { val: '99.9%', label: 'Uptime' },
+  ],
+  histLabel: 'Our History',
+  histH: 'Evolution & Renewal: The Terranode Journey',
+  histP1: 'Since 2016, we have been at the forefront of technology, offering a wide range of IT solutions including software development, equipment maintenance, and technology training. Initially operating under a different name in the Ecuadorian market, our company took a new direction in 2018.',
+  histP2: 'That year, we joined a regional technology group and evolved into a fully virtual-service-oriented model (Virtual Service Provider). This change reflected our commitment to providing fully virtual services, eliminating the need for hardware investment by our clients.',
+  histP3: 'In July 2023, adapting to our global expansion and seeking a fresher image, we evolved to Terranode. This new name symbolizes our growth and our continued adaptation to the technological needs of the future.',
+  timeline: [
+    { year: '2016', title: 'Foundation', desc: 'Start of operations as a technology company in Ecuador: software development, maintenance and training.' },
+    { year: '2018', title: 'Expansion', desc: 'Integration into a regional technology group and evolution into a Virtual Service Provider model. Expansion to 100% virtual services.' },
+    { year: '2023', title: 'Terranode', desc: 'Evolution to Terranode in July 2023. Global expansion with datacenters in the US and continuous cloud infrastructure innovation.' },
+  ],
+  pillarLabel: 'Building the Future',
+  pillarH: 'With Responsibility and Technology',
+  pillars: [
+    { icon: 'shield', title: 'Commitment', body: "At Terranode, we are dedicated to exceeding our clients' expectations in every interaction. Our commitment centers on providing highly reliable and secure hosting solutions, optimized for maximum performance and flexibility. The trust our clients place in us is the engine that drives our innovation and excellence." },
+    { icon: 'bolt', title: 'Innovation & Technology', body: 'Terranode is at the forefront of innovation in hosting services and related technologies. We implement the latest technologies and develop new solutions that set industry standards. From high-efficiency servers to intuitive management software, every element is designed to provide security, scalability and performance.' },
+    { icon: 'leaf', title: 'Social & Environmental', body: 'We are deeply committed to social responsibility and environmental sustainability. We adopt ecological practices in our operations, from optimizing energy efficiency in our data centers to supporting community initiatives that promote technology and education.' },
+  ],
+  ctaH: 'Ready to join us?',
+  ctaSub: 'Discover our infrastructure and start growing with Terranode today.',
+  ctaB1: 'View plans',
+  ctaB2: 'Contact us',
+  identityLabel: 'Our Identity',
+  identityH: 'Built in Ecuador, operating globally',
+  identity: [
+    { icon: 'shield', title: 'Trust above all', body: 'Since 2016 we have provided services to hundreds of clients in Ecuador and Latin America with total transparency.' },
+    { icon: 'pulse', title: '24/7 Availability', body: 'Our systems and human team are always active. No surprise maintenance windows, no excuses.' },
+    { icon: 'users', title: 'Local team', body: 'Spanish-language support with response time under 1 hour. We understand your business and your culture.' },
+  ],
+};
+
+const PILLAR_ICONS: Record<string, string> = {
+  shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4" stroke-linecap="round"/>',
+  bolt: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
+  leaf: '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>',
+};
+const FEAT_ICONS: Record<string, string> = {
+  shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4" stroke-linecap="round"/>',
+  pulse: '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12" stroke-linecap="round"/>',
+  users: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+};
+const contactoHref = `/${locale}/${es ? 'contacto' : 'contact'}`;
+const vpsHref = `/${locale}/vps`;
+---
+<main style="padding-top:66px;background:#080E1C;min-height:100vh">
+  <!-- HERO -->
+  <section aria-label="About hero" class="relative overflow-hidden px-6 py-24 md:py-[96px]">
+    <div class="pointer-events-none absolute inset-0" style="background:radial-gradient(ellipse 60% 50% at 50% 40%,rgba(37,99,235,.12),transparent 70%)"></div>
+    <div class="pointer-events-none absolute inset-0" style="background-image:linear-gradient(rgba(59,130,246,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.04) 1px,transparent 1px);background-size:50px 50px"></div>
+    <div class="relative z-[2] mx-auto max-w-[900px] text-center">
+      <span class="mb-6 inline-block rounded-full border border-[#3B82F6]/20 bg-[#3B82F6]/[0.08] px-[18px] py-1.5 font-body text-xs font-bold uppercase tracking-[2.5px] text-[#3B82F6]">{t.eyebrow}</span>
+      <h1 class="mb-2 font-display text-[clamp(2.4rem,5vw,4rem)] font-bold leading-[1.05] tracking-tight text-white">{t.h1}</h1>
+      <h2 class="mb-7 font-display text-[clamp(2.4rem,5vw,4rem)] font-bold leading-[1.05] tracking-tight text-[#3B82F6]">{t.h1b}</h2>
+      <p class="mx-auto max-w-[620px] font-body text-[17px] leading-relaxed text-slate-400">{t.sub}</p>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section aria-label="Stats" class="border-y border-white/[0.05] bg-[#060B18] px-6 py-[72px]">
+    <div class="mx-auto max-w-[1160px]">
+      <div class="mb-12 text-center">
+        <p class="mb-3.5 font-body text-[11px] font-bold uppercase tracking-[2.5px] text-[#3B82F6]">{t.statLabel}</p>
+        <h2 class="mb-3.5 font-display text-[clamp(1.8rem,3vw,2.5rem)] font-bold tracking-tight text-white">{t.statH}</h2>
+        <p class="mx-auto max-w-[500px] font-body text-slate-500">{t.statSub}</p>
+      </div>
+      <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+        {t.stats.map((s) => (
+          <div class="about-counter an rounded-2xl border border-white/[0.07] bg-white/[0.025] px-5 py-8 text-center" data-value={s.val}>
+            <div class="counter-display mb-2 font-display text-[clamp(2rem,4vw,3rem)] font-bold tracking-tight text-white">0</div>
+            <p class="font-body text-[13px] leading-snug text-slate-600">{s.label}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- HISTORY -->
+  <section aria-label="History" class="px-6 py-24">
+    <div class="mx-auto grid max-w-[1160px] grid-cols-1 items-start gap-16 lg:grid-cols-2 lg:gap-20">
+      <div class="an">
+        <p class="mb-3.5 font-body text-[11px] font-bold uppercase tracking-[2.5px] text-[#3B82F6]">{t.histLabel}</p>
+        <h2 class="mb-3.5 font-display text-[clamp(1.8rem,3vw,2.5rem)] font-bold tracking-tight text-white">{t.histH}</h2>
+        <p class="mb-[18px] font-body text-[15px] leading-[1.8] text-slate-500">{t.histP1}</p>
+        <p class="mb-[18px] font-body text-[15px] leading-[1.8] text-slate-500">{t.histP2}</p>
+        <p class="font-body text-[15px] leading-[1.8] text-slate-500">{t.histP3}</p>
+      </div>
+      <div class="an d2 relative flex flex-col pl-8">
+        <div class="absolute bottom-3 left-[10px] top-3 w-[1.5px]" style="background:linear-gradient(to bottom,rgba(59,130,246,.5),rgba(59,130,246,.1))"></div>
+        {t.timeline.map((item, i) => (
+          <div class="relative" style={i < t.timeline.length - 1 ? 'padding-bottom:36px' : ''}>
+            <div class="absolute -left-[22px] top-1 h-3 w-3 rounded-full" style={i === 2 ? 'background:#3B82F6;border:2px solid #3B82F6;box-shadow:0 0 12px rgba(59,130,246,.5)' : 'background:#0A1525;border:2px solid #1A3050'}></div>
+            <div class="mb-2 inline-flex items-center gap-2">
+              <span class="rounded-full border border-[#3B82F6]/[0.22] bg-[#3B82F6]/10 px-2.5 py-0.5 font-display text-xs font-bold text-[#3B82F6]">{item.year}</span>
+              <span class="font-display text-base font-bold text-white">{item.title}</span>
+            </div>
+            <p class="font-body text-sm leading-[1.7] text-slate-500">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- PILLARS -->
+  <section aria-label="Values" class="border-y border-white/[0.05] bg-white/[0.012] px-6 py-24">
+    <div class="mx-auto max-w-[1160px]">
+      <div class="an mb-12 text-center">
+        <p class="mb-3.5 font-body text-[11px] font-bold uppercase tracking-[2.5px] text-[#3B82F6]">{t.pillarLabel}</p>
+        <h2 class="font-display text-[clamp(1.8rem,3vw,2.5rem)] font-bold tracking-tight text-white">{t.pillarH}</h2>
+      </div>
+      <div class="an mb-10 flex flex-wrap justify-center gap-2" id="pillar-tabs">
+        {t.pillars.map((p, i) => (
+          <button
+            type="button"
+            class="pillar-tab rounded-lg border px-[22px] py-[9px] font-display text-sm font-semibold transition-all"
+            data-index={i}
+            style={i === 0 ? 'background:#3B82F6;border-color:#3B82F6;color:#fff' : 'background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);color:#6B8CAE'}
+          >{p.title}</button>
+        ))}
+      </div>
+      <div class="an mx-auto max-w-[760px]">
+        {t.pillars.map((p, i) => (
+          <div class="pillar-panel flex flex-col gap-7 rounded-[20px] border border-[#3B82F6]/[0.18] bg-[#0A1525] p-8 sm:flex-row sm:items-start md:p-11" data-index={i} style={i !== 0 ? 'display:none' : ''}>
+            <div class="flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-2xl bg-[#3B82F6]/[0.12]">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="1.6" class="h-7 w-7" set:html={PILLAR_ICONS[p.icon]}></svg>
+            </div>
+            <div>
+              <h3 class="mb-3.5 font-display text-xl font-bold tracking-tight text-white">{p.title}</h3>
+              <p class="font-body text-[15px] leading-[1.8] text-slate-500">{p.body}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- IDENTITY -->
+  <section aria-label="Identity" class="px-6 py-24">
+    <div class="mx-auto max-w-[1160px]">
+      <div class="an mb-12 text-center">
+        <p class="mb-3.5 font-body text-[11px] font-bold uppercase tracking-[2.5px] text-[#3B82F6]">{t.identityLabel}</p>
+        <h2 class="font-display text-[clamp(1.8rem,3vw,2.5rem)] font-bold tracking-tight text-white">{t.identityH}</h2>
+      </div>
+      <div class="grid grid-cols-1 gap-3.5 md:grid-cols-3">
+        {t.identity.map((c, i) => (
+          <article class={`an d${i + 1} rounded-2xl border border-white/[0.07] bg-white/[0.025] p-7`}>
+            <div class="mb-[18px] flex h-[46px] w-[46px] items-center justify-center rounded-xl bg-[#3B82F6]/10">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="1.6" class="h-[22px] w-[22px]" set:html={FEAT_ICONS[c.icon]}></svg>
+            </div>
+            <h3 class="mb-2.5 font-display text-base font-semibold text-white">{c.title}</h3>
+            <p class="font-body text-sm text-slate-500">{c.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section aria-label="CTA" class="px-6 pb-24">
+    <div class="an relative mx-auto max-w-[1160px] overflow-hidden rounded-[20px] border border-[#3B82F6]/[0.18] bg-[#0C1525] px-6 py-16 text-center md:px-12">
+      <div class="pointer-events-none absolute inset-0" style="background:radial-gradient(ellipse 60% 70% at 50% 50%,rgba(37,99,235,.09),transparent 70%)"></div>
+      <div class="relative z-[2]">
+        <h2 class="mb-4 font-display text-[clamp(1.8rem,3vw,2.4rem)] font-bold tracking-tight text-white">{t.ctaH}</h2>
+        <p class="mx-auto mb-8 max-w-[460px] font-body text-slate-400">{t.ctaSub}</p>
+        <div class="flex flex-wrap justify-center gap-3.5">
+          <a href={vpsHref} class="rounded-lg border-none bg-[#3B82F6] px-7 py-3 font-display text-[15px] font-semibold text-white no-underline shadow-[0_0_24px_rgba(59,130,246,.28)] transition-colors hover:bg-[#2563EB]">{t.ctaB1}</a>
+          <a href={contactoHref} class="rounded-lg border border-white/[0.14] bg-transparent px-7 py-3 font-body text-[15px] text-slate-300 no-underline transition-colors hover:text-white">{t.ctaB2}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+  // Animated counters — trigger once per element when it enters the viewport
+  document.querySelectorAll<HTMLElement>('.about-counter').forEach((el) => {
+    const display = el.querySelector<HTMLElement>('.counter-display');
+    const raw = el.dataset.value ?? '0';
+    const match = raw.replace(/,/g, '').match(/^(\d+\.?\d*)([%+]?)$/);
+    if (!display || !match) return;
+    const target = parseFloat(match[1]);
+    const suffix = match[2];
+    const useComma = raw.includes(',');
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        io.disconnect();
+        const dur = 1600;
+        const start = performance.now();
+        function tick(now: number) {
+          const p = Math.min((now - start) / dur, 1);
+          const ease = 1 - Math.pow(1 - p, 3);
+          const cur = Math.round(ease * target);
+          display!.textContent = (useComma ? cur.toLocaleString() : cur.toString()) + suffix;
+          if (p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      },
+      { threshold: 0.3 }
+    );
+    io.observe(el);
+  });
+
+  // Pillar tabs
+  const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('.pillar-tab'));
+  const panels = Array.from(document.querySelectorAll<HTMLElement>('.pillar-panel'));
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const idx = tab.dataset.index;
+      tabs.forEach((t) => {
+        const active = t === tab;
+        t.style.background = active ? '#3B82F6' : 'rgba(255,255,255,.04)';
+        t.style.borderColor = active ? '#3B82F6' : 'rgba(255,255,255,.1)';
+        t.style.color = active ? '#fff' : '#6B8CAE';
+      });
+      panels.forEach((p) => {
+        p.style.display = p.dataset.index === idx ? 'flex' : 'none';
+      });
+    });
+  });
+</script>
