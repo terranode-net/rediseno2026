@@ -91,6 +91,54 @@ const RULE_GROUPS = [
         code: `# ── Restrict HTTP Methods — OWASP A05:2021 ──────────────\n<LimitExcept GET POST HEAD>\n  Order Allow,Deny\n  Deny from all\n</LimitExcept>\nRewriteEngine On\nRewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK) [NC]\nRewriteRule .* - [F,L]` },
     ],
   },
+  {
+    id: 'ip_access', icon: '🌐', label: es ? 'Control de Acceso por IP' : 'IP Access Control', color: '#06B6D4',
+    rules: [
+      { id: 'allow_only_ip', label: es ? 'Restringir todo el sitio a IPs específicas' : 'Restrict entire site to specific IPs', desc: es ? 'Útil para modo mantenimiento: solo tu IP puede ver el sitio, el resto ve acceso denegado' : 'Useful for maintenance mode: only your IP can view the site, everyone else gets denied', risk: 'caution', default: false, note: es ? '⚠ Reemplaza TU_IP_AQUI. Si te equivocas te bloqueas a ti mismo' : '⚠ Replace YOUR_IP_HERE. If you get it wrong you can lock yourself out',
+        code: `# ── Restrict Site to Specific IPs ────────────────────────\n# ⚠ Replace YOUR_IP_HERE with your real IP address\n<RequireAll>\n  Require ip YOUR_IP_HERE\n</RequireAll>\n# Apache 2.2 fallback:\n# Order Deny,Allow\n# Deny from all\n# Allow from YOUR_IP_HERE` },
+      { id: 'block_ip_list', label: es ? 'Bloquear IPs o rangos específicos' : 'Block specific IPs or ranges', desc: es ? 'Deniega acceso a una lista de IPs o rangos conocidos por abuso' : 'Denies access to a list of IPs or ranges known for abuse', risk: 'safe', default: false, note: es ? '✏ Agrega las IPs que quieras bloquear' : '✏ Add the IPs you want to block',
+        code: `# ── Block Specific IPs ────────────────────────────────────\n# ✏ Add one "Require not ip" line per IP or range you want to block\n<RequireAll>\n  Require all granted\n  Require not ip 123.45.67.89\n  Require not ip 10.0.0.0/8\n</RequireAll>` },
+      { id: 'admin_ip_whitelist', label: es ? 'Proteger /admin/ o panel propio por IP' : 'Protect /admin/ or custom panel by IP', desc: es ? 'Restringe cualquier carpeta de administración genérica solo a tu IP' : 'Restricts any generic admin folder to only your IP', risk: 'caution', default: false, note: es ? '⚠ Ajusta la ruta /admin/ y TU_IP_AQUI a tu caso' : '⚠ Adjust the /admin/ path and YOUR_IP_HERE to your case',
+        code: `# ── Protect /admin/ by IP ─────────────────────────────────\n# ⚠ Adjust the path and YOUR_IP_HERE to your setup\n<IfModule mod_rewrite.c>\n  RewriteEngine On\n  RewriteCond %{REQUEST_URI} ^/admin/\n  RewriteCond %{REMOTE_ADDR} !^YOUR_IP_HERE$\n  RewriteRule ^(.*)$ - [F,L]\n</IfModule>` },
+    ],
+  },
+  {
+    id: 'geo_block', icon: '🗺️', label: es ? 'Bloqueo/Permiso por País' : 'Country Block/Allow', color: '#EC4899',
+    rules: [
+      { id: 'block_countries', label: es ? 'Bloquear países específicos' : 'Block specific countries', desc: es ? 'Deniega acceso desde países que definas por código ISO. Requiere mod_geoip2 activo en el servidor' : 'Denies access from countries you define by ISO code. Requires mod_geoip2 enabled on the server', risk: 'caution', default: false, note: es ? '⚠ Requiere que tu hosting tenga GeoIP habilitado (pregunta a soporte)' : '⚠ Requires your host to have GeoIP enabled (ask your hosting support)',
+        code: `# ── Block Countries by ISO Code ──────────────────────────\n# ⚠ Requires mod_geoip2 / GeoIP2 module enabled on the server\n# ✏ Replace CN, RU, KP with the ISO country codes to block\n<IfModule mod_geoip2.c>\n  SetEnvIf GEOIP2_COUNTRY_CODE (CN|RU|KP) BlockCountry\n  <RequireAll>\n    Require all granted\n    Require not env BlockCountry\n  </RequireAll>\n</IfModule>` },
+      { id: 'allow_only_countries', label: es ? 'Permitir solo ciertos países' : 'Allow only certain countries', desc: es ? 'Modelo whitelist: solo países permitidos pueden acceder (ej. si solo vendes en Ecuador)' : 'Whitelist model: only allowed countries can access (e.g. if you only sell in Ecuador)', risk: 'caution', default: false, note: es ? '⚠ Alto riesgo si tu audiencia es internacional. Requiere GeoIP' : '⚠ High risk if your audience is international. Requires GeoIP',
+        code: `# ── Allow Only Specific Countries ────────────────────────\n# ⚠ Requires mod_geoip2 / GeoIP2 module enabled on the server\n# ✏ Replace EC, US, CO with the ISO country codes to allow\n<IfModule mod_geoip2.c>\n  SetEnvIf GEOIP2_COUNTRY_CODE (EC|US|CO) AllowCountry\n  <RequireAll>\n    Require env AllowCountry\n  </RequireAll>\n</IfModule>` },
+    ],
+  },
+  {
+    id: 'redirects', icon: '↪️', label: es ? 'Redirecciones de URL' : 'URL Redirects', color: '#14B8A6',
+    rules: [
+      { id: 'redirect_old_domain', label: es ? 'Redirigir dominio antiguo al nuevo' : 'Redirect old domain to new one', desc: es ? 'Envía todo el tráfico de un dominio anterior a tu dominio actual (301 permanente)' : 'Sends all traffic from a previous domain to your current domain (301 permanent)', risk: 'safe', default: false, note: es ? '✏ Cambia dominioviejo.com por tu dominio anterior' : '✏ Replace olddomain.com with your previous domain',
+        code: `# ── Redirect Old Domain ───────────────────────────────────\n# ✏ Replace olddomain.com with your previous domain\nRewriteEngine On\nRewriteCond %{HTTP_HOST} ^(www\\.)?dominioviejo\\.com$ [NC]\nRewriteRule ^(.*)$ https://%{ENV:NEW_DOMAIN}/$1 [R=301,L]` },
+      { id: 'trailing_slash', label: es ? 'Normalizar barra final (trailing slash)' : 'Normalize trailing slash', desc: es ? 'Agrega o quita la / final de forma consistente. Evita contenido duplicado en SEO' : 'Consistently adds or removes the trailing /. Prevents duplicate content for SEO', risk: 'safe', default: true,
+        code: `# ── Normalize Trailing Slash ──────────────────────────────\nRewriteEngine On\nRewriteCond %{REQUEST_FILENAME} !-f\nRewriteCond %{REQUEST_URI} !(.*)/$\nRewriteRule ^(.*)$ $1/ [R=301,L]` },
+      { id: 'remove_index', label: es ? 'Quitar index.php/index.html de las URLs' : 'Remove index.php/index.html from URLs', desc: es ? 'Redirige /index.php o /index.html a la raíz del sitio' : 'Redirects /index.php or /index.html to the site root', risk: 'safe', default: false,
+        code: `# ── Remove index.php / index.html from URLs ───────────────\nRewriteEngine On\nRewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\\ /index\\.(php|html?)\\ HTTP\nRewriteRule ^index\\.(php|html?)$ / [R=301,L]` },
+      { id: 'custom_404', label: es ? 'Página 404 personalizada' : 'Custom 404 page', desc: es ? 'Muestra una página propia en vez del error 404 genérico del servidor' : "Shows your own page instead of the server's generic 404 error", risk: 'safe', default: false, note: es ? '✏ Crea /404.html en la raíz de tu sitio primero' : '✏ Create /404.html at your site root first',
+        code: `# ── Custom 404 Page ───────────────────────────────────────\n# ✏ Create /404.html at your site root first\nErrorDocument 404 /404.html` },
+    ],
+  },
+  {
+    id: 'wp_advanced', icon: '🧩', label: es ? 'Seguridad WordPress Avanzada' : 'Advanced WordPress Security', color: '#8B5CF6',
+    rules: [
+      { id: 'block_author_scan', label: es ? 'Bloquear escaneo de usuarios (?author=)' : 'Block user enumeration (?author=)', desc: es ? 'Impide que atacantes descubran nombres de usuario probando ?author=1, ?author=2, etc.' : 'Prevents attackers from discovering usernames by trying ?author=1, ?author=2, etc.', risk: 'safe', default: true,
+        code: `# ── Block WordPress Author Scan ───────────────────────────\nRewriteEngine On\nRewriteCond %{QUERY_STRING} ^author=([0-9]*)\nRewriteRule .* - [F,L]` },
+      { id: 'block_rest_users', label: es ? 'Bloquear enumeración vía REST API' : 'Block REST API user enumeration', desc: es ? 'Deniega acceso al endpoint /wp-json/wp/v2/users que expone nombres de usuario' : 'Denies access to the /wp-json/wp/v2/users endpoint that exposes usernames', risk: 'caution', default: false, note: es ? '⚠ No activar si un plugin/app externa necesita ese endpoint' : "⚠ Don't enable if a plugin or external app needs this endpoint",
+        code: `# ── Block WP REST API User Enumeration ────────────────────\nRewriteEngine On\nRewriteCond %{REQUEST_URI} ^/wp-json/wp/v2/users [NC]\nRewriteRule .* - [F,L]` },
+      { id: 'block_wp_cron', label: es ? 'Bloquear wp-cron.php externo' : 'Block external wp-cron.php', desc: es ? 'Impide llamadas externas a wp-cron.php (recomendado usar cron real del servidor en su lugar)' : "Prevents external calls to wp-cron.php (recommended to use the server's real cron instead)", risk: 'caution', default: false, note: es ? '⚠ Configura un cron job real en tu panel antes de activar esto' : '⚠ Set up a real cron job in your panel before enabling this',
+        code: `# ── Block External wp-cron.php ────────────────────────────\n# ⚠ Set up a real system cron job before enabling this\n<Files wp-cron.php>\n  Order Deny,Allow\n  Deny from all\n</Files>` },
+      { id: 'block_wp_info_files', label: es ? 'Bloquear archivos de información sensible' : 'Block sensitive info files', desc: es ? 'Oculta readme.html, license.txt, wp-config-sample.php y debug.log que revelan la versión de WP' : 'Hides readme.html, license.txt, wp-config-sample.php and debug.log which reveal the WP version', risk: 'safe', default: true,
+        code: `# ── Block WordPress Info Disclosure Files ─────────────────\n<FilesMatch "^(readme\\.html|license\\.txt|wp-config-sample\\.php|debug\\.log)$">\n  Order Allow,Deny\n  Deny from all\n</FilesMatch>` },
+      { id: 'protect_wp_includes', label: es ? 'Proteger wp-includes' : 'Protect wp-includes', desc: es ? 'Bloquea ejecución directa de archivos PHP dentro de wp-includes, salvo los necesarios para el core' : 'Blocks direct execution of PHP files inside wp-includes, except the ones core needs', risk: 'safe', default: true,
+        code: `# ── Protect wp-includes ───────────────────────────────────\n<IfModule mod_rewrite.c>\n  RewriteEngine On\n  RewriteRule ^wp-admin/includes/ - [F,L]\n  RewriteRule !^wp-includes/ - [S=3]\n  RewriteRule ^wp-includes/[^/]+\\.php$ - [F,L]\n  RewriteRule ^wp-includes/js/tinymce/langs/.+\\.php - [F,L]\n  RewriteRule ^wp-includes/theme-compat/ - [F,L]\n</IfModule>` },
+    ],
+  },
 ];
 
 const T = es ? {

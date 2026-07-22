@@ -23,11 +23,6 @@ export default defineConfig({
       filter: (page) =>
         !page.includes('/gracias') &&
         !page.includes('/thank-you') &&
-        !page.includes('/blog') &&
-        !page.includes('/desarrollo-web') &&
-        !page.includes('/web-development') &&
-        !page.includes('/desarrollo-sistemas') &&
-        !page.includes('/systems') &&
         page !== `${SITE_URL}/`,
     }),
   ],
