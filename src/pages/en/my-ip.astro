@@ -1,0 +1,16 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import IPCheckContent from '@/components/IPCheckContent.astro';
+import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+
+const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'What is my IP?', key: 'myip' }]);
+---
+<BaseLayout
+  locale="en"
+  pageKey="myip"
+  title="What is my IP? | Free Tool | Terranode"
+  description="Look up your public IP address, internet provider, ASN, location and VPN/proxy detection instantly. Free tool by Terranode."
+  jsonLd={[organizationSchema('en'), breadcrumb]}
+>
+  <IPCheckContent locale="en" />
+</BaseLayout>

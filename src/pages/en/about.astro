@@ -1,0 +1,16 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AboutContent from '@/components/AboutContent.astro';
+import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+
+const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'About', key: 'nosotros' }]);
+---
+<BaseLayout
+  locale="en"
+  pageKey="nosotros"
+  title="About Us | Terranode LLC — Cloud Infrastructure Since 2016"
+  description="Since 2016 in Ecuador: 6+ locations, 1,500+ servers deployed and 12,000+ mailboxes migrated. Learn the story and values behind Terranode."
+  jsonLd={[organizationSchema('en'), breadcrumb]}
+>
+  <AboutContent locale="en" />
+</BaseLayout>

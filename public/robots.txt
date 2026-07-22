@@ -1,0 +1,26 @@
+User-agent: *
+Allow: /
+
+# Bloquea rutas que no aportan valor de indexación
+Disallow: /api/
+
+# Permite explícitamente crawlers de motores de respuesta / IA (GEO)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+Sitemap: https://terranode.net/sitemap-index.xml

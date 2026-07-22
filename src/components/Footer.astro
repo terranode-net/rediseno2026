@@ -1,0 +1,143 @@
+---
+import { pathFor, ORG, type Locale } from '@/lib/site';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const p = locale === 'es' ? '/es' : '/en';
+
+const t = {
+  es: {
+    tag: 'Infraestructura cloud de calidad superior para empresas en todo el mundo.',
+    rights: '© 2025 Terranode · Todos los derechos reservados.',
+  },
+  en: {
+    tag: 'Superior quality cloud infrastructure for businesses worldwide.',
+    rights: '© 2025 Terranode · All rights reserved.',
+  },
+}[locale];
+
+const NAV_COLS = [
+  {
+    title: locale === 'es' ? 'Compañía' : 'Company',
+    links: [
+      { l: locale === 'es' ? 'Inicio' : 'Home', h: pathFor(locale, 'home') },
+      { l: locale === 'es' ? 'Nosotros' : 'About', h: pathFor(locale, 'nosotros') },
+      { l: 'Blog', h: pathFor(locale, 'blog') },
+      { l: locale === 'es' ? 'Contacto' : 'Contact', h: pathFor(locale, 'contacto') },
+      { l: 'Status', h: 'https://status.terranode.net', external: true },
+    ],
+  },
+  {
+    title: locale === 'es' ? 'Servicios' : 'Services',
+    links: [
+      { l: 'Web Hosting', h: pathFor(locale, 'hosting') },
+      { l: 'VPS Server', h: pathFor(locale, 'vps') },
+      { l: locale === 'es' ? 'Dedicados' : 'Dedicated', h: pathFor(locale, 'dedicados') },
+      { l: 'Correo Corp.', h: pathFor(locale, 'terramail') },
+      { l: 'Microsoft 365', h: pathFor(locale, 'm365') },
+    ],
+  },
+  {
+    title: locale === 'es' ? 'Herramientas' : 'Tools',
+    links: [
+      { l: locale === 'es' ? '¿Cuál es mi IP?' : 'What is my IP?', h: pathFor(locale, 'myip') },
+      { l: 'DNS Checker', h: pathFor(locale, 'dns') },
+      { l: locale === 'es' ? 'Detector de Hosting' : 'Hosting Detector', h: pathFor(locale, 'hostingDetector') },
+      { l: locale === 'es' ? 'Generador de .htaccess' : '.htaccess Generator', h: pathFor(locale, 'htaccess') },
+      { l: 'Email & DNS Toolbox', h: pathFor(locale, 'emailTools') },
+    ],
+  },
+  {
+    title: locale === 'es' ? 'Accesos Rápidos' : 'Quick Access',
+    links: [
+      { l: 'Panel Cliente', h: ORG.clientPortal, external: true },
+      { l: 'Panel VPS', h: 'https://cloud.terranode.net', external: true },
+      { l: locale === 'es' ? 'Crear Cuenta' : 'Sign Up', h: `${ORG.clientPortal}/register`, external: true },
+      { l: locale === 'es' ? 'Abrir Ticket' : 'Open Ticket', h: ORG.ticketUrl, external: true },
+      { l: locale === 'es' ? 'Documentación' : 'Docs', h: `${ORG.clientPortal}/knowledgebase`, external: true },
+    ],
+  },
+  {
+    title: 'Legal',
+    links: [
+      { l: locale === 'es' ? 'Términos y Condiciones' : 'Terms & Conditions', h: pathFor(locale, 'terms') },
+      { l: locale === 'es' ? 'Política de Reembolsos' : 'Refund Policy', h: pathFor(locale, 'refund') },
+      { l: locale === 'es' ? 'Uso Aceptable' : 'Acceptable Use Policy', h: `${pathFor(locale, 'terms')}#${locale === 'es' ? 'uso' : 'aup'}` },
+      { l: locale === 'es' ? 'Política de Privacidad' : 'Privacy Policy', h: pathFor(locale, 'privacy') },
+    ],
+  },
+];
+const SOCIAL_LINKS = [
+  { label: 'Discord', href: ORG.discord },
+  { label: 'Twitter', href: ORG.sameAs.find((u) => u.includes('twitter')) ?? '#' },
+  { label: 'LinkedIn', href: ORG.sameAs.find((u) => u.includes('linkedin')) ?? '#' },
+];
+---
+<footer role="contentinfo" class="border-t border-white/[0.05] bg-[#040810]">
+  <div class="mx-auto max-w-[1160px]">
+    <!-- Desktop: 5-col grid -->
+    <div class="hidden grid-cols-[1.3fr_1fr_1fr_1fr_1fr_1fr] gap-8 border-b border-white/[0.04] px-6 py-14 lg:grid lg:px-8">
+      <div>
+        <a href={pathFor(locale, 'home')} class="mb-4 inline-flex items-center gap-2.5 no-underline">
+          <img src="/logo-mark.png" alt="Terranode" class="h-8 w-auto" width="63" height="77" />
+          <div>
+            <div class="font-display text-[17px] font-bold leading-tight text-white">Terranode</div>
+            <div class="font-body text-[8px] uppercase tracking-[2px] text-[#3B82F6]">Cloud Infrastructure</div>
+          </div>
+        </a>
+        <p class="mb-5 font-body text-[13px] leading-[1.75] text-slate-500">{t.tag}</p>
+        <div class="flex flex-wrap gap-2">
+          {SOCIAL_LINKS.map((s) => (
+            <a href={s.href} target="_blank" rel="noopener" class="rounded-md border border-white/[0.09] px-3 py-1.5 font-body text-xs text-slate-500 no-underline transition-colors hover:text-[#60A5FA]">
+              {s.label}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      {NAV_COLS.map((col) => (
+        <nav aria-label={col.title}>
+          <h4 class="mb-4 font-display text-xs font-bold uppercase tracking-[1.5px] text-white">{col.title}</h4>
+          {col.links.map((lk) => (
+            <a href={lk.h} target={lk.external ? '_blank' : undefined} rel={lk.external ? 'noopener' : undefined} class="mb-[11px] block font-body text-[13px] leading-[1.4] text-slate-500 no-underline transition-colors hover:text-[#60A5FA]">{lk.l}</a>
+          ))}
+        </nav>
+      ))}
+    </div>
+
+    <!-- Mobile: brand + 2x2 grid -->
+    <div class="border-b border-white/[0.04] px-6 pt-10 lg:hidden">
+      <div class="mb-8">
+        <a href={pathFor(locale, 'home')} class="mb-4 inline-flex items-center gap-2.5 no-underline">
+          <img src="/logo-mark.png" alt="Terranode" class="h-8 w-auto" width="63" height="77" />
+          <div>
+            <div class="font-display text-[17px] font-bold leading-tight text-white">Terranode</div>
+            <div class="font-body text-[8px] uppercase tracking-[2px] text-[#3B82F6]">Cloud Infrastructure</div>
+          </div>
+        </a>
+        <p class="mb-4 font-body text-[13px] leading-[1.75] text-slate-500">{t.tag}</p>
+        <div class="flex flex-wrap gap-2">
+          {SOCIAL_LINKS.map((s) => (
+            <a href={s.href} target="_blank" rel="noopener" class="rounded-md border border-white/[0.09] px-3 py-1.5 font-body text-xs text-slate-500 no-underline">
+              {s.label}
+            </a>
+          ))}
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-x-5 gap-y-7 pb-8">
+        {NAV_COLS.map((col) => (
+          <nav aria-label={col.title}>
+            <h4 class="mb-4 font-display text-xs font-bold uppercase tracking-[1.5px] text-white">{col.title}</h4>
+            {col.links.map((lk) => (
+              <a href={lk.h} target={lk.external ? '_blank' : undefined} rel={lk.external ? 'noopener' : undefined} class="mb-[11px] block font-body text-[13px] leading-[1.4] text-slate-500 no-underline">{lk.l}</a>
+            ))}
+          </nav>
+        ))}
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-between gap-2.5 px-6 py-5 lg:px-8">
+      <small class="font-body text-xs text-slate-600">{t.rights}</small>
+    </div>
+  </div>
+</footer>

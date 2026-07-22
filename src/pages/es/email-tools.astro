@@ -1,0 +1,16 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import EmailToolboxContent from '@/components/EmailToolboxContent.astro';
+import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+
+const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Email & DNS Toolbox', key: 'emailTools' }]);
+---
+<BaseLayout
+  locale="es"
+  pageKey="emailTools"
+  title="Email & DNS Toolbox — MX, SPF, DKIM, DMARC, Blacklist | Terranode"
+  description="Herramientas gratuitas de diagnóstico email y DNS: MX, SPF, DKIM, DMARC, Blacklist, PTR, análisis de cabeceras y diagnóstico SMTP."
+  jsonLd={[organizationSchema('es'), breadcrumb]}
+>
+  <EmailToolboxContent locale="es" />
+</BaseLayout>

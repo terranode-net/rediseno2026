@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Metrophobic&family=JetBrains+Mono:wght@500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-body antialiased;
+    background: #080E1C;
+    color: #CBD5E1;
+    font-feature-settings: 'ss01' on, 'ss02' on;
+    overflow-x: hidden;
+  }
+
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #080E1C;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1A3050;
+    border-radius: 4px;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display text-ink;
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background: #3355FF;
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid #3355FF;
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-content px-6 md:px-10;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-white shadow-card transition-all duration-200 hover:bg-accent-hover hover:shadow-card-hover active:scale-[0.98];
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-ink transition-all duration-200 hover:border-accent hover:text-accent active:scale-[0.98];
+  }
+
+  .btn-ghost-dark {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition-all duration-200 hover:border-white/40 hover:bg-white/10;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent-soft px-3 py-1 text-[13px] font-semibold uppercase tracking-wide text-accent;
+  }
+
+  .card {
+    @apply rounded-xl2 border border-slate-200 bg-white p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover;
+  }
+
+  .stat-number {
+    @apply font-display text-2xl sm:text-3xl md:text-5xl text-white whitespace-nowrap;
+  }
+}
+
+@layer utilities {
+  .bg-dot-grid {
+    background-image: radial-gradient(circle, rgba(255,255,255,0.14) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Scroll-reveal: elements with .an fade+slide up the first time they enter the viewport */
+.an {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.an.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.an.d2.is-visible { transition-delay: .08s; }
+.an.d3.is-visible { transition-delay: .16s; }
+.an.d4.is-visible { transition-delay: .24s; }
+.an.d5.is-visible { transition-delay: .32s; }
+.an.d6.is-visible { transition-delay: .4s; }

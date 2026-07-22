@@ -1,0 +1,31 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import M365Content from '@/components/M365Content.astro';
+import { SITE_URL } from '@/lib/site';
+import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
+
+const faqs = [
+  { q: '¿Mi empresa ya tiene M365, puedo migrar con Terranode?', a: 'Sí. Transferimos tu suscripción existente sin interrupciones, con soporte local en español.' },
+  { q: '¿Incluye las apps de Office instaladas en la PC?', a: 'Las apps descargables están incluidas solo en el plan Business Standard.' },
+  { q: '¿Cuántos usuarios puedo agregar?', a: 'No hay límite de usuarios; cada licencia corresponde a un usuario.' },
+  { q: '¿Qué es Microsoft Copilot y está incluido?', a: 'Es el asistente de IA de M365, disponible actualmente como add-on.' },
+  { q: '¿Pueden ayudarme a configurar Microsoft 365 desde cero?', a: 'Sí, gestionamos activación, dominio, cuentas y migración de datos.' },
+  { q: '¿Puedo pagar mensual o anualmente?', a: 'Ofrecemos ambas opciones; el pago anual tiene descuento adicional.' },
+];
+const plans = [
+  { name: 'Exchange Online Plan 1', price: '5.50', description: 'Correo empresarial con Outlook, buzón de 50 GB.', url: `${SITE_URL}/es/store/m365-exchange` },
+  { name: 'Microsoft 365 Business Basic', price: '7.20', description: 'Teams, OneDrive 1TB, SharePoint, apps web de Office.', url: `${SITE_URL}/es/store/m365-basic` },
+  { name: 'Microsoft 365 Business Standard', price: '12.50', description: 'Todo lo de Basic + apps de escritorio instalables.', url: `${SITE_URL}/es/store/m365-standard` },
+];
+const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Microsoft 365', key: 'm365' }]);
+const service = serviceSchema('es', { name: 'Microsoft 365', description: 'Suite Microsoft 365 con Teams, OneDrive, Exchange y soporte local en Ecuador. Terranode es Partner Microsoft certificado.', pageKey: 'm365', serviceType: 'Microsoft 365 Implementation' });
+---
+<BaseLayout
+  locale="es"
+  pageKey="m365"
+  title="Microsoft 365 desde $5.50/mes | Partner Microsoft Ecuador | Terranode"
+  description="Teams, Outlook, Word, Excel, PowerPoint y 1 TB en la nube. Vendido y soportado por Terranode, Partner certificado de Microsoft en Ecuador. Migración gratis."
+  jsonLd={[organizationSchema('es'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
+>
+  <M365Content locale="es" />
+</BaseLayout>

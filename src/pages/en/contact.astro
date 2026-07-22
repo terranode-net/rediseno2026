@@ -1,0 +1,16 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ContactPageContent from '@/components/ContactPageContent.astro';
+import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+
+const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'Contact', key: 'contacto' }]);
+---
+<BaseLayout
+  locale="en"
+  pageKey="contacto"
+  title="Contact | Talk to a Terranode Engineer"
+  description="Questions about VPS, hosting, dedicated servers or Microsoft 365? Reach us via WhatsApp, email, ticket or Discord — response in under 1 hour."
+  jsonLd={[organizationSchema('en'), breadcrumb]}
+>
+  <ContactPageContent locale="en" />
+</BaseLayout>

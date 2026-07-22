@@ -1,0 +1,30 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import HostingContent from '@/components/HostingContent.astro';
+import { SITE_URL } from '@/lib/site';
+import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
+
+const faqs = [
+  { q: 'Can I migrate my current site to Terranode?', a: 'Yes. We offer free migration from any provider, including files, database and email, with zero downtime.' },
+  { q: 'Is SSL included in every plan?', a: "Yes. Every plan includes free, unlimited Let's Encrypt SSL certificates that renew automatically." },
+  { q: 'How many email accounts can I create?', a: 'Every plan includes unlimited email accounts.' },
+  { q: 'What happens if I exceed my storage limit?', a: "You'll get a notification before reaching the limit and can upgrade anytime." },
+  { q: 'Do you support e-commerce?', a: 'Yes. Install WooCommerce, Prestashop, Magento or any CMS with 1 click.' },
+];
+const plans = [
+  { name: '8 GB Plan', price: '3.33', description: '8 GB NVMe, 40 GB bandwidth, 5 databases, unlimited email.', url: `${SITE_URL}/en/store/hosting-8gb` },
+  { name: '14 GB Plan', price: '5.33', description: '14 GB NVMe, 70 GB bandwidth, 7 databases, unlimited email.', url: `${SITE_URL}/en/store/hosting-14gb` },
+  { name: '35 GB Plan', price: '14.58', description: '35 GB NVMe, 175 GB bandwidth, 17 databases, unlimited email.', url: `${SITE_URL}/en/store/hosting-35gb` },
+];
+const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'Hosting', key: 'hosting' }]);
+const service = serviceSchema('en', { name: 'Web Hosting', description: 'Professional web hosting with LiteSpeed, CloudLinux and cPanel. Free SSL, daily backups.', pageKey: 'hosting', serviceType: 'Web Hosting' });
+---
+<BaseLayout
+  locale="en"
+  pageKey="hosting"
+  title="Web Hosting from $40/yr | LiteSpeed + cPanel | Terranode"
+  description="Web hosting with LiteSpeed, CloudLinux, cPanel and free SSL. Plans from $40/yr, free migration and 24/7 support."
+  jsonLd={[organizationSchema('en'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
+>
+  <HostingContent locale="en" />
+</BaseLayout>

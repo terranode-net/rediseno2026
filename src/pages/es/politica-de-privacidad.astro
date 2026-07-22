@@ -1,0 +1,38 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import LegalPageContent from '@/components/LegalPageContent.astro';
+import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+
+const sections = [
+  { id: 'intro', title: '1. Introducción e Identidad del Responsable', content: `La presente Política de Privacidad describe cómo Terranode S.A.S ("Terranode") recopila, usa, almacena y protege los datos personales de sus clientes y usuarios.\n\nEsta Política cumple con la Ley Orgánica de Protección de Datos Personales (LOPDP) del Ecuador, publicada en el Registro Oficial Suplemento No. 459 del 26 de mayo de 2021.\n\nDatos del Responsable:\n- Empresa: Terranode S.A.S\n- Actividad: Servicios de infraestructura cloud, hosting, VPS, servidores dedicados\n- Sitio web: https://terranode.net\n- Correo: info@terranode.net\n- Teléfono: +593 99 819 7150\n- Domicilio: Guayaquil, República del Ecuador` },
+  { id: 'datos', title: '2. Datos Personales que Recopilamos', content: `Recopilamos únicamente los datos necesarios para prestar nuestros servicios:\n\nDatos de Identificación y Contacto (obligatorios):\n- Nombre completo o razón social\n- Dirección de correo electrónico\n- Número de teléfono\n- Dirección física (para facturación)\n- País y ciudad de residencia\n\nDatos de Facturación (obligatorios por ley tributaria ecuatoriana):\n- RUC o Cédula de Identidad\n- Razón social o nombre del contribuyente\n- Dirección de facturación\n- Método de pago (los datos de tarjeta son procesados por pasarelas certificadas PCI-DSS; Terranode no almacena datos completos de tarjetas)\n\nDatos Técnicos (recopilados automáticamente):\n- Dirección IP, tipo de navegador, sistema operativo\n- Páginas visitadas y tiempo de permanencia\n- Logs de acceso al panel de control\n- Registros de tickets de soporte\n\nNo recopilamos datos sensibles como información médica, afiliación política, orientación sexual, creencias religiosas ni datos biométricos.` },
+  { id: 'finalidades', title: '3. Finalidades del Tratamiento', content: `Los datos personales se tratan para:\n\nFinalidades Contractuales (necesarias para el servicio):\n- Creación y gestión de cuentas de usuario\n- Provisión y administración de los servicios contratados\n- Envío de notificaciones técnicas relacionadas con el servicio\n- Atención de solicitudes de soporte técnico\n- Gestión de renovaciones y cancelaciones\n\nFinalidades de Facturación y Cobro (obligación legal):\n- Emisión de facturas electrónicas conforme a la normativa del SRI\n- Procesamiento de pagos y gestión de cobros\n- Registro contable y tributario obligatorio\n- Cumplimiento de obligaciones ante el SRI\n\nFinalidades de Seguridad (interés legítimo):\n- Prevención y detección de fraudes y accesos no autorizados\n- Protección de la infraestructura técnica\n- Cumplimiento de solicitudes de autoridades competentes\n\nFinalidades de Comunicación Comercial (con consentimiento):\n- Envío de comunicaciones sobre nuevos servicios y promociones\n- El cliente puede darse de baja en cualquier momento` },
+  { id: 'conservacion', title: '4. Plazos de Conservación', content: `- Datos de facturación y contables: 7 años (exigencia del SRI y Código de Comercio)\n- Datos de la cuenta y servicios activos: Durante la vigencia del contrato + 1 año\n- Datos técnicos y logs: 90 días a 1 año según el tipo\n- Datos de tickets de soporte: 1 año desde el cierre del ticket\n- Datos para comunicaciones comerciales: Hasta que revoque su consentimiento` },
+  { id: 'transferencias', title: '5. Transferencias de Datos', content: `Terranode no vende ni alquila datos personales.\n\nPodemos compartir datos con:\n- Pasarelas de pago: Para procesamiento seguro de transacciones (PCI-DSS)\n- Proveedores de infraestructura: Centros de datos en Ecuador, USA y otras regiones\n- Microsoft Corporation: Para activación de licencias Microsoft 365 conforme a su política de privacidad\n- Autoridades públicas: Cuando exista obligación legal u orden judicial` },
+  { id: 'derechos', title: '6. Derechos del Titular', content: `Conforme a la LOPDP, usted tiene derecho a:\n\n- Acceso: Conocer qué datos suyos tratamos\n- Rectificación: Corregir datos inexactos o incompletos\n- Supresión: Solicitar eliminación cuando ya no sean necesarios\n- Oposición: Oponerse a comunicaciones comerciales en cualquier momento\n- Portabilidad: Recibir sus datos en formato estructurado y legible por máquina\n\nEjercicio de Derechos: Envíe su solicitud a info@terranode.net o abra un ticket en my.terranode.net indicando: nombre completo, número de cédula o RUC, correo electrónico, derecho que desea ejercer. Responderemos en un plazo máximo de 15 días hábiles.` },
+  { id: 'seguridad', title: '7. Medidas de Seguridad', content: `Implementamos medidas técnicas y organizativas apropiadas:\n- Transmisión cifrada SSL/TLS en todas las comunicaciones\n- Controles de acceso basados en roles\n- Gestión de contraseñas seguras en sistemas internos\n- Monitoreo y registro de accesos a sistemas con datos personales\n- Evaluaciones periódicas de seguridad de la infraestructura` },
+  { id: 'cookies', title: '8. Cookies y Seguimiento', content: `Utilizamos:\n- Cookies de sesión (necesarias para el funcionamiento)\n- Google Analytics (GA4): Datos de uso anónimos para mejorar el servicio\n- Meta Pixel: Medición de campañas publicitarias en Facebook e Instagram\n\nPuede gestionar las cookies desde la configuración de su navegador.` },
+  { id: 'menores', title: '9. Menores de Edad', content: `Los servicios de Terranode están dirigidos exclusivamente a personas mayores de 18 años. Si un menor ha proporcionado datos sin consentimiento parental, contáctenos a info@terranode.net para eliminarlos.` },
+  { id: 'modificaciones', title: '10. Modificaciones', content: `Terranode puede actualizar esta Política en cualquier momento. Los cambios materiales se notificarán a clientes activos por correo electrónico con al menos 30 días de anticipación.` },
+  { id: 'contacto', title: '11. Contacto', content: `Terranode S.A.S\nResponsable de Protección de Datos: Administración Terranode\nCorreo: info@terranode.net\nPanel de soporte: https://my.terranode.net\nTeléfono: +593 99 819 7150\nGuayaquil, República del Ecuador` },
+];
+const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Política de Privacidad', key: 'privacy' }]);
+---
+<BaseLayout
+  locale="es"
+  pageKey="privacy"
+  title="Política de Privacidad y Protección de Datos · Terranode"
+  description="Política de Privacidad de Terranode S.A.S conforme a la LOPDP Ecuador. Cómo recopilamos, usamos y protegemos sus datos personales para facturación y servicios."
+  jsonLd={[organizationSchema('es'), breadcrumb]}
+>
+  <LegalPageContent
+    locale="es"
+    title="Política de Privacidad y Protección de Datos Personales"
+    badge="Privacidad · LOPDP Ecuador"
+    icon="🔏"
+    subtitle="Esta política describe cómo Terranode recopila, utiliza y protege sus datos personales, en cumplimiento de la Ley Orgánica de Protección de Datos Personales (LOPDP) del Ecuador."
+    updated="20 de Marzo de 2026"
+    complianceBadge="Cumple LOPDP Ecuador"
+    sections={sections}
+  />
+</BaseLayout>
