@@ -8,24 +8,10 @@ const BL = '#3B82F6';
 
 const FLAG: Record<string, string> = { us: '🇺🇸', ec: '🇪🇨' };
 
-const REGIONS = [
-  { id: 'ashburn', name: 'Ashburn, VA', country: 'us', ping: '12ms', status: 'online' },
-  { id: 'losangeles', name: 'Los Ángeles, CA', country: 'us', ping: '8ms', status: 'online' },
-  { id: 'chicago', name: 'Chicago, IL', country: 'us', ping: '18ms', status: 'online' },
-  { id: 'houston', name: 'Houston, TX', country: 'us', ping: '15ms', status: 'online' },
-  { id: 'guayaquil', name: 'Guayaquil, EC', country: 'ec', ping: '3ms', status: 'online' },
-];
+const REGIONS = Astro.props.regions ?? [];
+const DEFAULT_REGION = REGIONS[0]?.id ?? '';
 
-const PLANS = [
-  { id: 'tns01', name: 'TNS-01', cpu: '1 vCPU', ram: '1 GB', disk: '25 GB NVMe', bw: '1 TB', price: '$2.99', regions: ['ashburn', 'losangeles', 'chicago', 'houston', 'guayaquil'], href: 'https://my.terranode.net/store/ashburn-intel-kvm-vps/va-tns-01', popular: false },
-  { id: 'tns02', name: 'TNS-02', cpu: '1 vCPU', ram: '2 GB', disk: '30 GB NVMe', bw: '2 TB', price: '$5.00', regions: ['ashburn', 'losangeles', 'chicago', 'houston', 'guayaquil'], href: 'https://my.terranode.net/store/ashburn-intel-kvm-vps/va-tns-02', popular: false },
-  { id: 'tns03', name: 'TNS-03', cpu: '2 vCPU', ram: '4 GB', disk: '40 GB NVMe', bw: '3 TB', price: '$9.00', regions: ['ashburn', 'losangeles', 'chicago', 'houston', 'guayaquil'], href: 'https://my.terranode.net/store/ashburn-intel-kvm-vps/va-tns-03', popular: true },
-  { id: 'tns04', name: 'TNS-04', cpu: '4 vCPU', ram: '8 GB', disk: '80 GB NVMe', bw: '5 TB', price: '$18.50', regions: ['ashburn', 'losangeles', 'chicago', 'houston'], href: 'https://my.terranode.net/store/ashburn-intel-kvm-vps/va-tns-04', popular: false },
-  { id: 'tns05', name: 'TNS-05', cpu: '6 vCPU', ram: '12 GB', disk: '120 GB NVMe', bw: '6 TB', price: '$25.00', regions: ['ashburn', 'chicago'], href: 'https://my.terranode.net/store/ashburn-intel-kvm-vps/va-tns-05', popular: false },
-  { id: 'tns06', name: 'TNS-06', cpu: '8 vCPU', ram: '16 GB', disk: '150 GB NVMe', bw: '7 TB', price: '$35.00', regions: ['ashburn', 'chicago'], href: 'https://my.terranode.net/store/ashburn-intel-kvm-vps/va-tns-06', popular: false },
-  { id: 'tns07', name: 'TNS-07', cpu: '16 vCPU', ram: '32 GB', disk: '320 GB NVMe', bw: '8 TB', price: '$75.00', regions: ['ashburn'], href: 'https://my.terranode.net/store/ashburn-intel-kvm-vps/va-tns-07', popular: false },
-  { id: 'tns08', name: 'TNS-08', cpu: '22 vCPU', ram: '64 GB', disk: '1024 GB NVMe', bw: '10 TB', price: '$155.00', regions: ['ashburn'], href: 'https://my.terranode.net/store/ashburn-intel-kvm-vps/va-tns-08', popular: false },
-];
+const PLANS = Astro.props.plans ?? [];
 
 const OS_LIST = ['Ubuntu 22.04', 'Ubuntu 20.04', 'Debian 12', 'CentOS 7', 'Rocky Linux 9', 'AlmaLinux 9', 'Arch Linux', 'Fedora 39', 'Windows Server 2022'];
 
@@ -151,13 +137,13 @@ const contactoHref = `/${locale}/${es ? 'contacto' : 'contact'}`;
               type="button"
               class="region-btn rounded-xl border p-3.5 text-left transition-all"
               data-region={r.id}
-              style={r.id === 'ashburn' ? 'background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.45)' : 'background:rgba(255,255,255,.025);border-color:rgba(255,255,255,.07)'}
+              style={r.id === DEFAULT_REGION ? 'background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.45)' : 'background:rgba(255,255,255,.025);border-color:rgba(255,255,255,.07)'}
             >
               <div class="mb-1.5 flex items-center gap-2">
                 <span class="text-lg">{FLAG[r.country] || '🌐'}</span>
                 <div class="h-1.5 w-1.5 rounded-full" style={r.status === 'online' ? 'background:#22C55E' : 'background:#EF4444'}></div>
               </div>
-              <div class="region-name font-display text-[13px] font-bold leading-tight" style={r.id === 'ashburn' ? 'color:#60A5FA' : 'color:#fff'}>{r.name}</div>
+              <div class="region-name font-display text-[13px] font-bold leading-tight" style={r.id === DEFAULT_REGION ? 'color:#60A5FA' : 'color:#fff'}>{r.name}</div>
               <div class="mt-[3px] font-body text-[11px] text-slate-600">{r.ping} {T.latency}</div>
             </button>
           ))}
@@ -324,7 +310,7 @@ const contactoHref = `/${locale}/${es ? 'contacto' : 'contact'}`;
   </section>
 </main>
 
-<script>
+<script define:vars={{ DEFAULT_REGION }}>
   // Region filter
   const regionButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.region-btn'));
   const planCards = Array.from(document.querySelectorAll<HTMLElement>('.plan-card'));
@@ -339,7 +325,7 @@ const contactoHref = `/${locale}/${es ? 'contacto' : 'contact'}`;
     regionData[btn.dataset.region ?? ''] = btn.querySelector('.region-name')?.textContent ?? '';
   });
 
-  let currentRegion = 'ashburn';
+  let currentRegion = DEFAULT_REGION;
   let currentView: 'cards' | 'table' = 'cards';
 
   function applyRegion(region: string) {
@@ -396,12 +382,12 @@ const contactoHref = `/${locale}/${es ? 'contacto' : 'contact'}`;
   }
 
   regionButtons.forEach((btn) => {
-    btn.addEventListener('click', () => applyRegion(btn.dataset.region ?? 'ashburn'));
+    btn.addEventListener('click', () => applyRegion(btn.dataset.region ?? DEFAULT_REGION));
   });
   document.getElementById('view-cards-btn')?.addEventListener('click', () => applyView('cards'));
   document.getElementById('view-table-btn')?.addEventListener('click', () => applyView('table'));
 
-  applyRegion('ashburn');
+  applyRegion(DEFAULT_REGION);
   applyView('cards');
 
   // FAQ accordion

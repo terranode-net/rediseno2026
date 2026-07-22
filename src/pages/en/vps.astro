@@ -1,32 +1,40 @@
 ---
+// Renderizado en servidor: los precios se leen de Supabase en cada visita,
+// así los cambios del panel de administración se ven al instante y Google
+// sigue viendo el precio dentro del HTML y del JSON-LD.
+export const prerender = false;
+
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import VPSContent from '@/components/VPSContent.astro';
-import { pathFor, SITE_URL } from '@/lib/site';
+import { getVpsRegions, getVpsPlans, getSeo, priceNumber } from '@/lib/db';
+import { SITE_URL } from '@/lib/site';
 import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
+
+const [regions, plans, seo] = await Promise.all([getVpsRegions(), getVpsPlans(), getSeo('/vps')]);
 
 const faqs = [
   { q: 'Can I reinstall the OS from the panel?', a: 'Yes. From VirtFusion you can reinstall the OS at any time in under 5 minutes.' },
   { q: 'Are backups included?', a: 'Automatic backups are optional. You can create manual snapshots from the panel.' },
-  { q: 'Are all plans available in every region?', a: 'No. Higher-capacity plans (TNS-07, TNS-08) are only available in Ashburn. Select your region to see available plans.' },
+  { q: 'Are all plans available in every region?', a: 'No. Availability varies by region and stock. Select your region to see available plans.' },
   { q: 'Can I scale my plan later?', a: 'Yes. Upgrade to a bigger plan from the client panel with no migration or downtime.' },
   { q: 'What is Full Root Access?', a: 'Full root SSH access: install any software, modify kernel configuration and control everything.' },
 ];
 
-const plans = [
-  { name: 'TNS-01', price: '2.99', description: '1 vCPU, 1 GB RAM, 25 GB NVMe, 1 TB bandwidth.', url: `${SITE_URL}/en/store/tns-01` },
-  { name: 'TNS-02', price: '5.00', description: '1 vCPU, 2 GB RAM, 30 GB NVMe, 2 TB bandwidth.', url: `${SITE_URL}/en/store/tns-02` },
-  { name: 'TNS-03', price: '9.00', description: '2 vCPU, 4 GB RAM, 40 GB NVMe, 3 TB bandwidth.', url: `${SITE_URL}/en/store/tns-03` },
-  { name: 'TNS-04', price: '18.50', description: '4 vCPU, 8 GB RAM, 80 GB NVMe, 5 TB bandwidth.', url: `${SITE_URL}/en/store/tns-04` },
-  { name: 'TNS-05', price: '25.00', description: '6 vCPU, 12 GB RAM, 120 GB NVMe, 6 TB bandwidth.', url: `${SITE_URL}/en/store/tns-05` },
-  { name: 'TNS-06', price: '35.00', description: '8 vCPU, 16 GB RAM, 150 GB NVMe, 7 TB bandwidth.', url: `${SITE_URL}/en/store/tns-06` },
-  { name: 'TNS-07', price: '75.00', description: '16 vCPU, 32 GB RAM, 320 GB NVMe, 8 TB bandwidth.', url: `${SITE_URL}/en/store/tns-07` },
-  { name: 'TNS-08', price: '155.00', description: '22 vCPU, 64 GB RAM, 1024 GB NVMe, 10 TB bandwidth.', url: `${SITE_URL}/en/store/tns-08` },
-];
+const products = productPlanSchema(
+  plans
+    .filter((p) => !isNaN(Number(priceNumber(p.price))) && Number(priceNumber(p.price)) > 0)
+    .map((p) => ({
+      name: `VPS ${p.name}`,
+      price: priceNumber(p.price),
+      description: `${p.cpu}, ${p.ram} RAM, ${p.disk}, ${p.bw}.`,
+      url: `${SITE_URL}/en/vps`,
+    }))
+);
 
 const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'VPS', key: 'vps' }]);
 const service = serviceSchema('en', {
   name: 'NVMe VPS',
-  description: 'Virtual private servers with KVM virtualization, NVMe storage and 60-second deployment, with datacenters in Ashburn, Los Angeles, Chicago, Houston and Guayaquil.',
+  description: 'Virtual private servers with KVM virtualization, NVMe storage and 60-second deployment.',
   pageKey: 'vps',
   serviceType: 'VPS Hosting',
 });
@@ -34,9 +42,9 @@ const service = serviceSchema('en', {
 <BaseLayout
   locale="en"
   pageKey="vps"
-  title="NVMe VPS from $2.99/mo | 5 Regions | Terranode"
-  description="VPS servers with KVM virtualization, NVMe DDR4 and 60-second deploy. 8 plans from $2.99/mo. Choose your region: Ashburn, Los Angeles, Chicago, Houston or Guayaquil."
-  jsonLd={[organizationSchema('en'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
+  title={seo?.title ?? 'NVMe VPS from $2.99/mo | 5 Regions | Terranode'}
+  description={seo?.description ?? 'VPS servers with KVM virtualization, NVMe DDR4 and 60-second deploy. Choose your region: Ashburn, Los Angeles, Chicago, Houston or Guayaquil.'}
+  jsonLd={[organizationSchema('en'), breadcrumb, service, ...products, faqSchema(faqs)]}
 >
-  <VPSContent locale="en" />
+  <VPSContent locale="en" regions={regions} plans={plans} />
 </BaseLayout>

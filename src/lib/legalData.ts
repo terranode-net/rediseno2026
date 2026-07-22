@@ -1,8 +1,5 @@
-// Contenido legal — textos tomados 1:1 de los documentos oficiales de Terranode.
-// NOTA: en el original de Privacy.jsx la razón social aparecía como
-// "Vsphost Cloud Services S.A.S". Se unificó a "Terranode S.A.S" para ser
-// consistente con Terms.jsx y con la instrucción de no mencionar Vsphost.
-// Si la razón social registrada es la otra, cámbiala aquí (2 apariciones).
+// Contenido legal — textos oficiales de Terranode S.A.S.
+// Las versiones ES y EN tienen exactamente las mismas secciones y contenido.
 
 export interface LegalSection { id: string; title: string; content: string }
 export interface SummaryCard { icon: string; color: string; title: string; desc: string }
@@ -112,17 +109,103 @@ Guayaquil, Ecuador` },
 ];
 
 export const TERMS_EN: LegalSection[] = [
-  { id: 'acceptance', title: '1. Acceptance of Terms', content: `By accessing, registering for, or using any service offered by Terranode ("the Company", "we", "our"), you ("the Client") agree to be bound by these Terms and Conditions unconditionally. If you disagree with any part of these terms, you may not use our services.\n\nThese terms constitute a legally binding agreement between you and Terranode, governed by the laws of the Republic of Ecuador. Terranode reserves the right to modify these terms at any time by posting notice on this website. Continued use of the service after changes constitutes your acceptance of the new terms.` },
-  { id: 'services', title: '2. Service Description', content: `Terranode provides cloud infrastructure services including, without limitation: shared web hosting, virtual private servers (VPS), dedicated servers, corporate email (TerraMail), Microsoft 365, web development and systems development.\n\nServices are activated upon payment confirmation. We reserve the right to modify, suspend, or discontinue any service with reasonable prior notice, except in cases of policy violations where suspension may be immediate.` },
-  { id: 'payments', title: '3. Payments, Billing and Renewals', content: `3.1 All prices are expressed in US Dollars (USD) unless otherwise stated.\n\n3.2 Services are billed in advance per selected billing cycle (monthly, annual, or other). Non-payment by the due date may result in service suspension without additional notice.\n\n3.3 Services auto-renew at the end of each billing cycle unless cancelled at least 24 hours before the renewal date.\n\n3.4 Unpaid services will be suspended and data may be permanently deleted after 15 days past due.\n\n3.5 Chargebacks: Initiating a chargeback or dispute results in immediate service suspension, waives the right to a refund under our policy, and may incur an administrative fee.` },
-  { id: 'acceptable-use', title: '4. Acceptable Use Policy', content: `The following activities are strictly prohibited: sending unsolicited email (SPAM), distributing malware or viruses, conducting DoS/DDoS attacks, hosting child sexual abuse material (zero tolerance), engaging in fraud or identity theft, violating intellectual property rights, hosting terrorist content, unauthorized port scanning or network enumeration, unauthorized cryptocurrency mining, and reselling services without written authorization.\n\nTerranode reserves the right to suspend or limit services when a client excessively uses CPU, RAM, bandwidth, disk I/O, or other resources that impact other users on the same infrastructure.` },
-  { id: 'security', title: '5. Security', content: `The client is solely responsible for maintaining and monitoring the security of their accounts, applications, and data. Terranode implements reasonable technical and organizational measures to protect shared infrastructure but cannot guarantee absolute security against external threats. Terranode shall not be liable for damages resulting from external attacks, vulnerabilities in third-party software installed by the client, or unauthorized access resulting from client negligence.` },
-  { id: 'backups', title: '6. Backups and Data', content: `Data stored on Terranode services is the exclusive responsibility of the client. Clients must maintain independent backups of all critical data. Any backup services provided by Terranode are offered as supplementary features without guarantees of integrity or availability. Upon service cancellation, client data may be permanently deleted. Terranode shall not be liable for data loss.` },
-  { id: 'ip-addresses', title: '7. IP Addresses', content: `All IP addresses assigned to client services are the property of Terranode or its upstream providers. IP addresses are non-transferable and clients acquire no ownership rights over them. Terranode reserves the right to reassign IP addresses with reasonable notice.` },
-  { id: 'suspension', title: '8. Suspension and Termination', content: `Terranode reserves the right to suspend or terminate any service, with or without prior notice, in cases of: policy violations, non-payment, illegal activity, damage to infrastructure or other users, or at Terranode's sole discretion when deemed necessary to protect its network or client security.\n\nUpon termination, client access to services and stored data ceases immediately. Terranode may permanently delete all client data without obligation to retain it.` },
-  { id: 'liability', title: '9. Limitation of Liability', content: `To the maximum extent permitted by applicable law, Terranode shall not be liable for indirect, incidental, special, consequential or punitive damages, including loss of profits, data loss, business interruption, or any other intangible damages.\n\nTerranode's total liability to the client shall be limited to the total amount paid to Terranode during the three (3) months preceding the event giving rise to the claim. Services are provided "as is" and "as available" without warranties.` },
-  { id: 'governing-law', title: '10. Governing Law and Dispute Resolution', content: `These terms are governed by the laws of the Republic of Ecuador. Disputes will first be resolved through good-faith negotiation. If no resolution is reached within 30 days, the dispute will be submitted to the competent courts of Guayaquil, Ecuador.` },
-  { id: 'contact', title: '11. Contact Information', content: `Terranode — Cloud Infrastructure\nWebsite: https://terranode.net\nSupport: https://my.terranode.net\nEmail: info@terranode.net\nPhone: +593 99 819 7150\nGuayaquil, Ecuador` },
+  { id: 'acceptance', title: '1. Acceptance of Terms', content: `By accessing, registering for, or using any service offered by Terranode ("the Company", "we", "our"), you ("the Client") agree to be bound by these Terms and Conditions unconditionally. If you disagree with any part of these terms, you may not use our services.
+
+These terms constitute a legally binding agreement between you and Terranode, governed by the laws in force in the Republic of Ecuador. Terranode reserves the right to modify these terms at any time by posting notice on this website. Continued use of the service after such changes constitutes your acceptance of the new terms.` },
+  { id: 'services', title: '2. Service Description', content: `Terranode provides cloud infrastructure services including, without limitation: shared web hosting, virtual private servers (VPS), dedicated servers, corporate email (TerraMail), Microsoft 365, web development and systems development.
+
+Services are activated upon payment confirmation. We reserve the right to modify, suspend or discontinue any service with reasonable prior notice to the client, except in cases of violations of these policies where suspension may be immediate.` },
+  { id: 'accounts', title: '3. Client Accounts and Responsibilities', content: `3.1 **Accurate Information.** The client agrees to provide truthful, accurate, current and complete information during the registration process and to keep it updated.
+
+3.2 **Account Security.** The client is solely responsible for maintaining the confidentiality of their access credentials and for all activities carried out under their account. Terranode shall not be liable for losses caused by unauthorized use of your account.
+
+3.3 **Proper Use.** The client is responsible for ensuring that use of the services complies with all applicable local, national and international laws, as well as with these policies.
+
+3.4 **Contact.** The client must maintain an active and valid email address to receive important communications about their account and the services.` },
+  { id: 'payments', title: '4. Payments, Billing and Renewals', content: `4.1 **Pricing.** All prices are expressed in US Dollars (USD) unless otherwise stated. Prices may be subject to applicable taxes under Ecuadorian law.
+
+4.2 **Billing.** Services are billed in advance according to the selected billing cycle (monthly, annual or other). Non-payment by the due date may result in service suspension without additional prior notice.
+
+4.3 **Renewals.** Services renew automatically at the end of each billing cycle, unless the client cancels at least 24 hours before the renewal date.
+
+4.4 **Suspension for Non-Payment.** Services unpaid by their due date will be suspended. Data may be permanently deleted after 15 days past due without payment, and Terranode is not responsible for data loss in this case.
+
+4.5 **Destruction of VPS and Dedicated Servers.** For VPS and Dedicated Server services, once the service is cancelled, suspended for non-payment, or terminated for policy violation, the server will be immediately and irreversibly destroyed along with all data, snapshots, internal backups and configurations stored on it. Terranode will not retain any copy of the data nor will it have the ability to recover it once destruction has been executed. The client is solely responsible for exporting and backing up all their information before cancellation or in the event of anything that could lead to service termination.
+
+4.6 **Chargebacks.** If a client initiates a chargeback or dispute with their financial institution, Terranode reserves the right to immediately suspend all services, share relevant information with the payment processor to contest the chargeback, and apply an administrative fee. Initiating a chargeback automatically waives the right to a refund under our policy.` },
+  { id: 'acceptable-use', title: '5. Acceptable Use Policy', content: `5.1 **Prohibited Activities.** The client may not use Terranode services to:
+- Send unsolicited email (SPAM), phishing, or any unauthorized mass communication
+- Distribute malware, viruses, ransomware, spyware, adware or any malicious software
+- Conduct or facilitate denial of service attacks (DoS/DDoS)
+- Host, distribute or promote child sexual abuse material (CSAM) — zero tolerance
+- Engage in fraudulent activities, identity theft or phishing
+- Violate third-party intellectual property or copyright rights
+- Host or distribute content related to terrorism or incitement to violence
+- Perform port scanning, network enumeration or unauthorized reconnaissance activities
+- Mine cryptocurrencies without express authorization from Terranode
+- Sell or resell the service without prior written authorization
+
+5.2 **Excessive Resource Use.** Terranode reserves the right to suspend or limit services when a client makes excessive use of CPU, RAM, bandwidth, disk I/O or other resources that affect other users on the same infrastructure.
+
+5.3 **Legal Adult Content.** Legal adult content is permitted provided it complies with all applicable laws, including those related to age verification, and does not violate any other provision of these policies.` },
+  { id: 'email', title: '6. Email Policy', content: `6.1 **Sending Limits.** For shared hosting services, the limits are: a maximum of 200 emails per hour per domain and up to 20 recipients per individual message.
+
+6.2 **SPAM.** Sending unsolicited email (SPAM) constitutes a direct and immediate violation of these policies and will result in immediate service suspension without the right to a refund.
+
+6.3 **Mailing Lists.** Bulk mailing lists are only permitted if recipients have granted explicit consent (opt-in) and a functional unsubscribe mechanism (opt-out) exists.
+
+6.4 **Dedicated Servers.** Dedicated servers have no predefined sending limits, provided the email is legitimate and does not constitute SPAM.` },
+  { id: 'security', title: '7. Security', content: `7.1 **Client Responsibility.** The client is solely responsible for maintaining and monitoring the security of their accounts, applications and data. This includes, without limitation: secure password management, regular software updates, correct file permission configuration, and monitoring of unusual activity.
+
+7.2 **Incident Notification.** If a security incident is suspected, the client must notify Terranode immediately through a support ticket.
+
+7.3 **Limitation of Terranode's Liability.** Terranode implements reasonable technical and organizational measures to protect shared infrastructure, but cannot guarantee absolute security against external threats. Terranode shall not be liable for damages arising from external attacks, vulnerabilities in third-party software installed by the client, or unauthorized access resulting from client negligence.` },
+  { id: 'backups', title: '8. Backups and Data', content: `8.1 **Client Responsibility.** Data stored on Terranode services is the exclusive responsibility of the client. The client must maintain independent backups of all their critical data.
+
+8.2 **Terranode Backups.** Terranode may offer backup services as an additional feature. However, these backups are provided as a supplement, without guarantee of integrity, availability or frequency. They should not be considered the sole data protection mechanism.
+
+8.3 **Data Deletion.** Upon cancelling a service, client data may be permanently deleted. Terranode is not obligated to retain data after cancellation or termination of the service. It is recommended to export all data before cancelling.
+
+8.4 **Data Loss.** Terranode shall not be liable for data loss, economic losses, loss of profits, or any indirect, incidental, special or consequential damages arising from data loss.` },
+  { id: 'server-location', title: '9. Server Location and Data Transfer', content: `Terranode services may be provided from servers located in the United States, Ecuador, and other geographic regions depending on the type of service contracted. By contracting our services, the client expressly accepts the transfer and storage of their data in those locations.
+
+The client is solely responsible for verifying that the international transfer of data is compatible with the data protection laws applicable in their jurisdiction. Terranode is not responsible for legal implications that may arise from storing data on servers located outside the client's jurisdiction.` },
+  { id: 'intellectual-property', title: '10. Intellectual Property', content: `10.1 **Terranode Property.** All content, software, code, designs, trademarks, logos and other elements owned by Terranode are protected by applicable intellectual property laws. Their reproduction, distribution or use without express written authorization from Terranode is prohibited.
+
+10.2 **Client Content.** The client retains all intellectual property rights over the content they host on Terranode services. The client grants Terranode a limited, non-exclusive license to host, store and transmit such content for the sole purpose of providing the contracted service.
+
+10.3 **Copyright Infringement.** The client agrees to indemnify and hold Terranode harmless against any claim arising from the illegal use of copyright-protected materials.` },
+  { id: 'ip-addresses', title: '11. IP Addresses', content: `All Internet Protocol (IP) addresses assigned to client services are the property of Terranode or its upstream providers. IP addresses are non-transferable and the client acquires no ownership rights over them. Terranode reserves the right to reassign IP addresses with reasonable notice to the client.` },
+  { id: 'suspension', title: '12. Suspension and Termination', content: `12.1 **By Terranode.** Terranode reserves the right to suspend or terminate any service, with or without prior notice, in the event of: violation of these policies, non-payment, illegal activity, damage to the infrastructure or to other users, or at Terranode's sole discretion when deemed necessary to protect its network or the security of its clients.
+
+12.2 **By the Client.** The client may cancel their service at any time by request through the client panel or a support ticket. Cancellation does not automatically entitle the client to a refund outside the period established in the Refund Policy.
+
+12.3 **Effects of Termination.** Upon termination of the service for any cause, the client loses access to the services and stored data. Terranode may permanently delete all client data without any obligation to retain it.` },
+  { id: 'liability', title: '13. Limitation of Liability', content: `13.1 To the maximum extent permitted by applicable law, Terranode shall not be liable for indirect, incidental, special, consequential or punitive damages, including loss of profits, data loss, business interruption, or any other intangible damage.
+
+13.2 Terranode's total liability to the client, for any cause and regardless of the form of action, shall be limited to the total amount paid by the client to Terranode during the three (3) months preceding the event giving rise to the claim.
+
+13.3 Terranode does not guarantee that the services will be uninterrupted, error-free or completely secure. Services are provided "as is" and "as available".` },
+  { id: 'force-majeure', title: '14. Force Majeure', content: `Terranode shall not be liable for delays or failures in the provision of services caused by circumstances beyond its reasonable control, including but not limited to: natural disasters, large-scale DDoS attacks, failures in third-party telecommunications networks, acts of war, terrorism, strikes, government decisions, pandemics, or any other force majeure event.` },
+  { id: 'privacy', title: '15. Privacy and Data Protection', content: `The processing of personal data is governed by our Privacy Policy, available on our website. By using our services, the client accepts the processing of their data under that policy, which forms an integral part of these Terms and Conditions.
+
+Terranode complies with the provisions of Ecuador's Organic Law on Personal Data Protection (LOPDP) with respect to the data of clients residing in that country.` },
+  { id: 'minors', title: '16. Minors', content: `Terranode services are directed exclusively at persons over 18 years of age. Terranode does not intentionally collect personal information from minors. If you become aware that a minor has provided personal information to Terranode, please contact us immediately so we can proceed with its deletion.` },
+  { id: 'governing-law', title: '17. Governing Law and Dispute Resolution', content: `17.1 **Governing Law.** These terms are governed by and interpreted in accordance with the laws of the Republic of Ecuador.
+
+17.2 **Dispute Resolution.** In the event of a dispute, the parties shall first attempt to resolve it amicably through direct negotiation. If no agreement is reached within 30 days, the dispute shall be submitted to the competent courts of the city of Guayaquil, Ecuador, to which the parties expressly submit, waiving any other jurisdiction that might correspond to them.` },
+  { id: 'abuse-reports', title: '18. Reporting Violations and Abuse', content: `To report violations of these policies, abusive activities, spam, or any misuse of our infrastructure, please contact our team through a support ticket at my.terranode.net or send an email to info@terranode.net with the subject "Abuse Report".
+
+Every report must include: the reporter's full name, contact information, the IP address or URL involved, a detailed description of the violation and relevant evidence. Terranode will review all verified reports and take appropriate action at its discretion.` },
+  { id: 'changes', title: '19. Modifications to these Terms', content: `Terranode reserves the right to modify these Terms and Conditions at any time. Modifications take effect upon publication on this website. Clients are advised to review this page periodically. In the event of material changes, Terranode may notify active clients by email. Continued use of the services after modifications are published constitutes acceptance of the new terms.` },
+  { id: 'contact', title: '20. Contact Information', content: `For any inquiries related to these Terms and Conditions:
+
+**Terranode — Cloud Infrastructure**
+Website: https://terranode.net
+Support: https://my.terranode.net
+Email: info@terranode.net
+Phone: +593 99 819 7150
+Guayaquil, Ecuador` },
 ];
 
 // ══════════════════ POLÍTICA DE REEMBOLSOS ══════════════════
@@ -223,14 +306,81 @@ El equipo de soporte está disponible 24/7.` },
 ];
 
 export const REFUND_EN: LegalSection[] = [
-  { id: 'commitment', title: '1. Our Commitment', content: `Terranode is committed to providing high-quality services and ensuring customer satisfaction. If you experience any issues, please contact our support team before requesting a refund. In most cases, we can resolve technical problems quickly and effectively.\n\nThis refund policy applies exclusively to services directly provided by Terranode. Effective date of this version: March 20, 2026.` },
-  { id: 'periods', title: '2. Money-Back Guarantee Periods', content: `- **Web Hosting (Shared):** 7 calendar days from service activation.\n- **Corporate Email (TerraMail):** 7 calendar days from service activation.\n- **VPS Server:** 3 calendar days from server activation.\n- **Dedicated Servers:** No standard money-back guarantee due to hardware provisioning costs. Claims for documented hardware defects will be evaluated within the first 72 hours.\n- **Web/Systems Development:** Not covered by this policy. Governed by the signed service contract.\n\n⚠ Microsoft 365 — NO REFUND: Microsoft 365 licenses are non-refundable under any circumstances once activated, as Terranode incurs non-recoverable costs with Microsoft from the moment of activation. By purchasing Microsoft 365, the client expressly accepts this condition.` },
-  { id: 'conditions', title: '3. Refund Eligibility Conditions', content: `All of the following conditions must be met:\n- Request submitted within the applicable guarantee period\n- First-time service purchase (not applicable to renewals)\n- No prior refund received for the same service type\n- Service not used to violate Terms and Conditions\n- No active dispute or chargeback with financial institution\n- Legitimate and documentable reason for refund` },
-  { id: 'process', title: '4. Refund Request Process', content: `Step 1: Contact support at my.terranode.net to attempt resolution before requesting a refund.\nStep 2: Open a support ticket with subject "Refund Request" including account number, service involved, activation date, detailed reason, and evidence if applicable.\nStep 3: Terranode will review and notify its decision within 7 business days.\nStep 4: Approved refunds will be processed via the original payment method within 5 to 15 additional business days.` },
-  { id: 'exclusions', title: '5. Exclusions — No Refund', content: `Refunds will not be issued for: domain registrations, transfers, or renewals; **Microsoft 365 licenses** (non-refundable under any circumstance once activated); renewed services; services used to violate policies; cases where a chargeback has been initiated; suspension due to resource abuse; data loss or security issues caused by client negligence; development projects once started; activated third-party software licenses; or planned maintenance downtime.` },
-  { id: 'chargebacks', title: '6. Chargeback Policy', content: `Initiating a chargeback without first exhausting the refund process will result in immediate suspension of all active services, loss of the right to a direct refund, submission of service evidence to contest the chargeback, and may incur an administrative fee of up to USD 25 per chargeback. If the chargeback results from card fraud, please notify us immediately.` },
-  { id: 'cancellation', title: '7. Service Cancellation', content: `Clients may cancel any service at any time from the client panel (my.terranode.net) or via support ticket. Cancellation does not generate an automatic refund for unused time outside the guarantee period, stops auto-billing at the next cycle, and results in data deletion. Please export all data before cancellation.` },
-  { id: 'contact', title: '8. Contact', content: `Client Panel: https://my.terranode.net\nEmail: info@terranode.net\nPhone: +593 99 819 7150\nGuayaquil, Ecuador\n\nSupport available 24/7.` },
+  { id: 'commitment', title: '1. Our Commitment', content: `Terranode is committed to providing high-quality services and to ensuring the satisfaction of our clients. If you experience any problem with our services, we urge you to contact our technical support team before requesting a refund. In most cases, we can resolve technical problems quickly and effectively.
+
+This refund policy applies exclusively to services directly provided by Terranode. The effective date of this version is March 20, 2026.` },
+  { id: 'periods', title: '2. Money-Back Guarantee Periods', content: `Below are the money-back guarantee periods by service type. All periods are counted in calendar days from the service activation date.
+
+- **Web Hosting (Shared):** 7 calendar days from activation.
+- **Corporate Email (TerraMail):** 7 calendar days from activation.
+- **VPS Server:** 3 calendar days from server activation.
+- **Dedicated Servers:** No standard money-back guarantee, given the cost of hardware provisioning. Claims for documented hardware defects will be evaluated case by case within the first 72 hours.
+- **Web and Systems Development:** This policy does not apply. Governed by the service contract signed between the parties.
+
+⚠ Microsoft 365 — NO RIGHT TO REFUND: Microsoft 365 licenses are non-refundable under any circumstances once activated, since Terranode incurs non-recoverable costs with Microsoft from the moment of activation. By purchasing Microsoft 365, the client expressly accepts this condition.
+
+Once the applicable guarantee period has elapsed, no refunds will be granted except in the exceptional cases described in section 5.` },
+  { id: 'conditions', title: '3. Conditions to Request a Refund', content: `For a refund request to be valid, all of the following conditions must be met:
+
+- The request must be submitted within the applicable guarantee period
+- The service must be a first-time purchase (does not apply to renewals)
+- The client must not have requested a previous refund for the same service type
+- The service must not have been used to violate the Terms and Conditions
+- There must be no active dispute, chargeback or claim with the financial institution
+- The reason for the refund must be legitimate and documentable` },
+  { id: 'process', title: '4. Request Process', content: `4.1 **Step 1 — Prior contact.** Before requesting a refund, the client must contact the support team via a ticket at my.terranode.net to attempt to resolve the problem. Terranode commits to responding within a maximum of 24 business hours.
+
+4.2 **Step 2 — Formal request.** If the problem cannot be resolved, the client must open a support ticket with the subject "Refund Request" including: account or invoice number, service involved, purchase date, detailed reason for the request, and evidence of the problem if applicable.
+
+4.3 **Step 3 — Review.** Terranode will review the request and notify its decision within a maximum of 7 business days.
+
+4.4 **Step 4 — Processing.** Approved refunds will be processed via the same payment method used in the original purchase within 5 to 15 additional business days, depending on the financial institution.` },
+  { id: 'exclusions', title: '5. Exclusions — No Right to Refund', content: `Refunds will not be granted in the following cases:
+
+- **Domains:** The registration, transfer and renewal of domain names are non-refundable under any circumstances, due to the non-reversible nature of the process with the registries.
+- **Renewals:** Renewed services (second purchase onward) are not covered by the money-back guarantee.
+- **Previous refund:** If the client has already received a refund for the same service type, they may not request another under this policy.
+- **Policy violations:** Services suspended or terminated for violating the Terms and Conditions or the Acceptable Use Policy.
+- **Active chargebacks:** If the client has initiated a dispute or chargeback with their financial institution, the direct refund request is automatically invalidated.
+- **Excessive resource use:** Suspensions for excessive use of CPU, RAM or bandwidth.
+- **Client negligence:** Data loss, security problems or outages caused by the client's own actions or omissions.
+- **Development services:** Web/systems development projects once started, unless expressly agreed in writing.
+- **Microsoft 365:** Microsoft 365 licenses are non-refundable under any circumstances once activated. Terranode cannot recover these costs from Microsoft. This exclusion is absolute and non-waivable.
+- **Other third-party software licenses:** Including but not limited to cPanel licenses or other software already activated.
+- **Planned downtime:** Service interruptions previously announced for maintenance.` },
+  { id: 'exceptions', title: '6. Exceptions and Special Cases', content: `Terranode may consider exceptions to the standard policy in the following cases, at its sole discretion and with adequate documentation:
+
+- **Verified hardware failure** on dedicated servers that prevents use of the service for more than 48 continuous hours, with no alternative solution offered
+- **Terranode billing error** resulting in a duplicate or incorrect charge
+- **Total inability to activate** the service for reasons attributable exclusively to Terranode, persisting for more than 72 hours from purchase
+
+In these exceptional cases, Terranode may offer, at its election: a total or partial refund, an equivalent credit to the client's account, or an extension of the service period.` },
+  { id: 'cancellation', title: '7. Service Cancellation', content: `The client may cancel any service at any time from the client panel (my.terranode.net) or via support ticket. Cancellation:
+
+- Does not generate an automatic refund for unused time outside the guarantee period
+- Stops automatic billing at the next cycle
+- Results in loss of access to the service at the end of the paid period
+- May result in the permanent deletion of stored data
+
+It is recommended to export all data before proceeding with cancellation.` },
+  { id: 'chargebacks', title: '8. Chargeback Policy', content: `If the client initiates a chargeback or dispute with their financial institution without having first exhausted the refund request process described in section 4:
+
+- All of the client's active services will be immediately suspended
+- The client will lose the right to request a direct refund under this policy
+- Terranode will submit evidence of the service provided to the payment processor and the financial institution to contest the chargeback
+- An administrative fee of up to USD 25 per chargeback initiated may be applied
+
+Terranode understands that chargebacks may result from card fraud. In such cases, the client must notify us immediately to coordinate an appropriate solution.` },
+  { id: 'credits', title: '9. Account Credits', content: `In some cases, instead of a monetary refund, Terranode may offer equivalent credits to the client's account, applicable to future services. Account credits have no monetary value outside the Terranode platform, are non-transferable, and expire 12 months from the date they are granted.` },
+  { id: 'modifications', title: '10. Modifications to this Policy', content: `Terranode reserves the right to modify this Refund Policy at any time. Modifications take effect upon publication on the website. Clients with refund requests in progress will be governed by the version of the policy in force at the time the service was purchased.` },
+  { id: 'contact', title: '11. Contact', content: `To request a refund or for inquiries related to this policy:
+
+Client Panel: https://my.terranode.net
+Email: info@terranode.net
+Phone: +593 99 819 7150
+Guayaquil, Ecuador
+
+The support team is available 24/7.` },
 ];
 
 // ══════════════════ POLÍTICA DE PRIVACIDAD ══════════════════
@@ -384,12 +534,150 @@ Guayaquil, República del Ecuador` },
 ];
 
 export const PRIVACY_EN: LegalSection[] = [
-  { id: 'intro', title: '1. Introduction', content: `This Privacy Policy describes how Terranode S.A.S ("Terranode", "we", "us") collects, uses, stores, and protects the personal data of its clients and users.\n\nThis Policy complies with Ecuador's Organic Law on Personal Data Protection (LOPDP), published in Official Gazette Supplement No. 459 of May 26, 2021.\n\n- **Company:** Terranode S.A.S\n- **Activity:** Cloud infrastructure, web hosting, VPS, dedicated servers\n- **Website:** https://terranode.net\n- **Privacy contact:** info@terranode.net\n- **Location:** Guayaquil, Republic of Ecuador` },
-  { id: 'data', title: '2. Personal Data Collected', content: `We collect only the data necessary to provide our services:\n\n- **Identification & Contact:** Full name, email address, phone number, postal address, country and city.\n- **Billing Data (legally required):** Tax ID (RUC/CI), billing name, billing address. Payment card data is processed by PCI-DSS certified payment gateways; Terranode does not store full card data.\n- **Technical Data:** IP address, browser type and version, operating system, pages visited, access logs, support ticket records.\n\nWe do not collect sensitive data such as health information, political affiliation, sexual orientation, religious beliefs, or biometric data.` },
-  { id: 'purposes', title: '3. Purposes of Processing', content: `- **Contractual purposes:** Account creation, service provisioning, technical notifications, support, renewals and cancellations.\n- **Billing & collection (legal obligation):** Electronic invoice issuance per Ecuadorian tax law, payment processing, accounting records, tax compliance with SRI (Ecuador's tax authority).\n- **Security (legitimate interest):** Fraud prevention, unauthorized access detection, infrastructure protection.\n- **Commercial communications (with consent):** Newsletters and promotions. You may unsubscribe at any time.` },
-  { id: 'retention', title: '4. Data Retention', content: `- **Billing and accounting data:** 7 years from invoice date, as required by Ecuadorian tax law.\n- **Account and service data:** Duration of contract plus 1 year after final cancellation.\n- **Technical logs:** 90 days to 1 year depending on log type.\n- **Support tickets:** 3 years from ticket closure date.\n- **Marketing data:** Until consent is withdrawn.` },
-  { id: 'sharing', title: '5. Data Sharing', content: `Terranode does not sell or rent personal data. We may share data with:\n\n- **Payment gateways:** For secure transaction processing.\n- **Infrastructure providers:** Data center and connectivity providers in Ecuador, USA, and other regions.\n- **Microsoft Corporation:** For Microsoft 365 license activation, per Microsoft's privacy policy.\n- **Public authorities:** When required by law or court order.` },
-  { id: 'rights', title: '6. Your Rights', content: `Under the LOPDP, you have the right to:\n\n- **Access:** Know what data we hold about you.\n- **Rectification:** Correct inaccurate or incomplete data.\n- **Erasure:** Request deletion when data is no longer necessary.\n- **Objection:** Opt out of commercial communications at any time.\n- **Portability:** Receive your data in a structured, machine-readable format.\n\nTo exercise any right, email info@terranode.net or open a ticket at my.terranode.net with your full name, ID number, account email, and the right you wish to exercise. We will respond within 15 business days.` },
-  { id: 'security', title: '7. Security', content: `We implement appropriate technical and organizational measures including SSL/TLS encryption, role-based access controls, secure password management, access monitoring and logging, and periodic security assessments. In the event of a data breach affecting personal data, Terranode will notify affected users and the competent authority as required by the LOPDP.` },
-  { id: 'contact', title: '8. Contact', content: `Terranode S.A.S\nPrivacy contact: info@terranode.net\nSupport: https://my.terranode.net\nPhone: +593 99 819 7150\nGuayaquil, Ecuador\n\nIf you are not satisfied with our response, you may file a complaint with Ecuador's Data Protection Authority (ADPDE).` },
+  { id: 'intro', title: '1. Introduction and Identity of the Data Controller', content: `This Privacy and Personal Data Protection Policy (hereinafter, "the Policy") describes how Terranode S.A.S (hereinafter, "Terranode", "we" or "the company") collects, uses, stores, protects and processes the personal data of its clients, users and contacts.
+
+This Policy has been prepared in compliance with the **Organic Law on Personal Data Protection (LOPDP) of Ecuador**, published in Official Gazette Supplement No. 459 of May 26, 2021, and its implementing Regulation.
+
+**Data Controller Details:**
+- **Company:** Terranode S.A.S
+- **Activity:** Cloud infrastructure services, web hosting, VPS, dedicated servers
+- **Website:** https://terranode.net
+- **Privacy contact email:** info@terranode.net
+- **Phone:** +593 99 819 7150
+- **Address:** Guayaquil, Republic of Ecuador
+
+By contracting or using any Terranode service, the user declares that they have read, understood and accepted this Policy in full.` },
+  { id: 'data-collected', title: '2. Personal Data We Collect', content: `Terranode collects only the personal data necessary to provide its services and comply with its legal obligations. The data collected includes:
+
+**2.1 Identification and Contact Data (required for the service):**
+- Full name or company name
+- Email address
+- Phone number
+- Physical address (for billing purposes)
+- Country and city of residence
+
+**2.2 Billing Data (required by Ecuadorian tax law):**
+- Taxpayer Registration Number (RUC) or National ID (CI)
+- Company name or taxpayer name
+- Billing address
+- Payment method (card data is processed by certified payment gateways; Terranode does not store full card data)
+
+**2.3 Technical and Usage Data (collected automatically):**
+- IP address of the accessing device
+- Web browser type and version
+- Operating system
+- Pages visited and time spent
+- Access logs to the control panel and services
+- Support ticket and communication records
+
+**2.4 Optional Data:**
+- Additional information voluntarily provided in contact forms or support tickets
+
+We do not collect sensitive data such as health information, political affiliation, sexual orientation, religious beliefs, or biometric data.` },
+  { id: 'purposes', title: '3. Purposes of Processing', content: `The personal data collected is processed exclusively for the following purposes:
+
+**3.1 Contractual Purposes (necessary to provide the service):**
+- Creation and management of user accounts on the platform
+- Provisioning, activation and administration of the contracted services
+- Sending technical notifications related to the service (maintenance, incidents, expirations)
+- Handling technical support requests
+- Managing service renewals and cancellations
+
+**3.2 Billing and Collection Purposes (legal and contractual obligation):**
+- Issuance of electronic invoices in compliance with Ecuadorian tax regulations (SRI)
+- Payment processing and collections management
+- Mandatory accounting and tax records
+- Management of non-payment and debt recovery procedures
+- Compliance with obligations before Ecuador's Tax Administration (SRI)
+
+**3.3 Security Purposes (legitimate interest):**
+- Prevention and detection of fraud, unauthorized access and illicit activities
+- Protection of the technical infrastructure and of other users
+- Compliance with legitimate requests from competent authorities
+
+**3.4 Commercial Communication Purposes (with consent):**
+- Sending communications about new services, promotions or relevant updates
+- The client may unsubscribe from these communications at any time
+
+Terranode **will not use** personal data for purposes other than those declared without first obtaining the data subject's consent or without another legal basis for processing.` },
+  { id: 'legal-basis', title: '4. Legal Basis for Processing', content: `The processing of personal data carried out by Terranode is based on the following legal grounds under the LOPDP:
+
+- **Performance of a contract:** Processing is necessary to provide the contracted services and manage the commercial relationship (Art. 22 LOPDP).
+- **Legal obligation:** The processing of billing data is mandatory under the Internal Tax Regime Law, the Commercial Code and other Ecuadorian tax and accounting regulations (Art. 22 LOPDP).
+- **Legitimate interest:** The processing of technical and security data is justified by Terranode's legitimate interest in protecting its infrastructure and that of its clients (Art. 22 LOPDP).
+- **Consent:** Optional commercial communications are sent only with the data subject's express consent (Art. 10 LOPDP).` },
+  { id: 'retention', title: '5. Data Retention Periods', content: `Personal data will be retained for the following periods:
+
+**Billing and accounting data:** 7 years from invoice issuance, in compliance with the tax obligations established by Ecuador's Internal Revenue Service (SRI) and the Commercial Code.
+
+**Account and active service data:** For the entire duration of the contractual relationship and up to 1 year after the definitive cancellation of the last active service.
+
+**Technical data and access logs:** Between 90 days and 1 year, depending on the log type and applicable security requirements.
+
+**Support ticket data:** 1 year from the ticket closure date.
+
+**Data for commercial communications:** Until the data subject withdraws their consent.
+
+Once these periods have elapsed, the data will be securely deleted or anonymized, unless there is an additional legal retention obligation or the data is necessary for the exercise or defense of claims.` },
+  { id: 'transfers', title: '6. Data Transfers and Disclosures', content: `**6.1 No sale of data.** Terranode does not sell, rent or transfer its clients' personal data to third parties for their own commercial purposes.
+
+**6.2 Data processors.** Terranode may share data with third parties acting as data processors on Terranode's behalf, exclusively to provide necessary services:
+- **Payment gateways:** For secure transaction processing (under their own PCI-DSS security policies).
+- **Infrastructure providers:** Companies providing the data centers and connectivity where services are hosted (located in Ecuador, the United States and other regions).
+- **Transactional email services:** For sending notifications and invoices.
+- **Microsoft Corporation:** In the case of Microsoft 365 services, the data necessary for license activation is shared with Microsoft in accordance with its privacy policy.
+
+**6.3 International transfers.** Some of the providers mentioned may be located outside Ecuador. In these cases, Terranode adopts appropriate measures to guarantee a level of protection equivalent to that established by the LOPDP.
+
+**6.4 Public authorities.** Terranode may disclose personal data to public, judicial or police authorities when there is a legal obligation or court order requiring it.` },
+  { id: 'rights', title: '7. Rights of the Data Subject', content: `In accordance with the LOPDP, the data subject has the following rights:
+
+**Right of Access (Art. 68 LOPDP):** To know what personal data of theirs is processed by Terranode, the origin of that data, the purposes of processing and the recipients.
+
+**Right of Rectification (Art. 69 LOPDP):** To request the correction of inaccurate, incomplete or outdated data.
+
+**Right of Erasure / Deletion (Art. 70 LOPDP):** To request the deletion of their data when it is no longer necessary for the purposes for which it was collected, provided there is no legal retention obligation.
+
+**Right to Object (Art. 72 LOPDP):** To object to the processing of their data for commercial communication purposes at any time and without needing to provide justification.
+
+**Right to Portability (Art. 73 LOPDP):** To receive the data they have provided to Terranode in a structured, commonly used and machine-readable format.
+
+**Right to Restriction of Processing:** To request that the processing of their data be restricted in certain circumstances provided by law.
+
+**Exercising Your Rights:** To exercise any of the above rights, the data subject must send a written request to info@terranode.net or via a support ticket at my.terranode.net, indicating: full name, national ID or RUC number, account email address, the right they wish to exercise and the reason. Terranode will respond within a maximum of 15 business days.
+
+If the data subject believes their rights have not been addressed, they may file a complaint with the **Personal Data Protection Authority of Ecuador** (ADPDE), once the direct route with Terranode has been exhausted.` },
+  { id: 'security', title: '8. Security Measures', content: `Terranode implements appropriate technical and organizational measures to protect personal data against unauthorized access, loss, destruction or accidental disclosure, including:
+
+- Encrypted data transmission via SSL/TLS in all web communications
+- Role-based access controls for personnel access to personal data
+- Secure password management procedures in internal systems
+- Monitoring and logging of access to systems containing personal data
+- Periodic security assessments of the infrastructure
+- Internal confidentiality policies for personnel with access to data
+
+Notwithstanding the above, no data transmission or storage system is completely secure. Terranode cannot guarantee absolute security. In the event of a security breach affecting personal data, Terranode will notify the affected data subjects and the competent authority as established by the LOPDP.` },
+  { id: 'cookies', title: '9. Cookies and Tracking Technologies', content: `The Terranode website uses cookies and similar technologies to ensure the correct functioning of the site and to improve the user experience:
+
+**Strictly necessary cookies:** Essential for the operation of the site. They cannot be disabled.
+
+**Analytics cookies (Google Analytics):** Collect anonymous information about site usage (pages visited, session time, etc.) to improve the service. The data is processed by Google LLC in accordance with its privacy policies.
+
+**Marketing cookies (Meta Pixel):** Used to measure the effectiveness of advertising campaigns on Facebook and Instagram. The data is processed by Meta Platforms in accordance with its privacy policies.
+
+Users can manage their cookie preferences through their browser settings. Disabling analytics or marketing cookies will not affect the functioning of the site or the provision of services.` },
+  { id: 'minors', title: '10. Minors', content: `Terranode services are directed exclusively at persons over 18 years of age. Terranode does not intentionally collect personal data from minors. If you become aware that a minor has provided personal data to Terranode without parental or guardian consent, please contact us immediately at info@terranode.net so we can proceed with its deletion.` },
+  { id: 'modifications', title: '11. Modifications to this Policy', content: `Terranode reserves the right to update this Privacy Policy at any time to reflect changes in applicable regulations, in our data processing practices, or in the services we offer.
+
+Modifications take effect upon publication on this website. In the event of material changes that significantly affect the rights of data subjects, Terranode will notify active clients by email at least 30 days in advance.
+
+The date of the last update will always be visible at the top of this page.` },
+  { id: 'contact', title: '12. Contact and Complaints', content: `For any inquiry, rights request or complaint related to the processing of your personal data:
+
+**Terranode S.A.S**
+Data Protection Officer: Terranode Administration
+Email: info@terranode.net
+Support panel: https://my.terranode.net
+Phone: +593 99 819 7150
+Guayaquil, Republic of Ecuador` },
 ];
