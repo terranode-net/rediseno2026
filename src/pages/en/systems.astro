@@ -8,15 +8,18 @@ const faqs = [
   { q: 'How long does development take?', a: 'Simple projects 4-6 weeks, medium 2-4 months, complex 4-8 months.' },
   { q: 'Can the system integrate with Ecuador\u2019s SRI?', a: 'Yes, we have experience with the SRI API for e-invoicing.' },
   { q: 'Which server is the system installed on?', a: 'Terranode VPS or dedicated servers, or your own server.' },
+  { q: 'Do you build software for businesses anywhere in Ecuador?', a: 'Yes, we work with companies in Guayaquil, Quito, Cuenca and the rest of the country, with remote or in-person meetings as needed.' },
+  { q: 'Do you offer support and maintenance after delivery?', a: 'Yes, we offer monthly maintenance plans with technical support, fixes and new features as agreed.' },
+  { q: 'Can you improve a system I already have instead of building a new one?', a: 'Yes, we evaluate your current system and propose improvements, integrations or a progressive migration without stopping your operation.' },
 ];
 const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'Systems Development', key: 'devsistemas' }]);
-const service = serviceSchema('en', { name: 'Custom Systems Development', description: 'ERPs, CRMs, portals and process automation with React, Node.js and scalable architecture.', pageKey: 'devsistemas', serviceType: 'Software Development' });
+const service = serviceSchema('en', { name: 'Custom Software Development in Ecuador', description: 'ERPs, CRMs, portals and process automation with React, Node.js and scalable architecture, for businesses in Ecuador.', pageKey: 'devsistemas', serviceType: 'Software Development', areaServed: ['EC'] });
 ---
 <BaseLayout
   locale="en"
   pageKey="devsistemas"
-  title="Custom Systems Development | ERP, CRM, Automation | Terranode"
-  description="Custom software that automates your business: ERPs, CRMs, portals and integrations with React, Node.js and scalable architecture. Free quote."
+  title="Custom Software Development in Ecuador | ERP, CRM | Terranode"
+  description="Software development company in Ecuador: ERPs, CRMs, portals and SRI integrations. React, Node.js and scalable architecture. Free quote."
   jsonLd={[organizationSchema('en'), breadcrumb, service, faqSchema(faqs)]}
 >
   <DevSistemasContent locale="en" />

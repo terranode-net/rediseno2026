@@ -8,15 +8,18 @@ const faqs = [
   { q: '¿Cuánto tiempo tarda el desarrollo?', a: 'Proyectos simples 4-6 semanas, medianos 2-4 meses, complejos 4-8 meses.' },
   { q: '¿El sistema puede integrarse con el SRI de Ecuador?', a: 'Sí, tenemos experiencia con la API del SRI para facturación electrónica.' },
   { q: '¿En qué servidor se instala el sistema?', a: 'En los VPS o servidores dedicados de Terranode, o en tu propio servidor.' },
+  { q: '¿Desarrollan software para empresas en cualquier ciudad de Ecuador?', a: 'Sí, trabajamos con empresas en Guayaquil, Quito, Cuenca y el resto del país, con reuniones remotas o presenciales según convenga.' },
+  { q: '¿Ofrecen soporte y mantenimiento después de la entrega?', a: 'Sí, ofrecemos planes de mantenimiento mensual con soporte técnico, correcciones y nuevas funcionalidades según lo acordado.' },
+  { q: '¿Pueden mejorar un sistema que ya tengo en vez de crear uno nuevo?', a: 'Sí, evaluamos tu sistema actual y proponemos mejoras, integraciones o una migración progresiva sin detener tu operación.' },
 ];
 const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Desarrollo de Sistemas', key: 'devsistemas' }]);
-const service = serviceSchema('es', { name: 'Desarrollo de Sistemas a Medida', description: 'ERPs, CRMs, portales y automatización de procesos con React, Node.js y arquitectura escalable.', pageKey: 'devsistemas', serviceType: 'Software Development' });
+const service = serviceSchema('es', { name: 'Desarrollo de Software a Medida en Ecuador', description: 'ERPs, CRMs, portales y automatización de procesos con React, Node.js y arquitectura escalable, para empresas en Ecuador.', pageKey: 'devsistemas', serviceType: 'Software Development', areaServed: ['EC'] });
 ---
 <BaseLayout
   locale="es"
   pageKey="devsistemas"
-  title="Desarrollo de Sistemas a Medida | ERP, CRM, Automatización | Terranode"
-  description="Software a medida que automatiza tu empresa: ERPs, CRMs, portales e integraciones con React, Node.js y arquitectura escalable. Cotización gratuita."
+  title="Desarrollo de Software a Medida en Ecuador | ERP, CRM | Terranode"
+  description="Empresa de desarrollo de software en Ecuador: ERPs, CRMs, portales e integraciones con el SRI. React, Node.js y arquitectura escalable. Cotización gratuita."
   jsonLd={[organizationSchema('es'), breadcrumb, service, faqSchema(faqs)]}
 >
   <DevSistemasContent locale="es" />

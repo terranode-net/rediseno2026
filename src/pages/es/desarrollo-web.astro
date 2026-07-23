@@ -9,6 +9,9 @@ const faqs = [
   { q: '¿Cuánto tiempo tarda en estar listo mi sitio?', a: 'Landing 7 días, Corporativo 15 días, Tienda Online 20 días.' },
   { q: '¿Puedo administrar el contenido yo mismo?', a: 'Sí, WordPress tiene un panel intuitivo e incluimos capacitación.' },
   { q: '¿Puedo migrar mi sitio actual a WordPress?', a: 'Sí, sin pérdida de posicionamiento SEO.' },
+  { q: '¿Hacen páginas web para negocios en cualquier ciudad de Ecuador?', a: 'Sí, trabajamos de forma remota con clientes en Guayaquil, Quito, Cuenca y el resto del país — todo el proceso de diseño, revisión y entrega se hace en línea.' },
+  { q: '¿El sitio queda alojado en Ecuador?', a: 'Contamos con infraestructura propia en Ecuador y Estados Unidos; podemos alojar tu sitio en la ubicación que ofrezca mejor velocidad para tu audiencia.' },
+  { q: '¿La tienda online se integra con pasarelas de pago ecuatorianas?', a: 'Sí, integramos PlaceToPay, PagoPlux, PayPhone y otras pasarelas usadas en Ecuador, además de tarjetas internacionales.' },
 ];
 const plans = [
   { name: 'Landing Page', price: '350', description: 'Hasta 5 secciones, diseño personalizado, responsive, entrega en 7 días.', url: `${SITE_URL}/es/store/devweb-landing` },
@@ -16,13 +19,13 @@ const plans = [
   { name: 'Tienda Online', price: '1200', description: 'WooCommerce completo, catálogo ilimitado, pasarela de pagos, entrega en 20 días.', url: `${SITE_URL}/es/store/devweb-tienda` },
 ];
 const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Desarrollo Web', key: 'devweb' }]);
-const service = serviceSchema('es', { name: 'Diseño Web y E-Commerce', description: 'Sitios web y tiendas online a medida con WordPress y WooCommerce.', pageKey: 'devweb', serviceType: 'Web Design' });
+const service = serviceSchema('es', { name: 'Diseño y Desarrollo Web en Ecuador', description: 'Diseño de páginas web, tiendas online y e-commerce a medida con WordPress y WooCommerce, alojados en infraestructura propia en Ecuador.', pageKey: 'devweb', serviceType: 'Web Design', areaServed: ['EC'] });
 ---
 <BaseLayout
   locale="es"
   pageKey="devweb"
-  title="Diseño Web y Tiendas Online desde $350 | Terranode"
-  description="Sitios web profesionales y tiendas online con WordPress y WooCommerce. Rápidos, seguros y posicionados en Google. Planes desde $350."
+  title="Diseño y Desarrollo Web en Ecuador desde $350 | Terranode"
+  description="Agencia de diseño web en Ecuador: páginas corporativas y tiendas online con WordPress y WooCommerce. Rápidas, seguras y optimizadas para SEO. Desde $350."
   jsonLd={[organizationSchema('es'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
 >
   <DevWebContent locale="es" />

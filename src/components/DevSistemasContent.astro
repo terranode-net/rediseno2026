@@ -93,17 +93,21 @@ const ICONS: Record<string, string> = {
 };
 
 const T = {
-  eyebrow: es ? 'Desarrollo de Sistemas' : 'Systems Development',
-  h1: es ? 'Software a medida que' : 'Custom software that',
-  h1b: es ? 'automatiza tu empresa' : 'automates your business',
-  sub: es ? 'Desarrollamos sistemas web, ERPs, CRMs, portales y aplicaciones que eliminan procesos manuales y conectan todas las áreas de tu empresa. Con React, Node.js y arquitectura escalable.' : 'We develop web systems, ERPs, CRMs, portals and applications that eliminate manual processes and connect all areas of your business. With React, Node.js and scalable architecture.',
+  eyebrow: es ? 'Desarrollo de Sistemas · Ecuador' : 'Systems Development · Ecuador',
+  h1: es ? 'Desarrollo de Software' : 'Custom Software',
+  h1b: es ? 'a Medida en Ecuador' : 'Development in Ecuador',
+  sub: es ? 'Desarrollamos sistemas web, ERPs, CRMs, portales y aplicaciones a medida en Ecuador que eliminan procesos manuales y conectan todas las áreas de tu empresa. Con React, Node.js y arquitectura escalable.' : 'We develop custom web systems, ERPs, CRMs, portals and applications in Ecuador that eliminate manual processes and connect every area of your business. With React, Node.js and scalable architecture.',
+  introH: es ? 'Empresa de desarrollo de software en Ecuador' : 'Software development company in Ecuador',
+  introBody: es
+    ? 'Elegir una empresa de desarrollo de software local en Ecuador tiene ventajas concretas frente a contratar un freelancer remoto o una agencia extranjera: comunicación en el mismo horario y zona horaria, entendimiento directo de procesos locales como la facturación electrónica del SRI, y un equipo al que puedes visitar o llamar cuando lo necesites. En Terranode desarrollamos software a medida para pymes y empresas en Guayaquil, Quito, Cuenca y el resto de Ecuador: desde sistemas de inventario y facturación integrados con el SRI, hasta ERPs completos, CRMs de gestión de clientes y portales web complejos. Cada sistema se despliega sobre nuestra propia infraestructura de VPS y servidores dedicados en Ecuador y Estados Unidos, lo que nos permite ofrecerte no solo el desarrollo, sino también el hosting, la seguridad y el soporte técnico continuo desde un mismo proveedor — sin depender de terceros para mantener tu sistema funcionando.'
+    : 'Choosing a local software development company in Ecuador has concrete advantages over hiring a remote freelancer or a foreign agency: communication in the same time zone, direct understanding of local processes like Ecuador\u2019s SRI e-invoicing system, and a team you can visit or call whenever you need to. At Terranode we build custom software for small and medium businesses in Guayaquil, Quito, Cuenca and the rest of Ecuador: from inventory and invoicing systems integrated with the SRI, to full ERPs, customer-management CRMs and complex web portals. Every system is deployed on our own VPS and dedicated server infrastructure in Ecuador and the United States, letting us offer not just development but also hosting, security and ongoing technical support from a single provider — with no dependency on third parties to keep your system running.',
   cta1: es ? 'Solicitar cotización gratuita' : 'Request free quote',
   cta2: es ? '¿Solo necesitas un sitio web? → Ver Desarrollo Web' : 'Just need a website? → See Web Development',
   svcTag: es ? 'SERVICIOS' : 'SERVICES',
   svcH: es ? '¿Qué sistemas desarrollamos?' : 'What systems do we develop?',
   svcSub: es ? 'Si puedes describirlo, podemos construirlo' : 'If you can describe it, we can build it',
   stackH: es ? 'Tecnologías que usamos' : 'Technologies we use',
-  featsH: es ? 'Ventajas del desarrollo a medida' : 'Custom development advantages',
+  featsH: es ? 'Ventajas del desarrollo de software a medida en Ecuador' : 'Advantages of custom software development in Ecuador',
   processH: es ? 'Cómo trabajamos' : 'How we work',
   processSub: es ? 'Metodología ágil con entregas parciales cada 2 semanas' : 'Agile methodology with partial deliveries every 2 weeks',
   faqH: es ? 'Preguntas frecuentes' : 'Frequently asked questions',
@@ -144,8 +148,9 @@ const CODE_LINES = [
           <svg viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" class="h-3 w-3"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
           {T.eyebrow}
         </span>
-        <h1 class="mb-1 font-display text-[clamp(2.2rem,4vw,3.6rem)] font-bold leading-[1.05] tracking-tight text-white">{T.h1}</h1>
-        <h2 class="mb-[22px] font-display text-[clamp(2.2rem,4vw,3.6rem)] font-bold leading-[1.05] tracking-tight text-slate-600">{T.h1b}</h2>
+        <h1 class="mb-[22px] font-display text-[clamp(2.2rem,4vw,3.6rem)] font-bold leading-[1.05] tracking-tight text-white">
+          {T.h1}<br /><span class="text-slate-600">{T.h1b}</span>
+        </h1>
         <p class="mb-3.5 max-w-[460px] font-body text-base leading-[1.75] text-slate-400">{T.sub}</p>
         <a href={devwebHref} class="mb-8 inline-block border-b border-dashed border-slate-600 pb-px font-body text-xs text-slate-500 no-underline">{T.cta2}</a>
         <div class="flex flex-wrap gap-3">
@@ -247,6 +252,14 @@ const CODE_LINES = [
           </div>
         ))}
       </div>
+    </div>
+  </section>
+
+  <!-- Intro / contenido SEO -->
+  <section class="border-t border-white/[0.04] bg-[#060B18] px-6 py-16">
+    <div class="mx-auto max-w-[820px]">
+      <h2 class="mb-4 font-display text-[clamp(1.5rem,2.6vw,2rem)] font-bold tracking-tight text-white">{T.introH}</h2>
+      <p class="font-body text-[15px] leading-[1.8] text-slate-400">{T.introBody}</p>
     </div>
   </section>
 

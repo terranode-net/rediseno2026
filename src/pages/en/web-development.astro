@@ -9,6 +9,9 @@ const faqs = [
   { q: 'How long until my site is ready?', a: 'Landing 7 days, Corporate 15 days, Online Store 20 days.' },
   { q: 'Can I manage the content myself?', a: 'Yes, WordPress has an intuitive panel and we include training.' },
   { q: 'Can I migrate my current site to WordPress?', a: 'Yes, without losing SEO rankings.' },
+  { q: 'Do you build websites for businesses anywhere in Ecuador?', a: 'Yes, we work remotely with clients in Guayaquil, Quito, Cuenca and the rest of the country \u2014 the whole design, review and delivery process happens online.' },
+  { q: 'Is the site hosted in Ecuador?', a: 'We have our own infrastructure in Ecuador and the United States; we can host your site wherever gives your audience the best speed.' },
+  { q: 'Does the online store integrate with Ecuadorian payment gateways?', a: 'Yes, we integrate PlaceToPay, PagoPlux, PayPhone and other gateways used in Ecuador, plus international cards.' },
 ];
 const plans = [
   { name: 'Landing Page', price: '350', description: 'Up to 5 sections, custom design, responsive, 7-day delivery.', url: `${SITE_URL}/en/store/devweb-landing` },
@@ -16,13 +19,13 @@ const plans = [
   { name: 'Online Store', price: '1200', description: 'Full WooCommerce, unlimited catalog, payment gateway, 20-day delivery.', url: `${SITE_URL}/en/store/devweb-store` },
 ];
 const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'Web Development', key: 'devweb' }]);
-const service = serviceSchema('en', { name: 'Web Design & E-Commerce', description: 'Custom websites and online stores with WordPress and WooCommerce.', pageKey: 'devweb', serviceType: 'Web Design' });
+const service = serviceSchema('en', { name: 'Web Design & Development in Ecuador', description: 'Custom website and online store design with WordPress and WooCommerce, hosted on our own infrastructure in Ecuador.', pageKey: 'devweb', serviceType: 'Web Design', areaServed: ['EC'] });
 ---
 <BaseLayout
   locale="en"
   pageKey="devweb"
-  title="Web Design & Online Stores from $350 | Terranode"
-  description="Professional websites and online stores with WordPress and WooCommerce. Fast, secure and Google-ranked. Plans from $350."
+  title="Web Design & Development in Ecuador from $350 | Terranode"
+  description="Web design agency in Ecuador: corporate websites and online stores with WordPress and WooCommerce. Fast, secure and SEO-optimized. From $350."
   jsonLd={[organizationSchema('en'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
 >
   <DevWebContent locale="en" />
