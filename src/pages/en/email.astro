@@ -2,11 +2,11 @@
 export const prerender = false;
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import TerraMailContent from '@/components/TerraMailContent.astro';
-import { getMailPlans, getSeo, priceNumber } from '@/lib/db';
+import { getMailPlans, priceNumber } from '@/lib/db';
 import { SITE_URL } from '@/lib/site';
 import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
 
-const [mailPlans, seo] = await Promise.all([getMailPlans(), getSeo('/en/email')]);
+const mailPlans = await getMailPlans();
 
 const faqs = [
   { q: 'Can I use my existing domain with TerraMail?', a: 'Yes, just point your domain\u2019s MX records to our servers.' },
@@ -30,8 +30,8 @@ const service = serviceSchema('en', { name: 'TerraMail Business Email', descript
 <BaseLayout
   locale="en"
   pageKey="terramail"
-  title={seo?.title ?? 'TerraMail: Business Email from $24.99/yr | Terranode'}
-  description={seo?.description ?? 'Business email with your own domain, advanced antispam, modern webmail and mobile sync. From $24.99/yr.'}
+  title='TerraMail: Business Email from $24.99/yr | Terranode'
+  description='Business email with your own domain, advanced antispam, modern webmail and mobile sync. From $24.99/yr.'
   jsonLd={[organizationSchema('en'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
 >
   <TerraMailContent locale="en" plans={mailPlans} />

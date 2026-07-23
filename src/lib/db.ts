@@ -14,7 +14,6 @@ export interface DedicatedPlan { id: string; name: string; cpu: string; cores: s
 export interface MailPlan { id: string; name: string; users: number; storage: string; price: string; period: string; monthly: string; tagline: string; feats: string[]; href: string; popular: boolean }
 export interface HostingPlan { id: string; name: string; price: string; period: string; tagline: string; feats: string[]; href: string; popular: boolean }
 export interface M365Plan { id: string; name: string; badge: string | null; price: string; period: string; tagline: string; feats: string[]; href: string; popular: boolean }
-export interface SeoMeta { title?: string; description?: string; keywords?: string; og_title?: string; og_description?: string; og_image?: string }
 export interface City { slug: string; name: string; province: string; country: string; active: boolean }
 
 // ── Fallbacks (los datos reales actuales del sitio) ─────────────────────────
@@ -87,17 +86,6 @@ export const getMailPlans = () => fetchTable<MailPlan>('mail_plans', FALLBACK_MA
 export const getHostingPlans = () => fetchTable<any>('hosting_plans', []);
 export const getM365Plans = () => fetchTable<any>('m365_plans', []);
 export const getCities = () => fetchTable<City>('cities', []);
-
-/** Metadatos SEO de una ruta. Devuelve null si no hay override en la base. */
-export async function getSeo(path: string): Promise<SeoMeta | null> {
-  try {
-    const { data, error } = await supabaseServer.from('site_seo').select('*').eq('path', path).maybeSingle();
-    if (error || !data) return null;
-    return data as SeoMeta;
-  } catch {
-    return null;
-  }
-}
 
 /** Ajustes de marca (fila única). */
 export async function getBrand(): Promise<Record<string, any>> {

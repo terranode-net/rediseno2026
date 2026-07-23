@@ -1,16 +1,25 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ContactPageContent from '@/components/ContactPageContent.astro';
-import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+import FAQSection from '@/components/FAQSection.astro';
+import { organizationSchema, breadcrumbSchema, faqSchema } from '@/lib/schema';
 
 const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'Contact', key: 'contacto' }]);
+
+const faqs = [
+  { q: 'What is the support response time?', a: 'We respond in under 1 hour via WhatsApp, email or ticket, with technical support available 24/7.' },
+  { q: 'What contact channels do you offer?', a: 'WhatsApp (support and sales), email, a ticket system and Discord \u2014 pick whichever fits your question best.' },
+  { q: 'Can I request a custom quote?', a: 'Yes, tell us about your project (VPS, hosting, dedicated servers, email or Microsoft 365) and we\u2019ll put together a tailored proposal.' },
+  { q: 'Do you serve customers outside Ecuador?', a: 'Yes, we have customers across Ecuador, the United States and other Latin American countries, with local billing available depending on the country.' },
+];
 ---
 <BaseLayout
   locale="en"
   pageKey="contacto"
   title="Contact | Talk to a Terranode Engineer"
   description="Questions about VPS, hosting, dedicated servers or Microsoft 365? Reach us via WhatsApp, email, ticket or Discord — response in under 1 hour."
-  jsonLd={[organizationSchema('en'), breadcrumb]}
+  jsonLd={[organizationSchema('en'), breadcrumb, faqSchema(faqs)]}
 >
   <ContactPageContent locale="en" />
+  <FAQSection locale="en" items={faqs} />
 </BaseLayout>

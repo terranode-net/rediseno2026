@@ -2,11 +2,11 @@
 export const prerender = false;
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import M365Content from '@/components/M365Content.astro';
-import { getM365Plans, getSeo, priceNumber } from '@/lib/db';
+import { getM365Plans, priceNumber } from '@/lib/db';
 import { SITE_URL } from '@/lib/site';
 import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
 
-const [m365Plans, seo] = await Promise.all([getM365Plans(), getSeo('/m365')]);
+const m365Plans = await getM365Plans();
 
 const faqs = [
   { q: '¿Mi empresa ya tiene M365, puedo migrar con Terranode?', a: 'Sí. Transferimos tu suscripción existente sin interrupciones, con soporte local en español.' },
@@ -28,8 +28,8 @@ const service = serviceSchema('es', { name: 'Microsoft 365', description: 'Suite
 <BaseLayout
   locale="es"
   pageKey="m365"
-  title={seo?.title ?? 'Microsoft 365 desde $5.50/mes | Partner Microsoft Ecuador | Terranode'}
-  description={seo?.description ?? 'Teams, Outlook, Word, Excel, PowerPoint y 1 TB en la nube. Vendido y soportado por Terranode, Partner certificado de Microsoft en Ecuador. Migración gratis.'}
+  title='Microsoft 365 desde $5.50/mes | Partner Microsoft Ecuador | Terranode'
+  description='Teams, Outlook, Word, Excel, PowerPoint y 1 TB en la nube. Vendido y soportado por Terranode, Partner certificado de Microsoft en Ecuador. Migración gratis.'
   jsonLd={[organizationSchema('es'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
 >
   <M365Content locale="es" plans={m365Plans} />

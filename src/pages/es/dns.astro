@@ -1,16 +1,38 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import DNSCheckerContent from '@/components/DNSCheckerContent.astro';
-import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+import FAQSection from '@/components/FAQSection.astro';
+import { organizationSchema, breadcrumbSchema, faqSchema, howToSchema } from '@/lib/schema';
 
 const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Verificador de DNS', key: 'dns' }]);
+
+const faqs = [
+  { q: '¿Cuánto tarda en propagarse un cambio de DNS?', a: 'Generalmente entre 15 minutos y 48 horas, según el TTL (tiempo de vida) configurado en el registro y la política de caché de cada servidor DNS en el mundo.' },
+  { q: '¿Por qué veo resultados distintos en cada servidor?', a: 'Es normal mientras el cambio se propaga: cada servidor DNS actualiza su caché en momentos distintos. Si todos muestran el mismo valor, la propagación ya terminó.' },
+  { q: '¿Qué significa el TTL de un registro DNS?', a: 'Es el tiempo (en segundos) que un servidor guarda en caché un registro antes de volver a consultarlo. Un TTL bajo (300s) propaga más rápido; uno alto (86400s) es más eficiente pero tarda más en actualizarse.' },
+  { q: '¿Qué tipos de registro puedo verificar?', a: 'A, AAAA, CNAME, MX, TXT, NS y más — selecciona el tipo antes de consultar tu dominio.' },
+  { q: '¿Esta herramienta funciona con cualquier dominio?', a: 'Sí, funciona con cualquier dominio público, sin importar dónde esté registrado o alojado.' },
+];
+
+const howTo = howToSchema({
+  name: 'Cómo verificar la propagación DNS de un dominio',
+  description: 'Pasos para comprobar cómo se están propagando los registros DNS de tu dominio en distintos servidores del mundo.',
+  totalTime: 'PT1M',
+  steps: [
+    { name: 'Escribe tu dominio', text: 'Ingresa el dominio que quieres verificar, por ejemplo terranode.net.' },
+    { name: 'Elige el tipo de registro', text: 'Selecciona A, AAAA, CNAME, MX, TXT u otro tipo de registro DNS.' },
+    { name: 'Ejecuta la verificación', text: 'Pulsa el botón de verificar para consultar múltiples servidores DNS alrededor del mundo en tiempo real.' },
+    { name: 'Revisa los resultados', text: 'Compara el valor devuelto por cada servidor para confirmar si la propagación ya se completó globalmente.' },
+  ],
+});
 ---
 <BaseLayout
   locale="es"
   pageKey="dns"
   title="Verificador de Propagación DNS Gratis | Terranode"
   description="Comprueba cómo se propagan tus registros DNS (A, AAAA, CNAME, MX, TXT y más) en múltiples servidores del mundo en tiempo real. Herramienta gratuita."
-  jsonLd={[organizationSchema('es'), breadcrumb]}
+  jsonLd={[organizationSchema('es'), breadcrumb, howTo, faqSchema(faqs)]}
 >
   <DNSCheckerContent locale="es" />
+  <FAQSection locale="es" items={faqs} />
 </BaseLayout>

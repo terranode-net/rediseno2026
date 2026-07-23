@@ -1,16 +1,38 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import DNSCheckerContent from '@/components/DNSCheckerContent.astro';
-import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+import FAQSection from '@/components/FAQSection.astro';
+import { organizationSchema, breadcrumbSchema, faqSchema, howToSchema } from '@/lib/schema';
 
 const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'DNS Checker', key: 'dns' }]);
+
+const faqs = [
+  { q: 'How long does a DNS change take to propagate?', a: 'Usually between 15 minutes and 48 hours, depending on the TTL (time to live) set on the record and each DNS server\u2019s caching policy worldwide.' },
+  { q: 'Why do I see different results on each server?', a: 'That\u2019s normal while the change propagates: each DNS server refreshes its cache at a different time. Once all servers show the same value, propagation is complete.' },
+  { q: 'What does a DNS record\u2019s TTL mean?', a: 'It\u2019s the time (in seconds) a server caches a record before querying it again. A low TTL (300s) propagates faster; a high TTL (86400s) is more efficient but updates more slowly.' },
+  { q: 'What record types can I check?', a: 'A, AAAA, CNAME, MX, TXT, NS and more \u2014 pick the type before looking up your domain.' },
+  { q: 'Does this tool work with any domain?', a: 'Yes, it works with any public domain regardless of where it\u2019s registered or hosted.' },
+];
+
+const howTo = howToSchema({
+  name: 'How to check a domain\u2019s DNS propagation',
+  description: 'Steps to check how your domain\u2019s DNS records are propagating across servers worldwide.',
+  totalTime: 'PT1M',
+  steps: [
+    { name: 'Enter your domain', text: 'Type the domain you want to check, e.g. terranode.net.' },
+    { name: 'Choose the record type', text: 'Select A, AAAA, CNAME, MX, TXT or another DNS record type.' },
+    { name: 'Run the check', text: 'Click check to query multiple DNS servers around the world in real time.' },
+    { name: 'Review the results', text: 'Compare the value returned by each server to confirm whether propagation has finished globally.' },
+  ],
+});
 ---
 <BaseLayout
   locale="en"
   pageKey="dns"
   title="Free DNS Propagation Checker | Terranode"
   description="Check how your DNS records (A, AAAA, CNAME, MX, TXT and more) are propagating across multiple servers worldwide in real time. Free tool."
-  jsonLd={[organizationSchema('en'), breadcrumb]}
+  jsonLd={[organizationSchema('en'), breadcrumb, howTo, faqSchema(faqs)]}
 >
   <DNSCheckerContent locale="en" />
+  <FAQSection locale="en" items={faqs} />
 </BaseLayout>

@@ -107,6 +107,27 @@ export function serviceSchema(locale: Locale, opts: {
   };
 }
 
+export function howToSchema(opts: {
+  name: string;
+  description: string;
+  steps: { name: string; text: string }[];
+  totalTime?: string; // ISO 8601 duration, ej. 'PT2M'
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: opts.name,
+    description: opts.description,
+    ...(opts.totalTime ? { totalTime: opts.totalTime } : {}),
+    step: opts.steps.map((s, i) => ({
+      '@type': 'HowToStep',
+      position: i + 1,
+      name: s.name,
+      text: s.text,
+    })),
+  };
+}
+
 export function productPlanSchema(plans: {
   name: string;
   price: string;

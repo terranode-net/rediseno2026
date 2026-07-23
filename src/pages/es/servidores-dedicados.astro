@@ -2,11 +2,11 @@
 export const prerender = false;
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import DedicatedContent from '@/components/DedicatedContent.astro';
-import { getDedicatedPlans, getSeo, priceNumber } from '@/lib/db';
+import { getDedicatedPlans, priceNumber } from '@/lib/db';
 import { SITE_URL } from '@/lib/site';
 import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
 
-const [dedPlans, seo] = await Promise.all([getDedicatedPlans(), getSeo('/servidores-dedicados')]);
+const dedPlans = await getDedicatedPlans();
 
 const faqs = [
   { q: '¿Cuánto tiempo tarda en aprovisionarse el servidor?', a: 'Los servidores dedicados típicamente se aprovisionan en 24-48 horas hábiles.' },
@@ -27,8 +27,8 @@ const service = serviceSchema('es', { name: 'Servidores Dedicados', description:
 <BaseLayout
   locale="es"
   pageKey="dedicados"
-  title={seo?.title ?? 'Servidores Dedicados Intel Xeon desde $47.99/mes | Terranode'}
-  description={seo?.description ?? 'Servidores dedicados con Intel Xeon, RAM DDR4 ECC, NVMe Enterprise, IPMI remoto y DDoS 160 Gbps. Desde $47.99/mes.'}
+  title='Servidores Dedicados Intel Xeon desde $47.99/mes | Terranode'
+  description='Servidores dedicados con Intel Xeon, RAM DDR4 ECC, NVMe Enterprise, IPMI remoto y DDoS 160 Gbps. Desde $47.99/mes.'
   jsonLd={[organizationSchema('es'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
 >
   <DedicatedContent locale="es" plans={dedPlans} />

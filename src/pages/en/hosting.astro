@@ -2,11 +2,11 @@
 export const prerender = false;
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import HostingContent from '@/components/HostingContent.astro';
-import { getHostingPlans, getSeo, priceNumber } from '@/lib/db';
+import { getHostingPlans, priceNumber } from '@/lib/db';
 import { SITE_URL } from '@/lib/site';
 import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
 
-const [hostingPlans, seo] = await Promise.all([getHostingPlans(), getSeo('/en/hosting')]);
+const hostingPlans = await getHostingPlans();
 
 const faqs = [
   { q: 'Can I migrate my current site to Terranode?', a: 'Yes. We offer free migration from any provider, including files, database and email, with zero downtime.' },
@@ -27,8 +27,8 @@ const service = serviceSchema('en', { name: 'Web Hosting', description: 'Profess
 <BaseLayout
   locale="en"
   pageKey="hosting"
-  title={seo?.title ?? 'Web Hosting from $40/yr | LiteSpeed + cPanel | Terranode'}
-  description={seo?.description ?? 'Web hosting with LiteSpeed, CloudLinux, cPanel and free SSL. Plans from $40/yr, free migration and 24/7 support.'}
+  title='Web Hosting from $40/yr | LiteSpeed + cPanel | Terranode'
+  description='Web hosting with LiteSpeed, CloudLinux, cPanel and free SSL. Plans from $40/yr, free migration and 24/7 support.'
   jsonLd={[organizationSchema('en'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
 >
   <HostingContent locale="en" plans={hostingPlans} />

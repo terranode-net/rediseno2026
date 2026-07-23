@@ -6,11 +6,11 @@ export const prerender = false;
 
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import VPSContent from '@/components/VPSContent.astro';
-import { getVpsRegions, getVpsPlans, getSeo, priceNumber } from '@/lib/db';
+import { getVpsRegions, getVpsPlans, priceNumber } from '@/lib/db';
 import { SITE_URL } from '@/lib/site';
 import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
 
-const [regions, plans, seo] = await Promise.all([getVpsRegions(), getVpsPlans(), getSeo('/vps')]);
+const [regions, plans] = await Promise.all([getVpsRegions(), getVpsPlans()]);
 
 const faqs = [
   { q: 'Can I reinstall the OS from the panel?', a: 'Yes. From VirtFusion you can reinstall the OS at any time in under 5 minutes.' },
@@ -42,8 +42,8 @@ const service = serviceSchema('en', {
 <BaseLayout
   locale="en"
   pageKey="vps"
-  title={seo?.title ?? 'NVMe VPS from $2.99/mo | 5 Regions | Terranode'}
-  description={seo?.description ?? 'VPS servers with KVM virtualization, NVMe DDR4 and 60-second deploy. Choose your region: Ashburn, Los Angeles, Chicago, Houston or Guayaquil.'}
+  title='NVMe VPS from $2.99/mo | 5 Regions | Terranode'
+  description='VPS servers with KVM virtualization, NVMe DDR4 and 60-second deploy. Choose your region: Ashburn, Los Angeles, Chicago, Houston or Guayaquil.'
   jsonLd={[organizationSchema('en'), breadcrumb, service, ...products, faqSchema(faqs)]}
 >
   <VPSContent locale="en" regions={regions} plans={plans} />

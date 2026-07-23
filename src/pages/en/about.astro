@@ -1,16 +1,25 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import AboutContent from '@/components/AboutContent.astro';
-import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+import FAQSection from '@/components/FAQSection.astro';
+import { organizationSchema, breadcrumbSchema, faqSchema } from '@/lib/schema';
 
 const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'About', key: 'nosotros' }]);
+
+const faqs = [
+  { q: 'How long has Terranode been in business?', a: 'Terranode has operated since 2016, with over 1,500 servers deployed and 12,000 mailboxes migrated for clients in Ecuador and the United States.' },
+  { q: 'Is Terranode an Ecuadorian company?', a: 'Yes, with legal operations in Ecuador (Terranode S.A.S.) and an additional presence in the United States (Terranode LLC), letting us bill locally and offer infrastructure in both countries.' },
+  { q: 'Where are your servers located?', a: 'We have presence in multiple locations: Houston, Ashburn, Los Angeles and Chicago in the United States, and Guayaquil in Ecuador.' },
+  { q: 'Do you offer 24/7 support in Spanish?', a: 'Yes, our technical support team is available in Spanish 24/7, via WhatsApp, ticket, email and Discord.' },
+];
 ---
 <BaseLayout
   locale="en"
   pageKey="nosotros"
   title="About Us | Terranode LLC — Cloud Infrastructure Since 2016"
   description="Since 2016 in Ecuador: 6+ locations, 1,500+ servers deployed and 12,000+ mailboxes migrated. Learn the story and values behind Terranode."
-  jsonLd={[organizationSchema('en'), breadcrumb]}
+  jsonLd={[organizationSchema('en'), breadcrumb, faqSchema(faqs)]}
 >
   <AboutContent locale="en" />
+  <FAQSection locale="en" items={faqs} />
 </BaseLayout>

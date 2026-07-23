@@ -1,16 +1,36 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import HostingDetectorContent from '@/components/HostingDetectorContent.astro';
-import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+import FAQSection from '@/components/FAQSection.astro';
+import { organizationSchema, breadcrumbSchema, faqSchema, howToSchema } from '@/lib/schema';
 
 const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Detector de Hosting', key: 'hostingDetector' }]);
+
+const faqs = [
+  { q: '¿Cómo detectan el proveedor de hosting de un sitio?', a: 'Analizamos los servidores de nombres (NS), la dirección IP y el número de sistema autónomo (ASN) del dominio, y los comparamos contra una base de proveedores conocidos.' },
+  { q: '¿Qué tan preciso es el detector?', a: 'Es muy preciso para la mayoría de sitios, aunque algunos usan CDN o proxies (como Cloudflare) que pueden ocultar el proveedor real de hosting.' },
+  { q: '¿Puedo consultar el hosting de cualquier sitio web?', a: 'Sí, funciona con cualquier dominio público — el tuyo, el de un competidor o cualquier sitio que te interese analizar.' },
+  { q: '¿Qué datos me muestra además del proveedor?', a: 'IP, ASN, ubicación aproximada del servidor y una puntuación de velocidad/calidad del proveedor detectado.' },
+];
+
+const howTo = howToSchema({
+  name: 'Cómo saber dónde está alojado un sitio web',
+  description: 'Pasos para descubrir el proveedor de hosting, IP y ASN de cualquier sitio web.',
+  totalTime: 'PT30S',
+  steps: [
+    { name: 'Ingresa la URL o dominio', text: 'Escribe la dirección del sitio web que quieres analizar.' },
+    { name: 'Pulsa analizar', text: 'La herramienta consulta los registros DNS, la IP y el ASN del dominio.' },
+    { name: 'Revisa el resultado', text: 'Verás el proveedor de hosting detectado, la IP, el ASN y una puntuación de calidad/velocidad.' },
+  ],
+});
 ---
 <BaseLayout
   locale="es"
   pageKey="hostingDetector"
   title="¿Dónde Está Alojada Esta Web? Detector de Hosting Gratis | Terranode"
   description="Descubre el proveedor de hosting, IP, ASN y calidad de cualquier sitio web al instante. Herramienta gratuita de Terranode."
-  jsonLd={[organizationSchema('es'), breadcrumb]}
+  jsonLd={[organizationSchema('es'), breadcrumb, howTo, faqSchema(faqs)]}
 >
   <HostingDetectorContent locale="es" />
+  <FAQSection locale="es" items={faqs} />
 </BaseLayout>

@@ -9,6 +9,8 @@ interface Props {
   ogImage?: string;
   noindex?: boolean;
   jsonLd?: Record<string, any> | Record<string, any>[];
+  /** Para páginas dinámicas (ej. posts de blog) cuya URL no está en PAGE_MAP: { es, en } absolutos. */
+  canonicalOverride?: { es: string; en: string };
 }
 
 const {
@@ -19,9 +21,10 @@ const {
   ogImage = '/og/og-default.png',
   noindex = false,
   jsonLd,
+  canonicalOverride,
 } = Astro.props;
 
-const alt = alternatesFor(pageKey);
+const alt = canonicalOverride ?? alternatesFor(pageKey);
 const canonical = alt[locale];
 const image = ogImage.startsWith('http') ? ogImage : `${SITE_URL}${ogImage}`;
 const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];

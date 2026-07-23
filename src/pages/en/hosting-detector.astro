@@ -1,16 +1,36 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import HostingDetectorContent from '@/components/HostingDetectorContent.astro';
-import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+import FAQSection from '@/components/FAQSection.astro';
+import { organizationSchema, breadcrumbSchema, faqSchema, howToSchema } from '@/lib/schema';
 
 const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'Hosting Detector', key: 'hostingDetector' }]);
+
+const faqs = [
+  { q: 'How do you detect a site\u2019s hosting provider?', a: 'We analyze the domain\u2019s nameservers (NS), IP address and Autonomous System Number (ASN), and match them against a database of known providers.' },
+  { q: 'How accurate is the detector?', a: 'It\u2019s very accurate for most sites, though some use a CDN or proxy (like Cloudflare) that can mask the real hosting provider.' },
+  { q: 'Can I look up the hosting of any website?', a: 'Yes, it works with any public domain \u2014 yours, a competitor\u2019s, or any site you want to analyze.' },
+  { q: 'What data do I get besides the provider name?', a: 'IP address, ASN, approximate server location, and a speed/quality score for the detected provider.' },
+];
+
+const howTo = howToSchema({
+  name: 'How to find out where a website is hosted',
+  description: 'Steps to discover the hosting provider, IP and ASN of any website.',
+  totalTime: 'PT30S',
+  steps: [
+    { name: 'Enter the URL or domain', text: 'Type the address of the website you want to analyze.' },
+    { name: 'Click analyze', text: 'The tool looks up the domain\u2019s DNS records, IP and ASN.' },
+    { name: 'Review the result', text: 'You\u2019ll see the detected hosting provider, IP, ASN and a quality/speed score.' },
+  ],
+});
 ---
 <BaseLayout
   locale="en"
   pageKey="hostingDetector"
   title="Who is Hosting This Website? Free Hosting Detector | Terranode"
   description="Find out the hosting provider, IP, ASN and quality of any website instantly. Free tool by Terranode."
-  jsonLd={[organizationSchema('en'), breadcrumb]}
+  jsonLd={[organizationSchema('en'), breadcrumb, howTo, faqSchema(faqs)]}
 >
   <HostingDetectorContent locale="en" />
+  <FAQSection locale="en" items={faqs} />
 </BaseLayout>

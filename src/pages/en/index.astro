@@ -1,8 +1,9 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import HomeContent from '@/components/HomeContent.astro';
+import FAQSection from '@/components/FAQSection.astro';
 import { pathFor, SITE_URL, BRAND } from '@/lib/site';
-import { organizationSchema, websiteSchema, productPlanSchema, breadcrumbSchema } from '@/lib/schema';
+import { organizationSchema, websiteSchema, productPlanSchema, breadcrumbSchema, faqSchema } from '@/lib/schema';
 
 const plans = [
   { name: 'Web Hosting', price: '3', description: 'Optimized hosting with LiteSpeed, CloudLinux and daily automatic backups.', url: pathFor('en', 'hosting') },
@@ -28,13 +29,22 @@ const reviews = [
 ];
 
 const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }]);
+
+const faqs = [
+  { q: 'How fast can I deploy a server with Terranode?', a: 'VPS servers deploy in under 60 seconds after payment confirmation. Dedicated servers usually take 24-48 business hours.' },
+  { q: 'What services does Terranode offer?', a: 'NVMe VPS, shared web hosting, Intel Xeon dedicated servers, business email (TerraMail) and Microsoft 365 licenses, all with 24/7 technical support.' },
+  { q: 'Which countries do you have a presence in?', a: 'Infrastructure in the United States (Houston, Ashburn, Los Angeles, Chicago) and Ecuador (Guayaquil), with local billing in both countries.' },
+  { q: 'Do you offer DDoS protection?', a: 'Yes, every plan includes DDoS protection of up to 160 Gbps at no extra cost.' },
+  { q: 'Do you have a money-back guarantee?', a: 'Yes, check the refund policy specific to each service — most hosting and VPS plans include a money-back guarantee.' },
+];
 ---
 <BaseLayout
   locale="en"
   pageKey="home"
   title="Terranode | Hosting, VPS & Dedicated Servers"
   description="Deploy your server in 60 seconds. High-performance cloud infrastructure with DDoS 160 Gbps, NVMe and 24/7 support. VPS from $10, Hosting from $3, Dedicated from $120."
-  jsonLd={[organizationSchema('en'), websiteSchema('en'), breadcrumb, itemList, ...productPlanSchema(plans), ...reviews]}
+  jsonLd={[organizationSchema('en'), websiteSchema('en'), breadcrumb, itemList, ...productPlanSchema(plans), ...reviews, faqSchema(faqs)]}
 >
   <HomeContent locale="en" />
+  <FAQSection locale="en" items={faqs} />
 </BaseLayout>

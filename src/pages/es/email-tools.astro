@@ -1,16 +1,38 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import EmailToolboxContent from '@/components/EmailToolboxContent.astro';
-import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+import FAQSection from '@/components/FAQSection.astro';
+import { organizationSchema, breadcrumbSchema, faqSchema, howToSchema } from '@/lib/schema';
 
 const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Email & DNS Toolbox', key: 'emailTools' }]);
+
+const faqs = [
+  { q: '¿Qué es el registro SPF y por qué lo necesito?', a: 'SPF (Sender Policy Framework) le dice a otros servidores de correo qué direcciones IP están autorizadas a enviar correos en nombre de tu dominio. Sin él, tus correos tienen más probabilidad de caer en spam.' },
+  { q: '¿Qué pasa si mi dominio aparece en una blacklist?', a: 'Tus correos pueden ser rechazados o marcados como spam por otros proveedores. Debes identificar la causa (servidor comprometido, envío masivo, etc.) y solicitar la remoción a la lista correspondiente.' },
+  { q: '¿DKIM y DMARC son obligatorios?', a: 'No son obligatorios, pero cada vez más proveedores (Gmail, Outlook) los exigen o penalizan fuertemente su ausencia para reducir el riesgo de que tus correos lleguen a spam o sean rechazados.' },
+  { q: '¿Qué herramientas incluye el toolbox?', a: 'Verificación de MX, SPF, DKIM, DMARC, blacklist, registros PTR, análisis de cabeceras de correo y diagnóstico SMTP.' },
+  { q: '¿Necesito acceso técnico a mi dominio para usarlo?', a: 'No para diagnosticar — puedes consultar cualquier dominio. Sí necesitarás acceso a tu panel DNS si quieres corregir los registros que la herramienta señale.' },
+];
+
+const howTo = howToSchema({
+  name: 'Cómo diagnosticar la configuración de correo de un dominio',
+  description: 'Pasos para verificar los registros MX, SPF, DKIM, DMARC y blacklist de un dominio.',
+  totalTime: 'PT2M',
+  steps: [
+    { name: 'Ingresa tu dominio', text: 'Escribe el dominio que quieres diagnosticar.' },
+    { name: 'Elige la herramienta', text: 'Selecciona MX, SPF, DKIM, DMARC, blacklist, PTR, análisis de cabeceras o diagnóstico SMTP.' },
+    { name: 'Ejecuta el diagnóstico', text: 'La herramienta consulta los registros DNS y servicios de reputación relevantes.' },
+    { name: 'Corrige lo que haga falta', text: 'Si encuentras errores o registros faltantes, actualízalos desde el panel DNS de tu dominio.' },
+  ],
+});
 ---
 <BaseLayout
   locale="es"
   pageKey="emailTools"
   title="Email & DNS Toolbox — MX, SPF, DKIM, DMARC, Blacklist | Terranode"
   description="Herramientas gratuitas de diagnóstico email y DNS: MX, SPF, DKIM, DMARC, Blacklist, PTR, análisis de cabeceras y diagnóstico SMTP."
-  jsonLd={[organizationSchema('es'), breadcrumb]}
+  jsonLd={[organizationSchema('es'), breadcrumb, howTo, faqSchema(faqs)]}
 >
   <EmailToolboxContent locale="es" />
+  <FAQSection locale="es" items={faqs} />
 </BaseLayout>

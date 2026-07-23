@@ -11,17 +11,31 @@ export function getStaticPaths() {
 
 const { slug } = Astro.params;
 const post = getFullPost(slug as string);
+const postUrl = `${SITE_URL}/es/blog/${slug}/`;
 
 const articleSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
   headline: post.title,
   description: post.intro,
+  image: `${SITE_URL}/og/og-default.png`,
   datePublished: post.date,
-  author: { '@type': 'Organization', name: post.author },
+  dateModified: post.date,
+  articleSection: post.category,
+  author: { '@type': 'Organization', name: post.author, url: SITE_URL },
   publisher: { '@id': `${SITE_URL}/#organization` },
-  mainEntityOfPage: `${SITE_URL}/es/blog/${slug}`,
+  mainEntityOfPage: { '@type': 'WebPage', '@id': postUrl },
   keywords: post.tags.join(', '),
+};
+
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${SITE_URL}/es/` },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${SITE_URL}/es/blog/` },
+    { '@type': 'ListItem', position: 3, name: post.title, item: postUrl },
+  ],
 };
 ---
 <BaseLayout
@@ -29,7 +43,8 @@ const articleSchema = {
   pageKey="blog"
   title={`${post.title} | Terranode Blog`}
   description={post.intro}
-  jsonLd={[organizationSchema('es'), articleSchema]}
+  jsonLd={[organizationSchema('es'), articleSchema, breadcrumb]}
+  canonicalOverride={{ es: postUrl, en: `${SITE_URL}/en/blog/${slug}/` }}
 >
   <BlogPostContent locale="es" slug={slug as string} />
 </BaseLayout>

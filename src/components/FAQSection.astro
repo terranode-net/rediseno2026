@@ -1,0 +1,38 @@
+---
+interface Props {
+  locale: 'es' | 'en';
+  items: { q: string; a: string }[];
+  title?: string;
+}
+const { locale, items, title } = Astro.props;
+const heading = title ?? (locale === 'es' ? 'Preguntas frecuentes' : 'Frequently asked questions');
+---
+<section class="border-t border-white/[0.04] bg-[#080E1C] px-6 py-[72px]">
+  <div class="mx-auto max-w-[760px]">
+    <h2 class="mb-8 text-center font-display text-[clamp(1.6rem,2.6vw,2.1rem)] font-bold tracking-tight text-white">{heading}</h2>
+    <div class="flex flex-col gap-2.5">
+      {items.map((item) => (
+        <div class="faq-item overflow-hidden rounded-xl border border-white/[0.07] bg-white/[0.025]">
+          <button type="button" class="faq-btn flex w-full items-center justify-between gap-4 border-none bg-transparent px-5 py-[18px] text-left">
+            <span class="font-display text-sm font-semibold text-white">{item.q}</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#4A6A88" stroke-width="2" class="faq-chevron h-4 w-4 shrink-0 transition-transform"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="faq-answer hidden border-t border-white/[0.05] px-5 pb-[18px] pt-3 font-body text-[13px] leading-[1.7] text-slate-500">{item.a}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('.faq-item').forEach((item) => {
+    const btn = item.querySelector('.faq-btn');
+    const answer = item.querySelector('.faq-answer');
+    const chevron = item.querySelector('.faq-chevron') as HTMLElement | null;
+    btn?.addEventListener('click', () => {
+      const isOpen = !answer?.classList.contains('hidden');
+      answer?.classList.toggle('hidden', isOpen);
+      if (chevron) chevron.style.transform = isOpen ? 'none' : 'rotate(180deg)';
+    });
+  });
+</script>

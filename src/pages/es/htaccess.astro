@@ -1,16 +1,38 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import HtaccessGeneratorContent from '@/components/HtaccessGeneratorContent.astro';
-import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+import FAQSection from '@/components/FAQSection.astro';
+import { organizationSchema, breadcrumbSchema, faqSchema, howToSchema } from '@/lib/schema';
 
 const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Generador de .htaccess', key: 'htaccess' }]);
+
+const faqs = [
+  { q: '¿Qué es un archivo .htaccess?', a: 'Es un archivo de configuración de servidores Apache que permite definir reglas de seguridad, redirecciones y comportamiento del sitio sin tocar la configuración global del servidor.' },
+  { q: '¿Funciona en cualquier hosting?', a: 'Funciona en servidores Apache y LiteSpeed (la mayoría del hosting compartido). Servidores Nginx no leen archivos .htaccess y requieren su propia configuración equivalente.' },
+  { q: '¿Puede romper mi sitio si lo subo mal?', a: 'Un .htaccess con errores de sintaxis puede causar un error 500. Guarda una copia del original antes de reemplazarlo, y prueba el sitio después de subir el nuevo archivo.' },
+  { q: '¿Dónde debo colocar el archivo generado?', a: 'En la carpeta raíz de tu sitio (normalmente public_html o www), junto al index de tu web.' },
+  { q: '¿Qué protecciones incluye?', a: 'Forzado de HTTPS, bloqueo de inyección SQL, XSS, hotlinking de imágenes y otras reglas alineadas con el OWASP Top 10.' },
+];
+
+const howTo = howToSchema({
+  name: 'Cómo generar un archivo .htaccess seguro',
+  description: 'Pasos para crear un archivo .htaccess con reglas de seguridad OWASP Top 10 sin escribir código manualmente.',
+  totalTime: 'PT2M',
+  steps: [
+    { name: 'Selecciona las reglas de seguridad', text: 'Marca las protecciones que necesitas: forzar HTTPS, bloqueo de SQL injection, XSS, hotlinking, etc.' },
+    { name: 'Genera el archivo', text: 'La herramienta arma el archivo .htaccess con la sintaxis correcta según las reglas elegidas.' },
+    { name: 'Copia o descarga el archivo', text: 'Copia el contenido generado o descárgalo directamente como archivo .htaccess.' },
+    { name: 'Súbelo a tu servidor', text: 'Colócalo en la carpeta raíz de tu sitio vía FTP, cPanel o tu panel de hosting.' },
+  ],
+});
 ---
 <BaseLayout
   locale="es"
   pageKey="htaccess"
   title="Generador de .htaccess Blindado (OWASP Top 10) | Terranode"
   description="Genera un .htaccess seguro con un clic. Protección OWASP Top 10: fuerza HTTPS, bloquea SQL injection, XSS, hotlinking y más."
-  jsonLd={[organizationSchema('es'), breadcrumb]}
+  jsonLd={[organizationSchema('es'), breadcrumb, howTo, faqSchema(faqs)]}
 >
   <HtaccessGeneratorContent locale="es" />
+  <FAQSection locale="es" items={faqs} />
 </BaseLayout>

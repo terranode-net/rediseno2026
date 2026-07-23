@@ -1,8 +1,9 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import HomeContent from '@/components/HomeContent.astro';
+import FAQSection from '@/components/FAQSection.astro';
 import { pathFor, SITE_URL, BRAND } from '@/lib/site';
-import { organizationSchema, websiteSchema, productPlanSchema, breadcrumbSchema } from '@/lib/schema';
+import { organizationSchema, websiteSchema, productPlanSchema, breadcrumbSchema, faqSchema } from '@/lib/schema';
 
 const plans = [
   { name: 'Web Hosting', price: '3', description: 'Hosting optimizado con LiteSpeed, CloudLinux y backups automáticos diarios.', url: pathFor('es', 'hosting') },
@@ -28,13 +29,22 @@ const reviews = [
 ];
 
 const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }]);
+
+const faqs = [
+  { q: '¿Qué tan rápido puedo desplegar un servidor con Terranode?', a: 'Los VPS se despliegan en menos de 60 segundos tras confirmar el pago. Los servidores dedicados suelen tardar 24-48 horas hábiles.' },
+  { q: '¿Qué servicios ofrece Terranode?', a: 'VPS con NVMe, hosting web compartido, servidores dedicados Intel Xeon, correo corporativo (TerraMail) y licencias de Microsoft 365, todo con soporte técnico 24/7.' },
+  { q: '¿En qué países tienen presencia?', a: 'Infraestructura en Estados Unidos (Houston, Ashburn, Los Ángeles, Chicago) y Ecuador (Guayaquil), con facturación local en ambos países.' },
+  { q: '¿Ofrecen protección contra ataques DDoS?', a: 'Sí, todos los planes incluyen protección DDoS de hasta 160 Gbps sin costo adicional.' },
+  { q: '¿Tienen garantía de devolución?', a: 'Sí, consulta la política de reembolso específica de cada servicio — la mayoría de planes de hosting y VPS incluyen garantía de devolución.' },
+];
 ---
 <BaseLayout
   locale="es"
   pageKey="home"
   title="Terranode | Hosting, VPS y Servidores Dedicados en Ecuador"
   description="Despliega tu servidor en 60 segundos. Infraestructura cloud de alto rendimiento con DDoS 160 Gbps, NVMe y soporte técnico 24/7. VPS desde $10, Hosting desde $3, Dedicados desde $120."
-  jsonLd={[organizationSchema('es'), websiteSchema('es'), breadcrumb, itemList, ...productPlanSchema(plans), ...reviews]}
+  jsonLd={[organizationSchema('es'), websiteSchema('es'), breadcrumb, itemList, ...productPlanSchema(plans), ...reviews, faqSchema(faqs)]}
 >
   <HomeContent locale="es" />
+  <FAQSection locale="es" items={faqs} />
 </BaseLayout>

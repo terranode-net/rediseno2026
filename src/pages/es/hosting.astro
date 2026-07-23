@@ -2,11 +2,11 @@
 export const prerender = false;
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import HostingContent from '@/components/HostingContent.astro';
-import { getHostingPlans, getSeo, priceNumber } from '@/lib/db';
+import { getHostingPlans, priceNumber } from '@/lib/db';
 import { SITE_URL } from '@/lib/site';
 import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
 
-const [hostingPlans, seo] = await Promise.all([getHostingPlans(), getSeo('/hosting')]);
+const hostingPlans = await getHostingPlans();
 
 const faqs = [
   { q: '¿Puedo migrar mi sitio actual a Terranode?', a: 'Sí. Ofrecemos migración gratuita desde cualquier proveedor. Nuestro equipo gestiona todo el proceso, incluyendo archivos, base de datos y correos, sin tiempo de inactividad.' },
@@ -27,8 +27,8 @@ const service = serviceSchema('es', { name: 'Web Hosting Ecuador', description: 
 <BaseLayout
   locale="es"
   pageKey="hosting"
-  title={seo?.title ?? 'Web Hosting en Ecuador desde $40/año | LiteSpeed + cPanel | Terranode'}
-  description={seo?.description ?? 'Hosting web con LiteSpeed, CloudLinux, cPanel y SSL gratis. Planes desde $40/año, migración gratuita y soporte 24/7.'}
+  title='Web Hosting en Ecuador desde $40/año | LiteSpeed + cPanel | Terranode'
+  description='Hosting web con LiteSpeed, CloudLinux, cPanel y SSL gratis. Planes desde $40/año, migración gratuita y soporte 24/7.'
   jsonLd={[organizationSchema('es'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
 >
   <HostingContent locale="es" plans={hostingPlans} />

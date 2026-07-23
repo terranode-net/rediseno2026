@@ -1,16 +1,25 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ContactPageContent from '@/components/ContactPageContent.astro';
-import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+import FAQSection from '@/components/FAQSection.astro';
+import { organizationSchema, breadcrumbSchema, faqSchema } from '@/lib/schema';
 
 const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Contacto', key: 'contacto' }]);
+
+const faqs = [
+  { q: '¿Cuál es el tiempo de respuesta del soporte?', a: 'Respondemos en menos de 1 hora por WhatsApp, correo o ticket, con soporte técnico disponible 24/7.' },
+  { q: '¿Qué canales de contacto tienen disponibles?', a: 'WhatsApp (soporte y ventas), correo electrónico, sistema de tickets y Discord — elige el que prefieras según tu consulta.' },
+  { q: '¿Puedo pedir una cotización personalizada?', a: 'Sí, escríbenos contándonos tu proyecto (VPS, hosting, servidores dedicados, correo o Microsoft 365) y te armamos una propuesta a la medida.' },
+  { q: '¿Atienden clientes fuera de Ecuador?', a: 'Sí, tenemos clientes en Ecuador, Estados Unidos y otros países de Latinoamérica, con facturación local disponible según el país.' },
+];
 ---
 <BaseLayout
   locale="es"
   pageKey="contacto"
   title="Contacto | Habla con un ingeniero de Terranode"
   description="¿Tienes dudas sobre VPS, hosting, servidores dedicados o Microsoft 365? Escríbenos por WhatsApp, correo, ticket o Discord — respuesta en menos de 1 hora."
-  jsonLd={[organizationSchema('es'), breadcrumb]}
+  jsonLd={[organizationSchema('es'), breadcrumb, faqSchema(faqs)]}
 >
   <ContactPageContent locale="es" />
+  <FAQSection locale="es" items={faqs} />
 </BaseLayout>

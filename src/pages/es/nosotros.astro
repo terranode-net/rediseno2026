@@ -1,16 +1,25 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import AboutContent from '@/components/AboutContent.astro';
-import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+import FAQSection from '@/components/FAQSection.astro';
+import { organizationSchema, breadcrumbSchema, faqSchema } from '@/lib/schema';
 
 const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Nosotros', key: 'nosotros' }]);
+
+const faqs = [
+  { q: '¿Desde cuándo opera Terranode?', a: 'Terranode opera desde 2016, con más de 1,500 servidores desplegados y 12,000 buzones de correo migrados para clientes en Ecuador y Estados Unidos.' },
+  { q: '¿Terranode es una empresa ecuatoriana?', a: 'Sí, con operación legal en Ecuador (Terranode S.A.S.) y presencia adicional en Estados Unidos (Terranode LLC), lo que nos permite facturar localmente y ofrecer infraestructura en ambos países.' },
+  { q: '¿Dónde están ubicados sus servidores?', a: 'Contamos con presencia en múltiples ubicaciones: Houston, Ashburn, Los Ángeles y Chicago en Estados Unidos, y Guayaquil en Ecuador.' },
+  { q: '¿Ofrecen soporte en español las 24 horas?', a: 'Sí, nuestro equipo de soporte técnico atiende en español las 24 horas los 7 días de la semana, por WhatsApp, ticket, correo y Discord.' },
+];
 ---
 <BaseLayout
   locale="es"
   pageKey="nosotros"
   title="Nosotros | Terranode S.A.S. — Infraestructura Cloud desde 2016"
   description="Desde 2016 en Ecuador: 6+ ubicaciones, 1,500+ servidores desplegados y 12,000+ buzones migrados. Conoce la historia y los valores de Terranode."
-  jsonLd={[organizationSchema('es'), breadcrumb]}
+  jsonLd={[organizationSchema('es'), breadcrumb, faqSchema(faqs)]}
 >
   <AboutContent locale="es" />
+  <FAQSection locale="es" items={faqs} />
 </BaseLayout>
