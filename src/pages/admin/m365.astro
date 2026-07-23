@@ -1,0 +1,34 @@
+---
+export const prerender = false;
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { requireAdmin } from '@/lib/supabaseServerAuth';
+
+const guard = await requireAdmin(Astro);
+if (guard) return guard;
+---
+<AdminLayout title="Microsoft 365" active="m365">
+  <p class="mb-4 max-w-2xl text-sm text-slate-500"><strong>Feats</strong> es JSON: <code class="rounded bg-slate-100 px-1">["Outlook","Teams","1 TB OneDrive"]</code></p>
+  <div id="table"></div>
+  <script>
+    import { mountAdminTable } from '@/lib/adminTable';
+    mountAdminTable({
+      table: 'm365_plans',
+      pk: 'id',
+      labelSingular: 'plan M365',
+      newRowDefaults: { name: 'Nuevo plan', badge: '', price: '$0', period: '/mes', tagline: '', feats: [], href: '', popular: false, sort_order: 99, active: true },
+      columns: [
+        { key: 'id', label: 'ID', type: 'text', width: 'w-24' },
+        { key: 'name', label: 'Nombre', type: 'text', width: 'w-28' },
+        { key: 'badge', label: 'Badge', type: 'text', width: 'w-24' },
+        { key: 'price', label: 'Precio', type: 'text', width: 'w-20' },
+        { key: 'period', label: 'Periodo', type: 'text', width: 'w-16' },
+        { key: 'tagline', label: 'Tagline', type: 'text' },
+        { key: 'feats', label: 'Características', type: 'json', width: 'w-56' },
+        { key: 'href', label: 'Link compra', type: 'text', width: 'w-28' },
+        { key: 'popular', label: 'Popular', type: 'boolean', width: 'w-16' },
+        { key: 'sort_order', label: 'Orden', type: 'number', width: 'w-16' },
+        { key: 'active', label: 'Activo', type: 'boolean', width: 'w-16' },
+      ],
+    });
+  </script>
+</AdminLayout>

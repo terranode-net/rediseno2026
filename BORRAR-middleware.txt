@@ -1,0 +1,1 @@
+IMPORTANTE: elimina src/middleware.ts de tu repo (ya no se usa)

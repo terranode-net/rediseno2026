@@ -1,0 +1,48 @@
+---
+export const prerender = false;
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { requireAdmin } from '@/lib/supabaseServerAuth';
+
+const guard = await requireAdmin(Astro);
+if (guard) return guard;
+---
+<AdminLayout title="Blog" active="blog">
+  <p class="mb-4 max-w-2xl text-sm text-slate-500">
+    <strong>Tags</strong> es JSON de texto: <code class="rounded bg-slate-100 px-1">["Linux","VPS"]</code>. <strong>Sections</strong> es JSON de objetos:
+    <code class="rounded bg-slate-100 px-1">{`[{"h":"Título","body":"Contenido…"}]`}</code>
+  </p>
+  <div id="table"></div>
+  <script>
+    import { mountAdminTable } from '@/lib/adminTable';
+    mountAdminTable({
+      table: 'blog_posts',
+      pk: 'slug',
+      orderBy: 'published_at',
+      labelSingular: 'artículo',
+      newRowDefaults: {
+        locale: 'es', category: '', title: 'Nuevo artículo', excerpt: '', published_at: new Date().toISOString().slice(0, 10),
+        read_time: '5 min', author: 'Equipo Terranode', tags: [], intro: '', sections: [], conclusion: '',
+        featured: false, published: false, seo_title: '', seo_description: '', sort_order: 99,
+      },
+      columns: [
+        { key: 'slug', label: 'Slug', type: 'text', width: 'w-32' },
+        { key: 'locale', label: 'Idioma', type: 'select', options: ['es', 'en'], width: 'w-16' },
+        { key: 'category', label: 'Categoría', type: 'text', width: 'w-24' },
+        { key: 'title', label: 'Título', type: 'text' },
+        { key: 'excerpt', label: 'Extracto', type: 'textarea' },
+        { key: 'published_at', label: 'Fecha', type: 'text', width: 'w-24' },
+        { key: 'read_time', label: 'Lectura', type: 'text', width: 'w-16' },
+        { key: 'author', label: 'Autor', type: 'text', width: 'w-24' },
+        { key: 'tags', label: 'Tags', type: 'json', width: 'w-40' },
+        { key: 'intro', label: 'Intro', type: 'textarea' },
+        { key: 'sections', label: 'Secciones', type: 'json', width: 'w-56' },
+        { key: 'conclusion', label: 'Conclusión', type: 'textarea' },
+        { key: 'seo_title', label: 'SEO Title', type: 'text' },
+        { key: 'seo_description', label: 'SEO Description', type: 'textarea' },
+        { key: 'featured', label: 'Destacado', type: 'boolean', width: 'w-16' },
+        { key: 'published', label: 'Publicado', type: 'boolean', width: 'w-16' },
+        { key: 'sort_order', label: 'Orden', type: 'number', width: 'w-16' },
+      ],
+    });
+  </script>
+</AdminLayout>

@@ -61,3 +61,17 @@ export async function getAdminSession(cookies: AstroCookies, request: Request) {
 
   return { supabase, user, isAdmin: !!adminRow };
 }
+
+/**
+ * Guard para usar directamente en el frontmatter de cada página bajo /admin
+ * (en vez de middleware.ts, que en Vercel choca con su propio "Edge Middleware").
+ * Uso:
+ *   const guard = await requireAdmin(Astro);
+ *   if (guard) return guard;
+ */
+export async function requireAdmin(Astro: { cookies: AstroCookies; request: Request; redirect: (path: string) => Response }) {
+  const { user, isAdmin } = await getAdminSession(Astro.cookies, Astro.request);
+  if (!user) return Astro.redirect('/admin/login');
+  if (!isAdmin) return Astro.redirect('/admin/login?error=no_autorizado');
+  return null;
+}

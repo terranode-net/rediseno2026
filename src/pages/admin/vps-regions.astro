@@ -1,0 +1,29 @@
+---
+export const prerender = false;
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { requireAdmin } from '@/lib/supabaseServerAuth';
+
+const guard = await requireAdmin(Astro);
+if (guard) return guard;
+---
+<AdminLayout title="Regiones VPS" active="vps-regions">
+  <div id="table"></div>
+  <script>
+    import { mountAdminTable } from '@/lib/adminTable';
+    mountAdminTable({
+      table: 'vps_regions',
+      pk: 'id',
+      labelSingular: 'región',
+      newRowDefaults: { name: 'Nueva región', country: 'us', ping: '—', status: 'online', sort_order: 99, active: true },
+      columns: [
+        { key: 'id', label: 'ID', type: 'text', width: 'w-28' },
+        { key: 'name', label: 'Nombre', type: 'text' },
+        { key: 'country', label: 'País (ISO)', type: 'text', width: 'w-20' },
+        { key: 'ping', label: 'Ping', type: 'text', width: 'w-20' },
+        { key: 'status', label: 'Estado', type: 'select', options: ['online', 'offline', 'maintenance'], width: 'w-32' },
+        { key: 'sort_order', label: 'Orden', type: 'number', width: 'w-20' },
+        { key: 'active', label: 'Activo', type: 'boolean', width: 'w-16' },
+      ],
+    });
+  </script>
+</AdminLayout>

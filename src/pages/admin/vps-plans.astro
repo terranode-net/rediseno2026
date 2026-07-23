@@ -1,0 +1,42 @@
+---
+export const prerender = false;
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { requireAdmin } from '@/lib/supabaseServerAuth';
+
+const guard = await requireAdmin(Astro);
+if (guard) return guard;
+---
+<AdminLayout title="Planes VPS" active="vps-plans">
+  <p class="mb-4 max-w-2xl text-sm text-slate-500">
+    <strong>Regiones</strong> y <strong>Stock</strong> son JSON: <code class="rounded bg-slate-100 px-1">["ashburn","houston"]</code>
+    y <code class="rounded bg-slate-100 px-1">{`{"houston":"available","ashburn":"out"}`}</code> — valores de stock: <code>available</code>, <code>limited</code>, <code>out</code>.
+  </p>
+  <div id="table"></div>
+  <script>
+    import { mountAdminTable } from '@/lib/adminTable';
+    mountAdminTable({
+      table: 'vps_plans',
+      pk: 'id',
+      labelSingular: 'plan VPS',
+      newRowDefaults: {
+        name: 'Nuevo plan', cpu: '1 vCPU', ram: '1 GB', disk: '25 GB NVMe', bw: '1 TB',
+        price: '$0.00', regions: [], stock: {}, href: '', popular: false, sort_order: 99, active: true,
+      },
+      columns: [
+        { key: 'id', label: 'ID', type: 'text', width: 'w-20' },
+        { key: 'name', label: 'Nombre', type: 'text', width: 'w-24' },
+        { key: 'cpu', label: 'CPU', type: 'text', width: 'w-24' },
+        { key: 'ram', label: 'RAM', type: 'text', width: 'w-20' },
+        { key: 'disk', label: 'Disco', type: 'text', width: 'w-28' },
+        { key: 'bw', label: 'BW', type: 'text', width: 'w-16' },
+        { key: 'price', label: 'Precio', type: 'text', width: 'w-20' },
+        { key: 'regions', label: 'Regiones', type: 'json', width: 'w-40' },
+        { key: 'stock', label: 'Stock', type: 'json', width: 'w-48' },
+        { key: 'href', label: 'Link compra', type: 'text', width: 'w-32' },
+        { key: 'popular', label: 'Popular', type: 'boolean', width: 'w-16' },
+        { key: 'sort_order', label: 'Orden', type: 'number', width: 'w-16' },
+        { key: 'active', label: 'Activo', type: 'boolean', width: 'w-16' },
+      ],
+    });
+  </script>
+</AdminLayout>

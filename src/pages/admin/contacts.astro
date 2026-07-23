@@ -1,0 +1,60 @@
+---
+export const prerender = false;
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { requireAdmin } from '@/lib/supabaseServerAuth';
+
+const guard = await requireAdmin(Astro);
+if (guard) return guard;
+---
+<AdminLayout title="Contactos" active="contacts">
+  <p id="count" class="mb-4 text-sm text-slate-500">Cargando…</p>
+  <div id="table" class="overflow-x-auto rounded-xl border border-slate-200 bg-white"></div>
+
+  <script>
+    import { supabaseBrowser as supabase } from '@/lib/supabaseBrowser';
+
+    async function load() {
+      const { data, error } = await supabase.from('contacts').select('*').order('created_at', { ascending: false });
+      const countEl = document.getElementById('count')!;
+      const tableEl = document.getElementById('table')!;
+      if (error) {
+        tableEl.innerHTML = `<div class="p-4 text-sm text-red-700">${error.message}</div>`;
+        return;
+      }
+      const rows = data ?? [];
+      countEl.textContent = `${rows.length} mensaje(s)`;
+
+      const body = rows
+        .map(
+          (r) => `<tr class="border-b border-slate-100 align-top">
+            <td class="px-3 py-2 text-sm">${new Date(r.created_at).toLocaleString()}</td>
+            <td class="px-3 py-2 text-sm font-semibold">${r.name}</td>
+            <td class="px-3 py-2 text-sm">${r.email}${r.phone ? '<br>' + r.phone : ''}</td>
+            <td class="px-3 py-2 text-sm text-slate-500">${r.company ?? ''}</td>
+            <td class="px-3 py-2 text-sm text-slate-500">${r.service_interest ?? ''}</td>
+            <td class="px-3 py-2 text-sm">${r.message ?? ''}</td>
+            <td class="px-3 py-2 text-right"><button data-id="${r.id}" class="del-btn rounded-md border border-red-200 px-2 py-1 text-xs font-semibold text-red-600 hover:bg-red-50">Eliminar</button></td>
+          </tr>`
+        )
+        .join('');
+
+      tableEl.innerHTML = `<table class="w-full border-collapse">
+        <thead><tr class="bg-surface text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
+          <th class="px-3 py-2">Fecha</th><th class="px-3 py-2">Nombre</th><th class="px-3 py-2">Contacto</th><th class="px-3 py-2">Empresa</th><th class="px-3 py-2">Interés</th><th class="px-3 py-2">Mensaje</th><th></th>
+        </tr></thead>
+        <tbody>${body || '<tr><td class="p-4 text-sm text-slate-400" colspan="7">Todavía no hay mensajes.</td></tr>'}</tbody>
+      </table>`;
+
+      tableEl.querySelectorAll('.del-btn').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const id = (btn as HTMLElement).dataset.id;
+          if (!confirm('¿Eliminar este mensaje?')) return;
+          await supabase.from('contacts').delete().eq('id', id);
+          load();
+        });
+      });
+    }
+
+    load();
+  </script>
+</AdminLayout>

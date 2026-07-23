@@ -1,0 +1,40 @@
+---
+export const prerender = false;
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { requireAdmin } from '@/lib/supabaseServerAuth';
+
+const guard = await requireAdmin(Astro);
+if (guard) return guard;
+---
+<AdminLayout title="Servidores dedicados" active="dedicated">
+  <div id="table"></div>
+  <script>
+    import { mountAdminTable } from '@/lib/adminTable';
+    mountAdminTable({
+      table: 'dedicated_plans',
+      pk: 'id',
+      labelSingular: 'servidor',
+      newRowDefaults: {
+        name: 'Nuevo servidor', cpu: '', cores: '', ram: '', disk: '', net: '', ip: 'IPv4 + IPv6',
+        price: '$0.00', period: '/mes', tagline: '', href: 'https://my.terranode.net/store/dedicated-servers', popular: false, sort_order: 99, active: true,
+      },
+      columns: [
+        { key: 'id', label: 'ID', type: 'text', width: 'w-20' },
+        { key: 'name', label: 'Nombre', type: 'text' },
+        { key: 'cpu', label: 'CPU', type: 'text' },
+        { key: 'cores', label: 'Cores', type: 'text', width: 'w-28' },
+        { key: 'ram', label: 'RAM', type: 'text', width: 'w-24' },
+        { key: 'disk', label: 'Disco', type: 'text', width: 'w-28' },
+        { key: 'net', label: 'Red', type: 'text', width: 'w-28' },
+        { key: 'ip', label: 'IP', type: 'text', width: 'w-24' },
+        { key: 'price', label: 'Precio', type: 'text', width: 'w-20' },
+        { key: 'period', label: 'Periodo', type: 'text', width: 'w-16' },
+        { key: 'tagline', label: 'Tagline', type: 'text' },
+        { key: 'href', label: 'Link compra', type: 'text', width: 'w-28' },
+        { key: 'popular', label: 'Popular', type: 'boolean', width: 'w-16' },
+        { key: 'sort_order', label: 'Orden', type: 'number', width: 'w-16' },
+        { key: 'active', label: 'Activo', type: 'boolean', width: 'w-16' },
+      ],
+    });
+  </script>
+</AdminLayout>
