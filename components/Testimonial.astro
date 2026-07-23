@@ -1,0 +1,25 @@
+---
+interface Props {
+  quote: string;
+  author: string;
+  role?: string;
+}
+const { quote, author, role } = Astro.props;
+---
+<div class="card !cursor-default">
+  <div class="flex gap-0.5 text-signal">
+    {Array.from({ length: 5 }).map(() => (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3.1 6.7 7.4.8-5.5 5 1.6 7.3L12 18l-6.6 3.8 1.6-7.3-5.5-5 7.4-.8L12 2Z"/></svg>
+    ))}
+  </div>
+  <p class="mt-4 text-[15px] leading-relaxed text-slate-600">&ldquo;{quote}&rdquo;</p>
+  <div class="mt-5 flex items-center gap-3">
+    <div class="flex h-9 w-9 items-center justify-center rounded-full bg-accent-soft font-display text-sm font-semibold text-accent">
+      {author.charAt(0)}
+    </div>
+    <div>
+      <p class="text-sm font-semibold text-ink">{author}</p>
+      {role && <p class="text-xs text-slate-400">{role}</p>}
+    </div>
+  </div>
+</div>
