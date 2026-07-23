@@ -1,5 +1,5 @@
 import { defineMiddleware } from 'astro:middleware';
-import { getAdminSession } from './lib/supabaseServerAuth.js';
+import { getAdminSession } from './lib/supabaseServerAuth';
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const { pathname } = context.url;
