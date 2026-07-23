@@ -1,0 +1,74 @@
+---
+export const prerender = false;
+import '@/styles/global.css';
+const error = Astro.url.searchParams.get('error');
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <title>Iniciar sesión · Admin Terranode</title>
+  </head>
+  <body class="flex min-h-screen items-center justify-center bg-ink font-body px-4">
+    <div class="w-full max-w-sm rounded-2xl bg-white p-8 shadow-card">
+      <div class="mb-6 flex items-center gap-2">
+        <img src="/logo-mark.png" alt="Terranode" class="h-8 w-8" />
+        <span class="font-display text-lg font-semibold text-ink">Admin Terranode</span>
+      </div>
+
+      {error === 'no_autorizado' && (
+        <p class="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+          Tu cuenta no tiene permisos de administrador.
+        </p>
+      )}
+
+      <form id="login-form" class="space-y-4">
+        <div>
+          <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-400">Correo</label>
+          <input type="email" id="email" required autocomplete="username" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent" />
+        </div>
+        <div>
+          <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-400">Contraseña</label>
+          <input type="password" id="password" required autocomplete="current-password" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent" />
+        </div>
+        <p id="form-error" class="hidden rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"></p>
+        <button type="submit" id="submit-btn" class="w-full rounded-lg bg-accent py-2.5 text-sm font-semibold text-white hover:bg-accent-hover">
+          Entrar
+        </button>
+      </form>
+    </div>
+
+    <script>
+      import { supabaseBrowser } from '@/lib/supabaseBrowser';
+
+      const form = document.getElementById('login-form') as HTMLFormElement;
+      const errorEl = document.getElementById('form-error') as HTMLParagraphElement;
+      const btn = document.getElementById('submit-btn') as HTMLButtonElement;
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errorEl.classList.add('hidden');
+        btn.disabled = true;
+        btn.textContent = 'Entrando…';
+
+        const email = (document.getElementById('email') as HTMLInputElement).value.trim();
+        const password = (document.getElementById('password') as HTMLInputElement).value;
+
+        const { error } = await supabaseBrowser.auth.signInWithPassword({ email, password });
+
+        if (error) {
+          errorEl.textContent = error.message === 'Invalid login credentials' ? 'Correo o contraseña incorrectos.' : error.message;
+          errorEl.classList.remove('hidden');
+          btn.disabled = false;
+          btn.textContent = 'Entrar';
+          return;
+        }
+
+        window.location.href = '/admin';
+      });
+    </script>
+  </body>
+</html>

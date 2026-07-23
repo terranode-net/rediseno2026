@@ -1,0 +1,33 @@
+---
+export const prerender = false;
+import AdminLayout from '@/layouts/AdminLayout.astro';
+---
+<AdminLayout title="Proveedores (Hosting Detector)" active="providers">
+  <p class="mb-4 max-w-2xl text-sm text-slate-500">
+    <strong>ns_patterns</strong> y <strong>asns</strong> son JSON: <code class="rounded bg-slate-100 px-1">["ns1.example.com"]</code> y
+    <code class="rounded bg-slate-100 px-1">[12345,67890]</code>.
+  </p>
+  <div id="table"></div>
+  <script>
+    import { mountAdminTable } from '@/lib/adminTable';
+    mountAdminTable({
+      table: 'hosting_providers',
+      pk: 'id',
+      labelSingular: 'proveedor',
+      newRowDefaults: { name: '', flag: '', color: '#3355FF', ns_patterns: [], asns: [], description: '', competitor: false, score: 0, sort_order: 99, active: true },
+      columns: [
+        { key: 'id', label: 'ID', type: 'text', width: 'w-24' },
+        { key: 'name', label: 'Nombre', type: 'text' },
+        { key: 'flag', label: 'Bandera', type: 'text', width: 'w-16' },
+        { key: 'color', label: 'Color', type: 'text', width: 'w-20' },
+        { key: 'ns_patterns', label: 'Patrones NS', type: 'json', width: 'w-48' },
+        { key: 'asns', label: 'ASNs', type: 'json', width: 'w-32' },
+        { key: 'description', label: 'Descripción', type: 'textarea' },
+        { key: 'competitor', label: 'Competidor', type: 'boolean', width: 'w-16' },
+        { key: 'score', label: 'Score', type: 'number', width: 'w-16' },
+        { key: 'sort_order', label: 'Orden', type: 'number', width: 'w-16' },
+        { key: 'active', label: 'Activo', type: 'boolean', width: 'w-16' },
+      ],
+    });
+  </script>
+</AdminLayout>

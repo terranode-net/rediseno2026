@@ -1,0 +1,42 @@
+---
+export const prerender = false;
+import AdminLayout from '@/layouts/AdminLayout.astro';
+---
+<AdminLayout title="SMTP y facturación" active="settings">
+  <p class="mb-6 max-w-2xl text-sm text-slate-500">
+    Estas dos secciones son privadas: nadie fuera del panel de administración puede leerlas (RLS lo bloquea a nivel de base de datos).
+  </p>
+
+  <h2 class="mb-3 font-display text-lg font-semibold text-ink">Servidor SMTP</h2>
+  <div id="smtp-form" class="mb-8 max-w-2xl rounded-xl border border-slate-200 bg-white p-6"></div>
+
+  <h2 class="mb-3 font-display text-lg font-semibold text-ink">Facturación</h2>
+  <div id="billing-form" class="max-w-2xl rounded-xl border border-slate-200 bg-white p-6"></div>
+
+  <script>
+    import { mountSingletonForm } from '@/lib/adminTable';
+    mountSingletonForm({
+      table: 'smtp_config',
+      mount: '#smtp-form',
+      fields: [
+        { key: 'host', label: 'Host SMTP' },
+        { key: 'port', label: 'Puerto' },
+        { key: 'username', label: 'Usuario' },
+        { key: 'password', label: 'Contraseña', type: 'password' },
+        { key: 'from_email', label: 'Email remitente' },
+        { key: 'from_name', label: 'Nombre remitente' },
+      ],
+    });
+    mountSingletonForm({
+      table: 'billing_settings',
+      mount: '#billing-form',
+      fields: [
+        { key: 'legal_name', label: 'Razón social' },
+        { key: 'tax_id', label: 'RUC / Tax ID' },
+        { key: 'address', label: 'Dirección fiscal', type: 'textarea' },
+        { key: 'currency', label: 'Moneda (ej. USD)' },
+        { key: 'invoice_prefix', label: 'Prefijo de factura' },
+      ],
+    });
+  </script>
+</AdminLayout>

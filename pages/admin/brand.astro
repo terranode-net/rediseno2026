@@ -1,0 +1,28 @@
+---
+export const prerender = false;
+import AdminLayout from '@/layouts/AdminLayout.astro';
+---
+<AdminLayout title="Marca" active="brand">
+  <p class="mb-4 max-w-2xl text-sm text-slate-500">Datos de contacto y marca usados en el footer, header y JSON-LD del sitio.</p>
+  <div id="form" class="max-w-3xl rounded-xl border border-slate-200 bg-white p-6"></div>
+  <script>
+    import { mountSingletonForm } from '@/lib/adminTable';
+    mountSingletonForm({
+      table: 'brand_settings',
+      mount: '#form',
+      fields: [
+        { key: 'siteName', label: 'Nombre del sitio' },
+        { key: 'legalNameEC', label: 'Razón social (Ecuador)' },
+        { key: 'legalNameUS', label: 'Razón social (USA)' },
+        { key: 'email', label: 'Email' },
+        { key: 'phone', label: 'Teléfono' },
+        { key: 'whatsappSupport', label: 'WhatsApp Soporte (URL)' },
+        { key: 'whatsappSales', label: 'WhatsApp Ventas (URL)' },
+        { key: 'discord', label: 'Discord (URL)' },
+        { key: 'clientPortal', label: 'Portal de clientes (URL)' },
+        { key: 'ticketUrl', label: 'Sistema de tickets (URL)' },
+        { key: 'address', label: 'Dirección' },
+      ],
+    });
+  </script>
+</AdminLayout>

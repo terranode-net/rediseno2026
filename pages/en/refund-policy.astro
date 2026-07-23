@@ -1,0 +1,29 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import LegalPageContent from '@/components/LegalPageContent.astro';
+import { REFUND_EN, REFUND_SUMMARY_EN, UPDATED_EN } from '@/lib/legalData';
+import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+
+const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'Refund Policy', key: 'refund' }]);
+---
+<BaseLayout
+  locale="en"
+  pageKey="refund"
+  title="Refund Policy · Terranode"
+  description="Terranode Refund Policy: 7-day guarantee on hosting and email, 3-day on VPS. Learn the conditions and request process."
+  jsonLd={[organizationSchema('en'), breadcrumb]}
+>
+  <LegalPageContent
+    locale="en"
+    title="Refund Policy"
+    badge="Refund Policy"
+    icon="💳"
+    subtitle="We are committed to your satisfaction. This policy describes the conditions under which you may request a refund for services contracted with Terranode."
+    updated={UPDATED_EN}
+    sections={REFUND_EN}
+    summary={REFUND_SUMMARY_EN}
+    ctaTitle="Need to request a refund?"
+    ctaSub="Open a support ticket and our team will assist you within 24 business hours."
+    ctaLabel="Open Ticket"
+  />
+</BaseLayout>

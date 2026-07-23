@@ -1,0 +1,26 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import LegalPageContent from '@/components/LegalPageContent.astro';
+import { PRIVACY_ES, UPDATED_ES } from '@/lib/legalData';
+import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+
+const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Política de Privacidad', key: 'privacy' }]);
+---
+<BaseLayout
+  locale="es"
+  pageKey="privacy"
+  title="Política de Privacidad · Terranode"
+  description="Política de Privacidad de Terranode. Cumple con la LOPDP de Ecuador. Conozca cómo recopilamos, usamos y protegemos sus datos personales."
+  jsonLd={[organizationSchema('es'), breadcrumb]}
+>
+  <LegalPageContent
+    locale="es"
+    title="Política de Privacidad y Protección de Datos Personales"
+    badge="Privacidad · LOPDP Ecuador"
+    icon="🔏"
+    subtitle="Esta política describe cómo Terranode recopila, utiliza y protege sus datos personales, en cumplimiento de la Ley Orgánica de Protección de Datos Personales (LOPDP) del Ecuador."
+    updated={UPDATED_ES}
+    sections={PRIVACY_ES}
+    complianceBadge="Cumple LOPDP Ecuador"
+  />
+</BaseLayout>

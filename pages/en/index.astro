@@ -1,0 +1,40 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import HomeContent from '@/components/HomeContent.astro';
+import { pathFor, SITE_URL, BRAND } from '@/lib/site';
+import { organizationSchema, websiteSchema, productPlanSchema, breadcrumbSchema } from '@/lib/schema';
+
+const plans = [
+  { name: 'Web Hosting', price: '3', description: 'Optimized hosting with LiteSpeed, CloudLinux and daily automatic backups.', url: pathFor('en', 'hosting') },
+  { name: 'VPS NVMe', price: '10', description: 'NVMe DDR4 virtual servers with deployment in under 60 seconds.', url: pathFor('en', 'vps') },
+  { name: 'Dedicated Server', price: '120', description: 'Exclusive Intel Xeon hardware with NVMe storage and maximum stability.', url: pathFor('en', 'dedicados') },
+];
+
+const itemList = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Web Hosting', url: `${SITE_URL}${pathFor('en', 'hosting')}` },
+    { '@type': 'ListItem', position: 2, name: 'VPS Server', url: `${SITE_URL}${pathFor('en', 'vps')}` },
+    { '@type': 'ListItem', position: 3, name: 'Dedicated Servers', url: `${SITE_URL}${pathFor('en', 'dedicados')}` },
+    { '@type': 'ListItem', position: 4, name: 'Microsoft 365', url: `${SITE_URL}${pathFor('en', 'm365')}` },
+  ],
+};
+
+const reviews = [
+  { '@context': 'https://schema.org', '@type': 'Review', reviewBody: 'Performance and reliability have been exceptional. Incredible loading speeds since migrating to Terranode.', author: { '@type': 'Person', name: 'Eduardo Marín' }, itemReviewed: { '@id': `${SITE_URL}/#organization` }, reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' } },
+  { '@context': 'https://schema.org', '@type': 'Review', reviewBody: 'Exceptional hosting service with reliable performance. Developer support is excellent and any question is resolved quickly.', author: { '@type': 'Person', name: 'Joel Lozano' }, itemReviewed: { '@id': `${SITE_URL}/#organization` }, reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' } },
+  { '@context': 'https://schema.org', '@type': 'Review', reviewBody: 'We migrated our entire infrastructure to Terranode and the process was flawless. Minimum latency in Ecuador.', author: { '@type': 'Person', name: 'Carlos Vélez' }, itemReviewed: { '@id': `${SITE_URL}/#organization` }, reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' } },
+];
+
+const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }]);
+---
+<BaseLayout
+  locale="en"
+  pageKey="home"
+  title="Terranode | Hosting, VPS & Dedicated Servers"
+  description="Deploy your server in 60 seconds. High-performance cloud infrastructure with DDoS 160 Gbps, NVMe and 24/7 support. VPS from $10, Hosting from $3, Dedicated from $120."
+  jsonLd={[organizationSchema('en'), websiteSchema('en'), breadcrumb, itemList, ...productPlanSchema(plans), ...reviews]}
+>
+  <HomeContent locale="en" />
+</BaseLayout>

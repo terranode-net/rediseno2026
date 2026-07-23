@@ -1,0 +1,16 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import BlogContent from '@/components/BlogContent.astro';
+import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+
+const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Blog', key: 'blog' }]);
+---
+<BaseLayout
+  locale="es"
+  pageKey="blog"
+  title="Blog de Terranode | Tutoriales, Guías y Novedades de Hosting"
+  description="Aprende sobre hosting, VPS, servidores dedicados, seguridad web y desarrollo. Tutoriales técnicos y guías del equipo de Terranode."
+  jsonLd={[organizationSchema('es'), breadcrumb]}
+>
+  <BlogContent locale="es" />
+</BaseLayout>

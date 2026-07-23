@@ -1,0 +1,16 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import HtaccessGeneratorContent from '@/components/HtaccessGeneratorContent.astro';
+import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+
+const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: '.htaccess Generator', key: 'htaccess' }]);
+---
+<BaseLayout
+  locale="en"
+  pageKey="htaccess"
+  title="Hardened .htaccess Generator (OWASP Top 10) | Terranode"
+  description="Generate a hardened .htaccess file in one click. OWASP Top 10 protection: force HTTPS, block SQL injection, XSS, hotlinking and more."
+  jsonLd={[organizationSchema('en'), breadcrumb]}
+>
+  <HtaccessGeneratorContent locale="en" />
+</BaseLayout>

@@ -1,0 +1,16 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import HostingDetectorContent from '@/components/HostingDetectorContent.astro';
+import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+
+const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'Hosting Detector', key: 'hostingDetector' }]);
+---
+<BaseLayout
+  locale="en"
+  pageKey="hostingDetector"
+  title="Who is Hosting This Website? Free Hosting Detector | Terranode"
+  description="Find out the hosting provider, IP, ASN and quality of any website instantly. Free tool by Terranode."
+  jsonLd={[organizationSchema('en'), breadcrumb]}
+>
+  <HostingDetectorContent locale="en" />
+</BaseLayout>

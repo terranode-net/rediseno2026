@@ -1,0 +1,16 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import DNSCheckerContent from '@/components/DNSCheckerContent.astro';
+import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+
+const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Verificador de DNS', key: 'dns' }]);
+---
+<BaseLayout
+  locale="es"
+  pageKey="dns"
+  title="Verificador de Propagación DNS Gratis | Terranode"
+  description="Comprueba cómo se propagan tus registros DNS (A, AAAA, CNAME, MX, TXT y más) en múltiples servidores del mundo en tiempo real. Herramienta gratuita."
+  jsonLd={[organizationSchema('es'), breadcrumb]}
+>
+  <DNSCheckerContent locale="es" />
+</BaseLayout>

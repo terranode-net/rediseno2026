@@ -1,0 +1,34 @@
+---
+export const prerender = false;
+import AdminLayout from '@/layouts/AdminLayout.astro';
+
+const cards = [
+  { href: '/admin/vps-regions', title: 'Regiones VPS', desc: 'Ubicaciones, ping y estado' },
+  { href: '/admin/vps-plans', title: 'Planes VPS', desc: 'Specs, precios y stock por región' },
+  { href: '/admin/dedicated', title: 'Servidores dedicados', desc: 'Specs y precios' },
+  { href: '/admin/mail', title: 'Correo (TerraMail)', desc: 'Planes de correo corporativo' },
+  { href: '/admin/hosting', title: 'Web hosting', desc: 'Planes de hosting compartido' },
+  { href: '/admin/m365', title: 'Microsoft 365', desc: 'Planes M365' },
+  { href: '/admin/seo', title: 'SEO por página', desc: 'Title, description, OG por ruta' },
+  { href: '/admin/blog', title: 'Blog', desc: 'Artículos ES/EN' },
+  { href: '/admin/cities', title: 'Ciudades', desc: 'SEO local' },
+  { href: '/admin/providers', title: 'Proveedores', desc: 'Datos del Hosting Detector' },
+  { href: '/admin/brand', title: 'Marca', desc: 'Contacto, redes, WhatsApp' },
+  { href: '/admin/settings', title: 'SMTP y facturación', desc: 'Configuración privada' },
+  { href: '/admin/subscribers', title: 'Suscriptores', desc: 'Lista del newsletter' },
+];
+---
+<AdminLayout title="Panel principal" active="dashboard">
+  <p class="mb-6 max-w-2xl text-sm text-slate-500">
+    Todo lo que edites aquí se refleja al instante en el sitio público — las páginas leen los precios y el contenido
+    directamente de Supabase en cada visita.
+  </p>
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    {cards.map((c) => (
+      <a href={c.href} class="rounded-xl border border-slate-200 bg-white p-4 shadow-card transition-shadow hover:shadow-card-hover">
+        <p class="font-display font-semibold text-ink">{c.title}</p>
+        <p class="mt-1 text-sm text-slate-500">{c.desc}</p>
+      </a>
+    ))}
+  </div>
+</AdminLayout>

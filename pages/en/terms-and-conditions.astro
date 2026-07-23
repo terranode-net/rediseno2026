@@ -1,0 +1,27 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import LegalPageContent from '@/components/LegalPageContent.astro';
+import { TERMS_EN, UPDATED_EN } from '@/lib/legalData';
+import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+
+const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'Terms and Conditions', key: 'terms' }]);
+---
+<BaseLayout
+  locale="en"
+  pageKey="terms"
+  title="Terms and Conditions · Terranode"
+  description="Terms and Conditions for using Terranode Cloud Infrastructure services. Please read this agreement before contracting any service."
+  jsonLd={[organizationSchema('en'), breadcrumb]}
+>
+  <LegalPageContent
+    locale="en"
+    title="Terms and Conditions of Service"
+    badge="Legal Document"
+    icon="⚖️"
+    subtitle="Please read this agreement carefully before contracting or using any Terranode service. By using our services, you accept the following terms."
+    updated={UPDATED_EN}
+    sections={TERMS_EN}
+    requestBtn="Open Support Ticket"
+    requestUrl="https://my.terranode.net"
+  />
+</BaseLayout>

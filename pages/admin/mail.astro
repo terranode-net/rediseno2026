@@ -1,0 +1,35 @@
+---
+export const prerender = false;
+import AdminLayout from '@/layouts/AdminLayout.astro';
+---
+<AdminLayout title="Correo (TerraMail)" active="mail">
+  <p class="mb-4 max-w-2xl text-sm text-slate-500"><strong>Feats</strong> es JSON: <code class="rounded bg-slate-100 px-1">["Buzón de 10 GB","Soporte 24/7"]</code></p>
+  <div id="table"></div>
+  <script>
+    import { mountAdminTable } from '@/lib/adminTable';
+    mountAdminTable({
+      table: 'mail_plans',
+      pk: 'id',
+      labelSingular: 'plan de correo',
+      newRowDefaults: {
+        name: 'Nuevo plan', users: 1, storage: '10 GB', price: '$0', period: '/año', monthly: '',
+        tagline: '', feats: [], href: 'https://my.terranode.net/store/corporate-email', popular: false, sort_order: 99, active: true,
+      },
+      columns: [
+        { key: 'id', label: 'ID', type: 'text', width: 'w-24' },
+        { key: 'name', label: 'Nombre', type: 'text', width: 'w-28' },
+        { key: 'users', label: 'Usuarios', type: 'number', width: 'w-20' },
+        { key: 'storage', label: 'Almacén.', type: 'text', width: 'w-20' },
+        { key: 'price', label: 'Precio', type: 'text', width: 'w-20' },
+        { key: 'period', label: 'Periodo', type: 'text', width: 'w-16' },
+        { key: 'monthly', label: 'Equiv. mensual', type: 'text', width: 'w-28' },
+        { key: 'tagline', label: 'Tagline', type: 'text' },
+        { key: 'feats', label: 'Características', type: 'json', width: 'w-56' },
+        { key: 'href', label: 'Link compra', type: 'text', width: 'w-28' },
+        { key: 'popular', label: 'Popular', type: 'boolean', width: 'w-16' },
+        { key: 'sort_order', label: 'Orden', type: 'number', width: 'w-16' },
+        { key: 'active', label: 'Activo', type: 'boolean', width: 'w-16' },
+      ],
+    });
+  </script>
+</AdminLayout>

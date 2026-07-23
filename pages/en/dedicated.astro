@@ -1,0 +1,35 @@
+---
+export const prerender = false;
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import DedicatedContent from '@/components/DedicatedContent.astro';
+import { getDedicatedPlans, getSeo, priceNumber } from '@/lib/db';
+import { SITE_URL } from '@/lib/site';
+import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
+
+const [dedPlans, seo] = await Promise.all([getDedicatedPlans(), getSeo('/en/dedicated')]);
+
+const faqs = [
+  { q: 'How long does it take to provision the server?', a: 'Dedicated servers typically provision in 24-48 business hours.' },
+  { q: 'Can I install any operating system?', a: 'Yes. We offer a wide range of pre-installed OSes, or you can upload your own ISO.' },
+  { q: 'What is IPMI access?', a: 'It lets you manage the server remotely even if the OS is unresponsive: virtual KVM console, forced reboot and more.' },
+  { q: 'Can I configure RAID from the panel?', a: 'Yes, RAID 1, 5 and 10 automatically with no manual intervention.' },
+  { q: 'Do plans include additional IPs?', a: 'Every server includes 1 IPv4 and IPv6. Additional /29 blocks available.' },
+];
+const plans = dedPlans.map((p) => ({
+  name: p.name,
+  price: priceNumber(p.price),
+  description: `${p.cores}, ${p.ram}, ${p.disk}, ${p.net}.`,
+  url: `${SITE_URL}/en/store/dedicated-${p.id}`,
+}));
+const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'Dedicated Servers', key: 'dedicados' }]);
+const service = serviceSchema('en', { name: 'Dedicated Servers', description: 'Exclusive Intel Xeon hardware with NVMe storage and remote IPMI.', pageKey: 'dedicados', serviceType: 'Dedicated Server Hosting' });
+---
+<BaseLayout
+  locale="en"
+  pageKey="dedicados"
+  title={seo?.title ?? 'Intel Xeon Dedicated Servers from $47.99/mo | Terranode'}
+  description={seo?.description ?? 'Dedicated servers with Intel Xeon, ECC DDR4 RAM, Enterprise NVMe, remote IPMI and DDoS 160 Gbps. From $47.99/mo.'}
+  jsonLd={[organizationSchema('en'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
+>
+  <DedicatedContent locale="en" plans={dedPlans} />
+</BaseLayout>

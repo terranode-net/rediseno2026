@@ -1,0 +1,29 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import LegalPageContent from '@/components/LegalPageContent.astro';
+import { REFUND_ES, REFUND_SUMMARY_ES, UPDATED_ES } from '@/lib/legalData';
+import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
+
+const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Política de Reembolsos', key: 'refund' }]);
+---
+<BaseLayout
+  locale="es"
+  pageKey="refund"
+  title="Política de Reembolsos · Terranode"
+  description="Política de Reembolsos de Terranode: garantía de 7 días en hosting y correo, 3 días en VPS. Conozca las condiciones y el proceso de solicitud."
+  jsonLd={[organizationSchema('es'), breadcrumb]}
+>
+  <LegalPageContent
+    locale="es"
+    title="Política de Reembolsos"
+    badge="Política de Reembolsos"
+    icon="💳"
+    subtitle="Nos comprometemos con su satisfacción. Esta política describe las condiciones bajo las cuales puede solicitar un reembolso por los servicios contratados con Terranode."
+    updated={UPDATED_ES}
+    sections={REFUND_ES}
+    summary={REFUND_SUMMARY_ES}
+    ctaTitle="¿Necesitas solicitar un reembolso?"
+    ctaSub="Abre un ticket de soporte y nuestro equipo te ayudará en un plazo máximo de 24 horas hábiles."
+    ctaLabel="Abrir Ticket"
+  />
+</BaseLayout>

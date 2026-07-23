@@ -1,0 +1,50 @@
+---
+// Renderizado en servidor: los precios se leen de Supabase en cada visita,
+// así los cambios del panel de administración se ven al instante y Google
+// sigue viendo el precio dentro del HTML y del JSON-LD.
+export const prerender = false;
+
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import VPSContent from '@/components/VPSContent.astro';
+import { getVpsRegions, getVpsPlans, getSeo, priceNumber } from '@/lib/db';
+import { SITE_URL } from '@/lib/site';
+import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
+
+const [regions, plans, seo] = await Promise.all([getVpsRegions(), getVpsPlans(), getSeo('/vps')]);
+
+const faqs = [
+  { q: 'Can I reinstall the OS from the panel?', a: 'Yes. From VirtFusion you can reinstall the OS at any time in under 5 minutes.' },
+  { q: 'Are backups included?', a: 'Automatic backups are optional. You can create manual snapshots from the panel.' },
+  { q: 'Are all plans available in every region?', a: 'No. Availability varies by region and stock. Select your region to see available plans.' },
+  { q: 'Can I scale my plan later?', a: 'Yes. Upgrade to a bigger plan from the client panel with no migration or downtime.' },
+  { q: 'What is Full Root Access?', a: 'Full root SSH access: install any software, modify kernel configuration and control everything.' },
+];
+
+const products = productPlanSchema(
+  plans
+    .filter((p) => !isNaN(Number(priceNumber(p.price))) && Number(priceNumber(p.price)) > 0)
+    .map((p) => ({
+      name: `VPS ${p.name}`,
+      price: priceNumber(p.price),
+      description: `${p.cpu}, ${p.ram} RAM, ${p.disk}, ${p.bw}.`,
+      url: `${SITE_URL}/en/vps`,
+    }))
+);
+
+const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'VPS', key: 'vps' }]);
+const service = serviceSchema('en', {
+  name: 'NVMe VPS',
+  description: 'Virtual private servers with KVM virtualization, NVMe storage and 60-second deployment.',
+  pageKey: 'vps',
+  serviceType: 'VPS Hosting',
+});
+---
+<BaseLayout
+  locale="en"
+  pageKey="vps"
+  title={seo?.title ?? 'NVMe VPS from $2.99/mo | 5 Regions | Terranode'}
+  description={seo?.description ?? 'VPS servers with KVM virtualization, NVMe DDR4 and 60-second deploy. Choose your region: Ashburn, Los Angeles, Chicago, Houston or Guayaquil.'}
+  jsonLd={[organizationSchema('en'), breadcrumb, service, ...products, faqSchema(faqs)]}
+>
+  <VPSContent locale="en" regions={regions} plans={plans} />
+</BaseLayout>

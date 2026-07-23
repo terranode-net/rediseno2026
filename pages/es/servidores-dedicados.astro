@@ -1,0 +1,35 @@
+---
+export const prerender = false;
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import DedicatedContent from '@/components/DedicatedContent.astro';
+import { getDedicatedPlans, getSeo, priceNumber } from '@/lib/db';
+import { SITE_URL } from '@/lib/site';
+import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
+
+const [dedPlans, seo] = await Promise.all([getDedicatedPlans(), getSeo('/servidores-dedicados')]);
+
+const faqs = [
+  { q: '¿Cuánto tiempo tarda en aprovisionarse el servidor?', a: 'Los servidores dedicados típicamente se aprovisionan en 24-48 horas hábiles.' },
+  { q: '¿Puedo instalar cualquier sistema operativo?', a: 'Sí. Ofrecemos una amplia gama de sistemas operativos preinstalados, o puedes subir tu propia ISO.' },
+  { q: '¿Qué es el acceso IPMI?', a: 'Te permite gestionar el servidor de forma remota incluso si el SO no responde: consola KVM virtual, reinicio forzado y más.' },
+  { q: '¿Puedo configurar RAID desde el panel?', a: 'Sí, RAID 1, 5 y 10 de forma automática sin intervención manual.' },
+  { q: '¿Los planes incluyen IPs adicionales?', a: 'Cada servidor incluye 1 IPv4 e IPv6. Puedes contratar bloques /29 adicionales.' },
+];
+const plans = dedPlans.map((p) => ({
+  name: p.name,
+  price: priceNumber(p.price),
+  description: `${p.cores}, ${p.ram}, ${p.disk}, ${p.net}.`,
+  url: `${SITE_URL}/es/store/dedicated-${p.id}`,
+}));
+const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Servidores Dedicados', key: 'dedicados' }]);
+const service = serviceSchema('es', { name: 'Servidores Dedicados', description: 'Hardware exclusivo Intel Xeon con almacenamiento NVMe y IPMI remoto.', pageKey: 'dedicados', serviceType: 'Dedicated Server Hosting' });
+---
+<BaseLayout
+  locale="es"
+  pageKey="dedicados"
+  title={seo?.title ?? 'Servidores Dedicados Intel Xeon desde $47.99/mes | Terranode'}
+  description={seo?.description ?? 'Servidores dedicados con Intel Xeon, RAM DDR4 ECC, NVMe Enterprise, IPMI remoto y DDoS 160 Gbps. Desde $47.99/mes.'}
+  jsonLd={[organizationSchema('es'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
+>
+  <DedicatedContent locale="es" plans={dedPlans} />
+</BaseLayout>
