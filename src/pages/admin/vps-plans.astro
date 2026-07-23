@@ -8,8 +8,7 @@ if (guard) return guard;
 ---
 <AdminLayout title="Planes VPS" active="vps-plans">
   <p class="mb-4 max-w-2xl text-sm text-slate-500">
-    <strong>Regiones</strong> y <strong>Stock</strong> son JSON: <code class="rounded bg-slate-100 px-1">["ashburn","houston"]</code>
-    y <code class="rounded bg-slate-100 px-1">{`{"houston":"available","ashburn":"out"}`}</code> — valores de stock: <code>available</code>, <code>limited</code>, <code>out</code>.
+    Marca las regiones donde este plan está disponible y elige el estado de stock de cada una.
   </p>
   <div id="table"></div>
   <script>
@@ -31,8 +30,7 @@ if (guard) return guard;
         { key: 'disk', label: 'Disco', type: 'text', width: 'w-28' },
         { key: 'bw', label: 'BW', type: 'text', width: 'w-16' },
         { key: 'price', label: 'Precio', type: 'text', width: 'w-20' },
-        { key: 'regions', label: 'Regiones', type: 'json', width: 'w-40' },
-        { key: 'stock', label: 'Stock', type: 'json', width: 'w-48' },
+        { key: 'stock', label: 'Regiones y stock', type: 'region-stock' },
         { key: 'href', label: 'Link compra', type: 'text', width: 'w-32' },
         { key: 'popular', label: 'Popular', type: 'boolean', width: 'w-16' },
         { key: 'sort_order', label: 'Orden', type: 'number', width: 'w-16' },

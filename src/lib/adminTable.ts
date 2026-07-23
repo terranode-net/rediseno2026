@@ -1,6 +1,6 @@
 import { supabaseBrowser as supabase } from './supabaseBrowser';
 
-export type ColType = 'text' | 'textarea' | 'number' | 'boolean' | 'json' | 'select';
+export type ColType = 'text' | 'textarea' | 'number' | 'boolean' | 'json' | 'select' | 'region-stock';
 
 export interface ColumnDef {
   key: string;
@@ -67,6 +67,29 @@ function readValue(el: HTMLElement, col: ColumnDef): any {
   return (el as HTMLInputElement | HTMLTextAreaElement).value;
 }
 
+const STOCK_LABELS: Record<string, string> = { available: 'Disponible', limited: 'Limitado', out: 'Agotado' };
+
+/** Widget compuesto: checkbox por región + estado de stock. Escribe a la vez `regions` (array) y `stock` (objeto). */
+function regionStockWidget(row: Record<string, any>, regionsList: { id: string; name: string }[]): string {
+  const currentRegions: string[] = Array.isArray(row.regions) ? row.regions : [];
+  const currentStock: Record<string, string> = row.stock && typeof row.stock === 'object' ? row.stock : {};
+  const rows = regionsList
+    .map((r) => {
+      const included = currentRegions.includes(r.id);
+      const st = currentStock[r.id] ?? 'available';
+      const options = Object.entries(STOCK_LABELS)
+        .map(([v, l]) => `<option value="${v}" ${v === st ? 'selected' : ''}>${l}</option>`)
+        .join('');
+      return `<div class="flex items-center gap-2 py-1" data-region-row="${esc(r.id)}">
+        <input type="checkbox" data-region-check="${esc(r.id)}" ${included ? 'checked' : ''} class="h-4 w-4 rounded border-slate-300 text-accent focus:ring-accent" />
+        <span class="flex-1 text-sm text-ink">${esc(r.name)}</span>
+        <select data-region-status="${esc(r.id)}" class="rounded-md border border-slate-200 bg-white px-2 py-1 text-xs focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent" ${included ? '' : 'disabled'}>${options}</select>
+      </div>`;
+    })
+    .join('');
+  return `<div class="rounded-lg border border-slate-200 p-2.5">${rows || '<p class="text-xs text-slate-400">No hay regiones creadas todavía en Regiones VPS.</p>'}</div>`;
+}
+
 function status(mountEl: HTMLElement, msg: string, kind: 'ok' | 'err' | 'info' = 'info') {
   let bar = mountEl.querySelector<HTMLDivElement>('.admin-status');
   if (!bar) {
@@ -94,9 +117,15 @@ export function mountAdminTable(cfg: AdminTableConfig) {
   }
   const orderBy = cfg.orderBy ?? (cfg.columns.some((c) => c.key === 'sort_order') ? 'sort_order' : cfg.pk);
   const label = cfg.labelSingular ?? 'registro';
+  const needsRegions = cfg.columns.some((c) => c.type === 'region-stock');
+  let regionsList: { id: string; name: string }[] = [];
 
   async function load() {
     mountEl!.innerHTML = '<p class="text-sm text-slate-400">Cargando…</p>';
+    if (needsRegions && regionsList.length === 0) {
+      const { data: regionsData } = await supabase.from('vps_regions').select('id,name').order('sort_order', { ascending: true });
+      regionsList = regionsData ?? [];
+    }
     const { data, error } = await supabase.from(cfg.table).select('*').order(orderBy, { ascending: true });
     if (error) {
       mountEl!.innerHTML = `<div class="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">Error cargando datos: ${esc(error.message)}</div>`;
@@ -110,10 +139,11 @@ export function mountAdminTable(cfg: AdminTableConfig) {
       .map((row, i) => {
         const fields = cfg.columns
           .map((c) => {
-            const wide = c.type === 'json' || c.type === 'textarea';
+            const wide = c.type === 'json' || c.type === 'textarea' || c.type === 'region-stock';
+            const widget = c.type === 'region-stock' ? regionStockWidget(row, regionsList) : inputFor(c, row[c.key], String(row[cfg.pk]));
             return `<div class="${wide ? 'col-span-full' : ''}">
               <label class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-400">${esc(c.label)}</label>
-              ${inputFor(c, row[c.key], String(row[cfg.pk]))}
+              ${widget}
             </div>`;
           })
           .join('');
@@ -141,10 +171,34 @@ export function mountAdminTable(cfg: AdminTableConfig) {
       const rowIndex = Number((card as HTMLElement).dataset.row);
       const rowData = rows[rowIndex];
 
+      // En los widgets region-stock: al marcar/desmarcar una región, habilita/deshabilita su <select> de estado.
+      card.querySelectorAll<HTMLInputElement>('[data-region-check]').forEach((chk) => {
+        chk.addEventListener('change', () => {
+          const sel = card.querySelector<HTMLSelectElement>(`[data-region-status="${chk.dataset.regionCheck}"]`);
+          if (sel) sel.disabled = !chk.checked;
+        });
+      });
+
       card.querySelector('[data-action="save"]')?.addEventListener('click', async () => {
         try {
           const payload: Record<string, any> = {};
           cfg.columns.forEach((c) => {
+            if (c.type === 'region-stock') {
+              // Widget compuesto: arma `regions` (array) y `stock` (objeto) a partir de los checkboxes/selects marcados.
+              const regions: string[] = [];
+              const stock: Record<string, string> = {};
+              card.querySelectorAll<HTMLInputElement>('[data-region-check]').forEach((chk) => {
+                const id = chk.dataset.regionCheck!;
+                if (chk.checked) {
+                  regions.push(id);
+                  const sel = card.querySelector<HTMLSelectElement>(`[data-region-status="${id}"]`);
+                  stock[id] = sel?.value ?? 'available';
+                }
+              });
+              payload.regions = regions;
+              payload[c.key] = stock;
+              return;
+            }
             const el = card.querySelector<HTMLElement>(`[data-field="${c.key}"]`);
             if (el) payload[c.key] = readValue(el, c);
           });
