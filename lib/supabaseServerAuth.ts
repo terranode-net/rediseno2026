@@ -14,15 +14,26 @@ const cookieOptions: CookieOptionsWithName = {
 
 /**
  * Cliente de Supabase para usar en middleware / páginas .astro server-side.
- * Lee y escribe la sesión de auth directamente en las cookies de Astro,
- * para que el login persista entre navegaciones (SSR).
+ * Lee la sesión de auth directamente del header "Cookie" de la request (AstroCookies
+ * no tiene forma de listar todas las cookies, solo de leer una por nombre), y escribe
+ * la sesión nueva vía Astro.cookies.set(), para que el login persista entre navegaciones (SSR).
  */
-export function createSupabaseServerClient(cookies: AstroCookies) {
+export function createSupabaseServerClient(cookies: AstroCookies, request: Request) {
   return createServerClient(url, anonKey, {
     cookieOptions,
     cookies: {
       getAll() {
-        return cookies.getAll().map((c) => ({ name: c.name, value: c.value }));
+        const header = request.headers.get('cookie') ?? '';
+        return header
+          .split(';')
+          .map((pair) => pair.trim())
+          .filter(Boolean)
+          .map((pair) => {
+            const idx = pair.indexOf('=');
+            const name = idx === -1 ? pair : pair.slice(0, idx);
+            const value = idx === -1 ? '' : decodeURIComponent(pair.slice(idx + 1));
+            return { name, value };
+          });
       },
       setAll(cookiesToSet) {
         cookiesToSet.forEach(({ name, value, options }) => {
@@ -34,8 +45,8 @@ export function createSupabaseServerClient(cookies: AstroCookies) {
 }
 
 /** Devuelve el usuario actual (o null) y si es admin, en un solo viaje. */
-export async function getAdminSession(cookies: AstroCookies) {
-  const supabase = createSupabaseServerClient(cookies);
+export async function getAdminSession(cookies: AstroCookies, request: Request) {
+  const supabase = createSupabaseServerClient(cookies, request);
   const {
     data: { user },
   } = await supabase.auth.getUser();
