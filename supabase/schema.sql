@@ -27,6 +27,21 @@ as $$
   select exists (select 1 from public.admin_users where user_id = auth.uid());
 $$;
 
+-- ── 0.1 Contactos (formulario público, PRIVADA) ─────────────────────────────
+create table if not exists public.contacts (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  email text not null,
+  phone text,
+  company text,
+  service_interest text,
+  message text,
+  locale text,
+  source_page text,
+  created_at timestamptz not null default now()
+);
+create index if not exists contacts_created_idx on public.contacts (created_at desc);
+
 -- ── 1. SEO por página ───────────────────────────────────────────────────────
 create table if not exists public.site_seo (
   path text primary key,                -- ej: '/vps', '/hosting'
@@ -72,6 +87,7 @@ create table if not exists public.dedicated_plans (
   name text not null,
   cpu text, cores text, ram text, disk text, net text, ip text,
   price text not null,
+  period text not null default '/mes',
   tagline text,
   href text,
   popular boolean not null default false,
@@ -218,6 +234,7 @@ create index if not exists subscribers_created_idx on public.subscribers (create
 -- ROW LEVEL SECURITY
 -- ============================================================================
 alter table public.admin_users        enable row level security;
+alter table public.contacts           enable row level security;
 alter table public.site_seo           enable row level security;
 alter table public.vps_regions        enable row level security;
 alter table public.vps_plans          enable row level security;
@@ -255,7 +272,7 @@ end $$;
 do $$
 declare t text;
 begin
-  foreach t in array array['smtp_config','billing_settings','subscribers','admin_users']
+  foreach t in array array['smtp_config','billing_settings','subscribers','admin_users','contacts']
   loop
     execute format('drop policy if exists "admin only" on public.%I', t);
     execute format('create policy "admin only" on public.%I for all to authenticated using (public.is_admin()) with check (public.is_admin())', t);
@@ -265,6 +282,11 @@ end $$;
 -- El público SÍ puede suscribirse al newsletter (insertar), pero no leer la lista
 drop policy if exists "public subscribe" on public.subscribers;
 create policy "public subscribe" on public.subscribers
+  for insert to anon with check (true);
+
+-- El público SÍ puede enviar el formulario de contacto (insertar), pero no leer los leads
+drop policy if exists "public contact" on public.contacts;
+create policy "public contact" on public.contacts
   for insert to anon with check (true);
 
 -- ── Trigger para updated_at ────────────────────────────────────────────────

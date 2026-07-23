@@ -20,9 +20,18 @@ src/
     en/           Página en inglés de cada sección (código independiente)
     index.astro   Redirección "/" -> "/es/"
 supabase/
-  schema.sql       Tabla `contacts` + políticas de seguridad (RLS) — CÓRRELO EN SUPABASE
+  schema.sql       15 tablas (precios, SEO, blog, ciudades, marca, SMTP, facturación...) + RLS
+  seed.sql         Datos iniciales reales (precios, ciudades, SEO)
+  install.sql      schema.sql + seed.sql combinados en el orden correcto — EJECUTA SOLO ESTE
 vercel.json         Redirect 301 "/" -> "/es/" + headers de seguridad
 ```
+
+**Panel de administración (`/admin`):** login con Supabase Auth, protegido por
+`src/middleware.ts` (nadie sin sesión de admin puede ver ninguna página bajo
+`/admin`). Desde ahí editas precios, SEO, blog, ciudades, proveedores del
+Hosting Detector, marca y configuración privada (SMTP/facturación) — los
+cambios se reflejan al instante en el sitio público porque las páginas leen
+de Supabase en cada visita (SSR).
 
 **Importante sobre el idioma:** tal como pediste, **no hay traducción en vivo**.
 Cada sección tiene un archivo `.astro` propio en español y otro en inglés, con
@@ -42,30 +51,82 @@ npm run dev
 
 Abre `http://localhost:4321/es/` (o `/en/`).
 
-## 3. Supabase — formulario de contacto
+## 3. Supabase — base de datos y panel de administración
 
-1. Entra a tu proyecto de Supabase → **SQL Editor** → pega el contenido de
-   `supabase/schema.sql` → **Run**. Esto crea la tabla `contacts` con Row Level
-   Security activado (el público solo puede *insertar*, nunca leer datos).
-2. Variables de entorno usadas por el proyecto (ver `.env.example`):
+### 3.1 Instalar el esquema (un solo paso)
 
+1. Entra a tu proyecto de Supabase → **SQL Editor** → **New query**.
+2. Pega **todo** el contenido de `supabase/install.sql` (no `schema.sql` ni
+   `seed.sql` por separado — `install.sql` ya los combina en el orden
+   correcto) → **Run**.
+3. Esto crea las 15 tablas (precios de VPS/dedicados/correo/hosting/M365, SEO
+   por página, blog, ciudades, proveedores, marca, SMTP, facturación,
+   suscriptores) con Row Level Security: lectura pública solo en contenido
+   público, escritura solo para administradores.
+4. Es idempotente — puedes volver a correrlo sin duplicar ni borrar nada si
+   necesitas reinstalar.
+
+### 3.2 Crear tu usuario administrador
+
+1. Supabase → **Authentication → Users → Add user** → crea tu usuario con
+   email y contraseña. Marca **"Auto Confirm User"**.
+2. Copia el UUID del usuario recién creado.
+3. Supabase → **SQL Editor** → ejecuta (reemplazando los valores):
+
+   ```sql
+   insert into public.admin_users (user_id, email)
+   values ('PEGA-AQUI-EL-UUID', 'tu@correo.com');
    ```
-   PUBLIC_SUPABASE_URL=https://cjapoonbmrfmwxzrqpgk.supabase.co
-   PUBLIC_SUPABASE_ANON_KEY=sb_publishable_...
-   ```
 
-   ⚠️ Nota: Supabase te mostró `SUPABASE_URL` / `SUPABASE_KEY`, pero en Astro
-   toda variable usada en el navegador (como el formulario) necesita el
-   prefijo `PUBLIC_`, si no, el build no la expone al cliente. Por eso el
-   `.env.example` ya viene con los nombres correctos y tus valores.
+4. Entra a `https://tudominio.com/admin/login` (o `http://localhost:4321/admin/login`
+   en desarrollo) con ese email y contraseña. Sin el paso 3 puedes iniciar
+   sesión pero no guardar cambios — es la protección de RLS funcionando.
 
-3. **Para ver los leads que lleguen:** entra a Supabase → **Table Editor** →
-   tabla `contacts`. La anon key nunca puede leer la tabla (solo insertar),
-   así que solo tú, con tu cuenta de Supabase, puedes verlos — es la
-   configuración de seguridad recomendada para un formulario público.
-4. (Opcional, próximo paso) Puedo configurarte una Edge Function de Supabase
-   que te envíe un correo o mensaje de Slack automáticamente cuando llegue un
-   lead nuevo — solo pídemelo cuando quieras implementarlo.
+### 3.3 Variables de entorno
+
+Ver `.env.example`:
+
+```
+PUBLIC_SUPABASE_URL=https://cjapoonbmrfmwxzrqpgk.supabase.co
+PUBLIC_SUPABASE_ANON_KEY=sb_publishable_...
+```
+
+⚠️ Nota: Supabase te muestra `SUPABASE_URL` / `SUPABASE_KEY`, pero en Astro
+toda variable usada en el navegador necesita el prefijo `PUBLIC_`, si no, el
+build no la expone al cliente. El `.env.example` ya viene con los nombres
+correctos.
+
+### 3.4 Formulario de contacto y suscriptores
+
+- Los leads del formulario de contacto van a la tabla `contacts` (creada en
+  el paso 3.1, con RLS: el público solo puede insertar, nunca leer) — revísalos
+  y elimínalos desde **`/admin/contacts`**.
+- Los suscriptores del newsletter se administran desde `/admin/subscribers`
+  (ver o exportar CSV, eliminar).
+
+### 3.5 Panels disponibles en `/admin`
+
+| Panel | Ruta | Qué edita |
+|---|---|---|
+| Regiones VPS | `/admin/vps-regions` | Ubicaciones, ping, estado |
+| Planes VPS | `/admin/vps-plans` | Specs, precio, stock por región |
+| Servidores dedicados | `/admin/dedicated` | Specs y precio |
+| Correo (TerraMail) | `/admin/mail` | Planes de correo corporativo |
+| Web hosting | `/admin/hosting` | Planes de hosting compartido |
+| Microsoft 365 | `/admin/m365` | Planes M365 |
+| SEO por página | `/admin/seo` | Title/description/OG por ruta |
+| Blog | `/admin/blog` | Artículos ES/EN |
+| Ciudades | `/admin/cities` | SEO local |
+| Proveedores | `/admin/providers` | Datos del Hosting Detector |
+| Marca | `/admin/brand` | Contacto, redes, WhatsApp |
+| SMTP y facturación | `/admin/settings` | Configuración privada |
+| Contactos | `/admin/contacts` | Leads del formulario de contacto |
+| Suscriptores | `/admin/subscribers` | Lista del newsletter |
+
+Todos (excepto login) requieren sesión de administrador — `src/middleware.ts`
+redirige automáticamente a `/admin/login` si no la hay.
+
+---
 
 ## 4. Despliegue en Vercel
 
