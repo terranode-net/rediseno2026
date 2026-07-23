@@ -106,19 +106,24 @@ export function mountAdminTable(cfg: AdminTableConfig) {
   }
 
   function render(rows: Record<string, any>[]) {
-    const head = cfg.columns.map((c) => `<th class="px-2 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">${esc(c.label)}</th>`).join('');
-    const body = rows
+    const cards = rows
       .map((row, i) => {
-        const cells = cfg.columns
-          .map((c) => `<td class="px-2 py-1.5 align-top ${c.width ?? ''}">${inputFor(c, row[c.key], String(row[cfg.pk]))}</td>`)
+        const fields = cfg.columns
+          .map((c) => {
+            const wide = c.type === 'json' || c.type === 'textarea';
+            return `<div class="${wide ? 'col-span-full' : ''}">
+              <label class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-400">${esc(c.label)}</label>
+              ${inputFor(c, row[c.key], String(row[cfg.pk]))}
+            </div>`;
+          })
           .join('');
-        return `<tr data-row="${i}" data-pk="${esc(row[cfg.pk])}" class="border-b border-slate-100 hover:bg-surface/60">
-          ${cells}
-          <td class="whitespace-nowrap px-2 py-1.5 text-right align-top">
-            <button data-action="save" class="rounded-md bg-accent px-3 py-1.5 text-xs font-semibold text-white hover:bg-accent-hover">Guardar</button>
-            <button data-action="delete" class="ml-1 rounded-md border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50">Eliminar</button>
-          </td>
-        </tr>`;
+        return `<div data-row="${i}" data-pk="${esc(row[cfg.pk])}" class="rounded-xl border border-slate-200 bg-white p-4 shadow-card">
+          <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">${fields}</div>
+          <div class="mt-4 flex justify-end gap-2 border-t border-slate-100 pt-3">
+            <button data-action="delete" class="rounded-md border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50">Eliminar</button>
+            <button data-action="save" class="rounded-md bg-accent px-4 py-1.5 text-xs font-semibold text-white hover:bg-accent-hover">Guardar</button>
+          </div>
+        </div>`;
       })
       .join('');
 
@@ -127,23 +132,20 @@ export function mountAdminTable(cfg: AdminTableConfig) {
         <p class="text-sm text-slate-500">${rows.length} ${label}(s)</p>
         <button data-action="add" class="rounded-md bg-ink px-3 py-1.5 text-xs font-semibold text-white hover:bg-ink-2">+ Agregar ${esc(label)}</button>
       </div>
-      <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white">
-        <table class="w-full border-collapse">
-          <thead><tr class="bg-surface">${head}<th></th></tr></thead>
-          <tbody>${body || `<tr><td class="p-4 text-sm text-slate-400" colspan="${cfg.columns.length + 1}">Sin registros todavía.</td></tr>`}</tbody>
-        </table>
+      <div class="space-y-3">
+        ${cards || `<div class="rounded-xl border border-dashed border-slate-200 p-8 text-center text-sm text-slate-400">Sin registros todavía.</div>`}
       </div>
     `;
 
-    mountEl!.querySelectorAll('tr[data-row]').forEach((tr) => {
-      const rowIndex = Number((tr as HTMLElement).dataset.row);
+    mountEl!.querySelectorAll('[data-row]').forEach((card) => {
+      const rowIndex = Number((card as HTMLElement).dataset.row);
       const rowData = rows[rowIndex];
 
-      tr.querySelector('[data-action="save"]')?.addEventListener('click', async () => {
+      card.querySelector('[data-action="save"]')?.addEventListener('click', async () => {
         try {
           const payload: Record<string, any> = {};
           cfg.columns.forEach((c) => {
-            const el = tr.querySelector<HTMLElement>(`[data-field="${c.key}"]`);
+            const el = card.querySelector<HTMLElement>(`[data-field="${c.key}"]`);
             if (el) payload[c.key] = readValue(el, c);
           });
           const { error } = await supabase.from(cfg.table).update(payload).eq(cfg.pk, rowData[cfg.pk]);
@@ -154,7 +156,7 @@ export function mountAdminTable(cfg: AdminTableConfig) {
         }
       });
 
-      tr.querySelector('[data-action="delete"]')?.addEventListener('click', async () => {
+      card.querySelector('[data-action="delete"]')?.addEventListener('click', async () => {
         if (!confirm(`¿Eliminar este ${label}? Esta acción no se puede deshacer.`)) return;
         const { error } = await supabase.from(cfg.table).delete().eq(cfg.pk, rowData[cfg.pk]);
         if (error) {

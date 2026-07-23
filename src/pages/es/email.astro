@@ -1,8 +1,12 @@
 ---
+export const prerender = false;
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import TerraMailContent from '@/components/TerraMailContent.astro';
+import { getMailPlans, getSeo, priceNumber } from '@/lib/db';
 import { SITE_URL } from '@/lib/site';
 import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
+
+const [mailPlans, seo] = await Promise.all([getMailPlans(), getSeo('/email')]);
 
 const faqs = [
   { q: '¿Puedo usar mi dominio existente con TerraMail?', a: 'Sí, solo necesitas apuntar los registros MX de tu dominio a nuestros servidores.' },
@@ -12,19 +16,23 @@ const faqs = [
   { q: '¿El correo incluye protección contra phishing?', a: 'Sí, antispam avanzado que filtra intentos de phishing y adjuntos maliciosos.' },
   { q: '¿Puedo acceder desde mi teléfono?', a: 'Sí, compatible con ActiveSync en iOS, Android y cualquier cliente estándar.' },
 ];
-const plans = [
-  { name: 'TerraMail Essentials', price: '2.08', description: 'Buzón de 10 GB, webmail moderno, antispam y antivirus.', url: `${SITE_URL}/es/store/terramail-essentials` },
-  { name: 'TerraMail Pro', price: '5.83', description: 'Buzón de 30 GB, calendario y contactos compartidos, soporte prioritario.', url: `${SITE_URL}/es/store/terramail-pro` },
-];
+const plans = mailPlans
+  .filter((p) => !isNaN(Number(priceNumber(p.price))) && Number(priceNumber(p.price)) > 0)
+  .map((p) => ({
+    name: p.name,
+    price: priceNumber(p.price),
+    description: `Buzón de ${p.storage}, ${p.tagline}.`,
+    url: `${SITE_URL}/es/store/terramail-${p.id}`,
+  }));
 const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Correo Corporativo', key: 'terramail' }]);
 const service = serviceSchema('es', { name: 'Correo Corporativo TerraMail', description: 'Correo corporativo profesional con antispam, antivirus y webmail incluido.', pageKey: 'terramail', serviceType: 'Business Email Hosting' });
 ---
 <BaseLayout
   locale="es"
   pageKey="terramail"
-  title="TerraMail: Correo Corporativo desde $24.99/año | Terranode"
-  description="Correo empresarial con tu propio dominio, antispam avanzado, webmail moderno y sincronización móvil. Desde $24.99/año."
+  title={seo?.title ?? 'TerraMail: Correo Corporativo desde $24.99/año | Terranode'}
+  description={seo?.description ?? 'Correo empresarial con tu propio dominio, antispam avanzado, webmail moderno y sincronización móvil. Desde $24.99/año.'}
   jsonLd={[organizationSchema('es'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
 >
-  <TerraMailContent locale="es" />
+  <TerraMailContent locale="es" plans={mailPlans} />
 </BaseLayout>

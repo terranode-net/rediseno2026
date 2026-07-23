@@ -1,8 +1,12 @@
 ---
+export const prerender = false;
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import TerraMailContent from '@/components/TerraMailContent.astro';
+import { getMailPlans, getSeo, priceNumber } from '@/lib/db';
 import { SITE_URL } from '@/lib/site';
 import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
+
+const [mailPlans, seo] = await Promise.all([getMailPlans(), getSeo('/en/email')]);
 
 const faqs = [
   { q: 'Can I use my existing domain with TerraMail?', a: 'Yes, just point your domain\u2019s MX records to our servers.' },
@@ -12,19 +16,23 @@ const faqs = [
   { q: 'Does email include phishing protection?', a: 'Yes, advanced antispam filtering phishing attempts and malicious attachments.' },
   { q: 'Can I access it from my phone?', a: 'Yes, ActiveSync compatible on iOS, Android and any standard mail client.' },
 ];
-const plans = [
-  { name: 'TerraMail Essentials', price: '2.08', description: '10 GB mailbox, modern webmail, antispam and antivirus.', url: `${SITE_URL}/en/store/terramail-essentials` },
-  { name: 'TerraMail Pro', price: '5.83', description: '30 GB mailbox, shared calendar and contacts, priority support.', url: `${SITE_URL}/en/store/terramail-pro` },
-];
+const plans = mailPlans
+  .filter((p) => !isNaN(Number(priceNumber(p.price))) && Number(priceNumber(p.price)) > 0)
+  .map((p) => ({
+    name: p.name,
+    price: priceNumber(p.price),
+    description: `${p.storage} mailbox, ${p.tagline}.`,
+    url: `${SITE_URL}/en/store/terramail-${p.id}`,
+  }));
 const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'Business Email', key: 'terramail' }]);
 const service = serviceSchema('en', { name: 'TerraMail Business Email', description: 'Professional business email with antispam, antivirus and webmail included.', pageKey: 'terramail', serviceType: 'Business Email Hosting' });
 ---
 <BaseLayout
   locale="en"
   pageKey="terramail"
-  title="TerraMail: Business Email from $24.99/yr | Terranode"
-  description="Business email with your own domain, advanced antispam, modern webmail and mobile sync. From $24.99/yr."
+  title={seo?.title ?? 'TerraMail: Business Email from $24.99/yr | Terranode'}
+  description={seo?.description ?? 'Business email with your own domain, advanced antispam, modern webmail and mobile sync. From $24.99/yr.'}
   jsonLd={[organizationSchema('en'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
 >
-  <TerraMailContent locale="en" />
+  <TerraMailContent locale="en" plans={mailPlans} />
 </BaseLayout>

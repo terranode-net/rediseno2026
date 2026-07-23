@@ -1,8 +1,12 @@
 ---
+export const prerender = false;
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import HostingContent from '@/components/HostingContent.astro';
+import { getHostingPlans, getSeo, priceNumber } from '@/lib/db';
 import { SITE_URL } from '@/lib/site';
 import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
+
+const [hostingPlans, seo] = await Promise.all([getHostingPlans(), getSeo('/hosting')]);
 
 const faqs = [
   { q: '¿Puedo migrar mi sitio actual a Terranode?', a: 'Sí. Ofrecemos migración gratuita desde cualquier proveedor. Nuestro equipo gestiona todo el proceso, incluyendo archivos, base de datos y correos, sin tiempo de inactividad.' },
@@ -11,20 +15,21 @@ const faqs = [
   { q: '¿Qué pasa si supero el límite de almacenamiento?', a: 'Recibirás una notificación antes de alcanzar el límite y puedes actualizar tu plan en cualquier momento.' },
   { q: '¿Tienen soporte para e-commerce?', a: 'Sí. Puedes instalar WooCommerce, Prestashop, Magento o cualquier otro CMS con 1 clic.' },
 ];
-const plans = [
-  { name: 'Plan 8 GB', price: '3.33', description: '8 GB NVMe, 40 GB de banda ancha, 5 bases de datos, correos ilimitados.', url: `${SITE_URL}/es/store/hosting-8gb` },
-  { name: 'Plan 14 GB', price: '5.33', description: '14 GB NVMe, 70 GB de banda ancha, 7 bases de datos, correos ilimitados.', url: `${SITE_URL}/es/store/hosting-14gb` },
-  { name: 'Plan 35 GB', price: '14.58', description: '35 GB NVMe, 175 GB de banda ancha, 17 bases de datos, correos ilimitados.', url: `${SITE_URL}/es/store/hosting-35gb` },
-];
+const plans = hostingPlans.map((p) => ({
+  name: p.name,
+  price: priceNumber(p.price),
+  description: (p.feats ?? []).slice(0, 4).join(', ') + '.',
+  url: `${SITE_URL}/es/store/hosting-${p.id}`,
+}));
 const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Hosting', key: 'hosting' }]);
 const service = serviceSchema('es', { name: 'Web Hosting Ecuador', description: 'Hosting web profesional con LiteSpeed, CloudLinux y cPanel. SSL gratis, backups diarios.', pageKey: 'hosting', serviceType: 'Web Hosting' });
 ---
 <BaseLayout
   locale="es"
   pageKey="hosting"
-  title="Web Hosting en Ecuador desde $40/año | LiteSpeed + cPanel | Terranode"
-  description="Hosting web con LiteSpeed, CloudLinux, cPanel y SSL gratis. Planes desde $40/año, migración gratuita y soporte 24/7."
+  title={seo?.title ?? 'Web Hosting en Ecuador desde $40/año | LiteSpeed + cPanel | Terranode'}
+  description={seo?.description ?? 'Hosting web con LiteSpeed, CloudLinux, cPanel y SSL gratis. Planes desde $40/año, migración gratuita y soporte 24/7.'}
   jsonLd={[organizationSchema('es'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
 >
-  <HostingContent locale="es" />
+  <HostingContent locale="es" plans={hostingPlans} />
 </BaseLayout>

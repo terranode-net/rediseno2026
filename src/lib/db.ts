@@ -10,8 +10,10 @@ import { supabaseServer } from './supabaseServer';
 // ── Tipos ───────────────────────────────────────────────────────────────────
 export interface VpsRegion { id: string; name: string; country: string; ping: string; status: string }
 export interface VpsPlan { id: string; name: string; cpu: string; ram: string; disk: string; bw: string; price: string; regions: string[]; stock: Record<string, string>; href: string; popular: boolean }
-export interface DedicatedPlan { id: string; name: string; cpu: string; cores: string; ram: string; disk: string; net: string; ip: string; price: string; tagline: string; href: string; popular: boolean }
+export interface DedicatedPlan { id: string; name: string; cpu: string; cores: string; ram: string; disk: string; net: string; ip: string; price: string; period: string; tagline: string; href: string; popular: boolean }
 export interface MailPlan { id: string; name: string; users: number; storage: string; price: string; period: string; monthly: string; tagline: string; feats: string[]; href: string; popular: boolean }
+export interface HostingPlan { id: string; name: string; price: string; period: string; tagline: string; feats: string[]; href: string; popular: boolean }
+export interface M365Plan { id: string; name: string; badge: string | null; price: string; period: string; tagline: string; feats: string[]; href: string; popular: boolean }
 export interface SeoMeta { title?: string; description?: string; keywords?: string; og_title?: string; og_description?: string; og_image?: string }
 export interface City { slug: string; name: string; province: string; country: string; active: boolean }
 
@@ -37,9 +39,22 @@ const FALLBACK_VPS: VpsPlan[] = [
 ];
 
 const FALLBACK_DED: DedicatedPlan[] = [
-  { id: 'e3', name: 'Intel Xeon E3-1230 V5', cpu: 'Intel Xeon E3-1230 V5 @ 3.4 GHz', cores: '4 Cores / 8 Threads', ram: '32 GB DDR4', disk: '1 TB SSD', net: '1 Gbps Ilimitado', ip: 'IPv4 + IPv6', price: '$50.00', tagline: 'Ideal para proyectos personales', href: 'https://my.terranode.net/store/dedicated-servers', popular: false },
-  { id: 'e5', name: 'Intel Xeon Dual E5-2680 V4', cpu: 'Intel Xeon Dual E5-2680 V4 @ 2.4 GHz', cores: '28 Cores / 56 Threads', ram: '128 GB DDR4', disk: '1 TB SSD', net: '1 Gbps Ilimitado', ip: 'IPv4 + IPv6', price: '$94.99', tagline: 'Para proyectos en crecimiento', href: 'https://my.terranode.net/store/dedicated-servers', popular: true },
-  { id: 'gold', name: 'Intel Xeon Dual Gold 6138', cpu: 'Intel Xeon Dual Gold 6138 @ 2.0 GHz', cores: '40 Cores / 80 Threads', ram: '256 GB DDR4', disk: '2 TB U.2 NVMe', net: '10 Gbps (330 TB)', ip: 'IPv4 + IPv6', price: '$149.99', tagline: 'Para proyectos escalables y empresariales', href: 'https://my.terranode.net/store/dedicated-servers', popular: false },
+  { id: 'e3', name: 'Intel Xeon E3-1230 V5', cpu: 'Intel Xeon E3-1230 V5 @ 3.4 GHz', cores: '4 Cores / 8 Threads', ram: '32 GB DDR4', disk: '1 TB SSD', net: '1 Gbps Ilimitado', ip: 'IPv4 + IPv6', price: '$50.00', period: '/mes', tagline: 'Ideal para proyectos personales', href: 'https://my.terranode.net/store/dedicated-servers', popular: false },
+  { id: 'e5', name: 'Intel Xeon Dual E5-2680 V4', cpu: 'Intel Xeon Dual E5-2680 V4 @ 2.4 GHz', cores: '28 Cores / 56 Threads', ram: '128 GB DDR4', disk: '1 TB SSD', net: '1 Gbps Ilimitado', ip: 'IPv4 + IPv6', price: '$94.99', period: '/mes', tagline: 'Para proyectos en crecimiento', href: 'https://my.terranode.net/store/dedicated-servers', popular: true },
+  { id: 'gold', name: 'Intel Xeon Dual Gold 6138', cpu: 'Intel Xeon Dual Gold 6138 @ 2.0 GHz', cores: '40 Cores / 80 Threads', ram: '256 GB DDR4', disk: '2 TB U.2 NVMe', net: '10 Gbps (330 TB)', ip: 'IPv4 + IPv6', price: '$149.99', period: '/mes', tagline: 'Para proyectos escalables y empresariales', href: 'https://my.terranode.net/store/dedicated-servers', popular: false },
+];
+
+const HOST_FEATS = (n: string) => [`${n} Espacio NVMe`, 'Correos ilimitados', "SSL Let's Encrypt gratis", 'cPanel incluido', '1-clic WordPress', 'Soporte 24/7'];
+const FALLBACK_HOSTING: HostingPlan[] = [
+  { id: '8gb', name: 'Plan 8 GB', price: '$40', period: '/año', tagline: 'Para proyectos personales', popular: false, href: 'https://my.terranode.net/store/business-hosting/hosting-8-gb', feats: HOST_FEATS('8 GB') },
+  { id: '14gb', name: 'Plan 14 GB', price: '$64', period: '/año', tagline: 'Para proyectos en crecimiento', popular: true, href: 'https://my.terranode.net/store/business-hosting/hosting-14-gb', feats: HOST_FEATS('14 GB') },
+  { id: '35gb', name: 'Plan 35 GB', price: '$175', period: '/año', tagline: 'Para empresas medianas', popular: false, href: 'https://my.terranode.net/store/business-hosting/hosting-35-gb', feats: HOST_FEATS('35 GB') },
+];
+
+const FALLBACK_M365: M365Plan[] = [
+  { id: 'exchange', name: 'Exchange Online Plan 1', badge: null, price: '$5.50', period: '/mes/usuario', tagline: 'Correo empresarial con Outlook sin apps de escritorio', popular: false, href: 'https://my.terranode.net', feats: ['Buzón de 50 GB por usuario', 'Mensajes hasta 150 MB', 'Outlook Web App', 'Antispam y antimalware', 'Soporte Terranode 24/7'] },
+  { id: 'basic', name: 'Microsoft 365 Business Basic', badge: 'M365', price: '$7.20', period: '/mes/usuario', tagline: 'Productividad en la nube para todo tu equipo', popular: false, href: 'https://my.terranode.net', feats: ['Buzón de 50 GB por usuario', '1 TB en OneDrive', 'Teams: chat, llamadas y video', 'SharePoint colaborativo', 'Soporte Terranode 24/7'] },
+  { id: 'standard', name: 'Microsoft 365 Business Standard', badge: 'M365', price: '$12.50', period: '/mes/usuario', tagline: 'Todo lo de Basic más las apps de escritorio descargables', popular: true, href: 'https://my.terranode.net', feats: ['Todo lo del plan Business Basic', 'Apps de escritorio instalables', 'Hasta 5 PCs o Macs por usuario', 'Soporte Terranode 24/7 + migración gratis'] },
 ];
 
 const MAIL_FEATS_BASE = ['Webmail Terramail Suite', 'Sincronización móvil (ActiveSync)', 'Acceso POP3 / IMAP / SMTP', 'Antivirus en tiempo real', 'Antispam avanzado', 'SSL/TLS cifrado'];

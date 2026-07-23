@@ -312,27 +312,27 @@ const contactoHref = `/${locale}/${es ? 'contacto' : 'contact'}`;
 
 <script define:vars={{ DEFAULT_REGION }}>
   // Region filter
-  const regionButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.region-btn'));
-  const planCards = Array.from(document.querySelectorAll<HTMLElement>('.plan-card'));
-  const planRows = Array.from(document.querySelectorAll<HTMLElement>('.plan-row'));
+  const regionButtons = Array.from(document.querySelectorAll('.region-btn'));
+  const planCards = Array.from(document.querySelectorAll('.plan-card'));
+  const planRows = Array.from(document.querySelectorAll('.plan-row'));
   const cardsWrap = document.getElementById('plans-cards');
   const tableWrap = document.getElementById('plans-table');
   const emptyState = document.getElementById('plans-empty');
   const statusName = document.getElementById('region-status-name');
   const statusCount = document.getElementById('region-status-count');
-  const regionData: Record<string, string> = {};
+  const regionData = {};
   regionButtons.forEach((btn) => {
     regionData[btn.dataset.region ?? ''] = btn.querySelector('.region-name')?.textContent ?? '';
   });
 
   let currentRegion = DEFAULT_REGION;
-  let currentView: 'cards' | 'table' = 'cards';
+  let currentView = 'cards';
 
-  function applyRegion(region: string) {
+  function applyRegion(region) {
     currentRegion = region;
     regionButtons.forEach((btn) => {
       const active = btn.dataset.region === region;
-      const nameEl = btn.querySelector('.region-name') as HTMLElement | null;
+      const nameEl = btn.querySelector('.region-name');
       btn.style.background = active ? 'rgba(59,130,246,.1)' : 'rgba(255,255,255,.025)';
       btn.style.borderColor = active ? 'rgba(59,130,246,.45)' : 'rgba(255,255,255,.07)';
       if (nameEl) nameEl.style.color = active ? '#60A5FA' : '#fff';
@@ -364,7 +364,7 @@ const contactoHref = `/${locale}/${es ? 'contacto' : 'contact'}`;
     }
   }
 
-  function applyView(view: 'cards' | 'table') {
+  function applyView(view) {
     currentView = view;
     const cardsBtn = document.getElementById('view-cards-btn');
     const tableBtn = document.getElementById('view-table-btn');
@@ -394,7 +394,7 @@ const contactoHref = `/${locale}/${es ? 'contacto' : 'contact'}`;
   document.querySelectorAll('.vps-faq-item').forEach((item) => {
     const btn = item.querySelector('.vps-faq-btn');
     const answer = item.querySelector('.vps-faq-answer');
-    const chevron = item.querySelector('.vps-faq-chevron') as HTMLElement | null;
+    const chevron = item.querySelector('.vps-faq-chevron');
     btn?.addEventListener('click', () => {
       const isOpen = !answer?.classList.contains('hidden');
       answer?.classList.toggle('hidden', isOpen);

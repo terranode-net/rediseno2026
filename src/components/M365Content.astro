@@ -1,10 +1,10 @@
 ---
-interface Props { locale: 'es' | 'en' }
-const { locale } = Astro.props;
+interface Props { locale: 'es' | 'en'; plans?: any[] }
+const { locale, plans } = Astro.props;
 const es = locale === 'es';
 const contactoHref = `/${locale}/${es ? 'contacto' : 'contact'}`;
 
-const PLANS = es ? [
+const PLANS = (plans && plans.length) ? plans : es ? [
   { id: 'exchange', popular: false, name: 'Exchange Online Plan 1', badge: null, price: '$5.50', period: '/mes/usuario', tagline: 'Correo empresarial con Outlook sin apps de escritorio', href: 'https://my.terranode.net', feats: ['Buzón de 50 GB por usuario', 'Mensajes hasta 150 MB', 'Outlook Web App', 'Bandeja de entrada prioritarios', 'Archivo automático de correos', 'Contactos y calendario compartido', 'Antispam y antimalware', 'Soporte Terranode 24/7'] },
   { id: 'basic', popular: false, name: 'Microsoft 365 Business Basic', badge: 'M365', price: '$7.20', period: '/mes/usuario', tagline: 'Productividad en la nube para todo tu equipo', href: 'https://my.terranode.net', feats: ['Buzón de 50 GB por usuario', '1 TB de almacenamiento en OneDrive', 'Teams: chat, llamadas y video', 'SharePoint colaborativo', '+10 aplicaciones (Planner, Forms, Bookings…)', 'Aplicaciones web de Office (Word, Excel, PP)', 'Antispam y antimalware', 'Soporte Terranode 24/7'] },
   { id: 'standard', popular: true, name: 'Microsoft 365 Business Standard', badge: 'M365', price: '$12.50', period: '/mes/usuario', tagline: 'Todo lo de Basic más las apps de escritorio descargables', href: 'https://my.terranode.net', feats: ['Todo lo del plan Business Basic', 'Word, Excel, PowerPoint y Outlook instalables', 'Hasta 5 PCs o Macs por usuario', 'Webinars con registro de asistentes', 'Microsoft Loop: espacios colaborativos', 'Microsoft Clipchamp: edición de video', 'Copilot (AI) disponible como add-on', 'Soporte Terranode 24/7 + migración gratis'] },

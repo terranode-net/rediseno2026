@@ -1,10 +1,10 @@
 ---
-interface Props { locale: 'es' | 'en' }
-const { locale } = Astro.props;
+interface Props { locale: 'es' | 'en'; plans?: any[] }
+const { locale, plans } = Astro.props;
 const es = locale === 'es';
 const contactoHref = `/${locale}/${es ? 'contacto' : 'contact'}`;
 
-const PLANS = [
+const PLANS = (plans && plans.length) ? plans : [
   { id: 'e3', name: 'Intel Xeon E3-1230 V5', cpu: 'Intel Xeon E3-1230 V5 @ 3.4 GHz', cores: es ? '4 Núcleos / 8 Hilos' : '4 Cores / 8 Threads', ram: '32 GB DDR4', disk: '1 TB SSD', net: es ? '1 Gbps Ilimitado' : '1 Gbps Unmetered', ip: 'IPv4 + IPv6', price: '$47.99', period: '/mes', tagline: es ? 'Ideal para proyectos personales' : 'Ideal for personal projects', href: 'https://my.terranode.net/store/dedicated-servers', popular: false },
   { id: 'e5', name: 'Intel Xeon Dual E5-2680 V4', cpu: 'Intel Xeon Dual E5-2680 V4 @ 2.4 GHz', cores: es ? '28 Núcleos / 56 Hilos' : '28 Cores / 56 Threads', ram: '128 GB DDR4', disk: '1 TB SSD', net: es ? '1 Gbps Ilimitado' : '1 Gbps Unmetered', ip: 'IPv4 + IPv6', price: '$94.99', period: '/mes', tagline: es ? 'Para proyectos en crecimiento' : 'For growing projects', href: 'https://my.terranode.net/store/dedicated-servers', popular: true },
   { id: 'gold', name: 'Intel Xeon Dual Gold 6138', cpu: 'Intel Xeon Dual Gold 6138 @ 2.0 GHz', cores: es ? '40 Núcleos / 80 Hilos' : '40 Cores / 80 Threads', ram: '256 GB DDR4', disk: '2 TB U.2 NVMe', net: '10 Gbps (330 TB)', ip: 'IPv4 + IPv6', price: '$149.99', period: '/mes', tagline: es ? 'Para proyectos escalables y empresariales' : 'For scalable, enterprise projects', href: 'https://my.terranode.net/store/dedicated-servers', popular: false },

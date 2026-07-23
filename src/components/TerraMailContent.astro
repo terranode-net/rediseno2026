@@ -1,11 +1,11 @@
 ---
-interface Props { locale: 'es' | 'en' }
-const { locale } = Astro.props;
+interface Props { locale: 'es' | 'en'; plans?: any[] }
+const { locale, plans } = Astro.props;
 const es = locale === 'es';
 const contactoHref = `/${locale}/${es ? 'contacto' : 'contact'}`;
 const BL = '#3B82F6';
 
-const PLANS = es ? [
+const PLANS = (plans && plans.length) ? plans : es ? [
   { id: 'essentials', popular: false, name: 'TerraMail Essentials', price: '$24.99', period: '/año', monthly: '≈ $2.08/mes', tagline: 'Ideal para freelancers y proyectos personales', href: 'https://my.terranode.net/store/business-hosting', feats: ['Buzón de 10 GB', 'Webmail moderno (Terramail Suite)', 'Sincronización móvil (ActiveSync)', 'Acceso POP3 / IMAP / SMTP', 'Antivirus en tiempo real', 'Antispam avanzado', 'SSL/TLS cifrado', 'Soporte 24/7'] },
   { id: 'pro', popular: true, name: 'TerraMail Pro', price: '$69.99', period: '/año', monthly: '≈ $5.83/mes', tagline: 'Para profesionales y equipos en crecimiento', href: 'https://my.terranode.net/store/business-hosting', feats: ['Buzón de 30 GB', 'Webmail moderno (Terramail Suite)', 'Sincronización móvil (ActiveSync)', 'Acceso POP3 / IMAP / SMTP', 'Antivirus en tiempo real', 'Antispam avanzado', 'SSL/TLS cifrado', 'Calendario y contactos compartidos', 'Soporte prioritario 24/7'] },
   { id: 'enterprise', popular: false, name: 'TerraMail Enterprise', price: 'Custom', period: '', monthly: 'Contacta al equipo de ventas', tagline: 'Para empresas con volumen alto de buzones', href: contactoHref, feats: ['Buzones ilimitados', 'Almacenamiento a medida', 'Dominios múltiples', 'ActiveSync para todos los dispositivos', 'Antivirus y antispam enterprise', 'SLA garantizado', 'Migración gratuita', 'Gestor de cuenta dedicado'] },
