@@ -1,0 +1,109 @@
+---
+import '@/styles/global.css';
+
+interface Props {
+  title: string;
+  active?: string;
+}
+const { title, active = '' } = Astro.props;
+
+const nav = [
+  { group: 'General', items: [{ key: 'dashboard', href: '/admin', label: 'Panel principal' }] },
+  {
+    group: 'Precios',
+    items: [
+      { key: 'vps-regions', href: '/admin/vps-regions', label: 'Regiones VPS' },
+      { key: 'vps-plans', href: '/admin/vps-plans', label: 'Planes VPS' },
+      { key: 'dedicated', href: '/admin/dedicated', label: 'Servidores dedicados' },
+      { key: 'mail', href: '/admin/mail', label: 'Correo (TerraMail)' },
+      { key: 'hosting', href: '/admin/hosting', label: 'Web hosting' },
+      { key: 'm365', href: '/admin/m365', label: 'Microsoft 365' },
+    ],
+  },
+  {
+    group: 'Contenido',
+    items: [
+      { key: 'seo', href: '/admin/seo', label: 'SEO por página' },
+      { key: 'blog', href: '/admin/blog', label: 'Blog' },
+      { key: 'cities', href: '/admin/cities', label: 'Ciudades' },
+      { key: 'providers', href: '/admin/providers', label: 'Proveedores (Hosting Detector)' },
+    ],
+  },
+  {
+    group: 'Configuración',
+    items: [
+      { key: 'brand', href: '/admin/brand', label: 'Marca' },
+      { key: 'settings', href: '/admin/settings', label: 'SMTP y facturación' },
+      { key: 'contacts', href: '/admin/contacts', label: 'Contactos (leads)' },
+      { key: 'subscribers', href: '/admin/subscribers', label: 'Suscriptores' },
+    ],
+  },
+];
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <title>{title} · Admin Terranode</title>
+  </head>
+  <body class="min-h-screen bg-surface font-body text-ink">
+    <div class="flex min-h-screen">
+      <aside class="hidden w-64 shrink-0 flex-col bg-ink text-white lg:flex">
+        <div class="flex items-center gap-2 border-b border-white/10 px-5 py-5">
+          <img src="/logo-mark.png" alt="Terranode" class="h-7 w-7" />
+          <span class="font-display font-semibold">Admin Terranode</span>
+        </div>
+        <nav class="flex-1 space-y-6 overflow-y-auto px-3 py-5">
+          {nav.map((group) => (
+            <div>
+              <p class="mb-1.5 px-2 text-[11px] font-semibold uppercase tracking-wider text-white/40">{group.group}</p>
+              <ul class="space-y-0.5">
+                {group.items.map((item) => (
+                  <li>
+                    <a
+                      href={item.href}
+                      class:list={[
+                        'block rounded-lg px-2.5 py-2 text-sm transition-colors',
+                        active === item.key ? 'bg-accent text-white' : 'text-white/70 hover:bg-white/5 hover:text-white',
+                      ]}
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
+        <div class="border-t border-white/10 p-3">
+          <a href="/es/" target="_blank" class="block rounded-lg px-2.5 py-2 text-xs text-white/50 hover:text-white/80">← Ver sitio público</a>
+          <button id="logout-btn" class="block w-full rounded-lg px-2.5 py-2 text-left text-sm text-white/70 hover:bg-white/5 hover:text-white">Cerrar sesión</button>
+        </div>
+      </aside>
+
+      <div class="flex min-h-screen flex-1 flex-col">
+        <header class="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3 lg:hidden">
+          <span class="font-display font-semibold">Admin Terranode</span>
+          <button id="logout-btn-mobile" class="text-sm text-slate-500">Salir</button>
+        </header>
+        <main class="flex-1 px-4 py-6 sm:px-8 sm:py-8">
+          <h1 class="mb-6 font-display text-2xl font-semibold text-ink">{title}</h1>
+          <slot />
+        </main>
+      </div>
+    </div>
+
+    <script>
+      import { supabaseBrowser } from '@/lib/supabaseBrowser';
+      async function logout() {
+        await supabaseBrowser.auth.signOut();
+        window.location.href = '/admin/login';
+      }
+      document.getElementById('logout-btn')?.addEventListener('click', logout);
+      document.getElementById('logout-btn-mobile')?.addEventListener('click', logout);
+    </script>
+  </body>
+</html>
