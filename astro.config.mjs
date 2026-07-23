@@ -10,7 +10,7 @@ const SITE_URL = 'https://terranode.net';
 export default defineConfig({
   site: SITE_URL,
   output: 'static', // páginas estáticas por defecto; usa `export const prerender = false` en una página para hacerla server-rendered (ej. una futura API route)
-  adapter: vercel(),
+  adapter: vercel({ edgeMiddleware: true }),
   integrations: [
     tailwind({ applyBaseStyles: false }),
     sitemap({
