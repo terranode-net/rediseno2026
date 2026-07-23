@@ -30,8 +30,8 @@ const service = serviceSchema('es', { name: 'Correo Corporativo TerraMail', desc
 <BaseLayout
   locale="es"
   pageKey="terramail"
-  title='TerraMail: Correo Corporativo desde $24.99/año | Terranode'
-  description='Correo empresarial con tu propio dominio, antispam avanzado, webmail moderno y sincronización móvil. Desde $24.99/año.'
+  title='TerraMail: Correo Corporativo y Empresarial desde $24.99/año | Terranode'
+  description='Correo corporativo y empresarial profesional con tu propio dominio, antispam avanzado, webmail moderno y sincronización móvil. Migración gratis. Desde $24.99/año.'
   jsonLd={[organizationSchema('es'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
 >
   <TerraMailContent locale="es" plans={mailPlans} />

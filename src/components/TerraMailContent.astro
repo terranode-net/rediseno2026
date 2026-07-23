@@ -73,9 +73,13 @@ const ICONS: Record<string, string> = {
 
 const T = {
   badge: 'TerraMail',
-  h1: es ? 'Comunicación profesional' : 'Professional communication',
-  h1b: es ? 'con tu propio dominio' : 'with your own domain',
-  sub: es ? 'Correo empresarial seguro y confiable con antispam avanzado, webmail moderno, sincronización móvil y soporte 24/7. Desde $24.99/año.' : 'Secure and reliable business email with advanced antispam, modern webmail, mobile sync and 24/7 support. From $24.99/year.',
+  h1: es ? 'Correo Corporativo y' : 'Corporate & Business',
+  h1b: es ? 'Empresarial Profesional' : 'Email, Done Right',
+  sub: es ? 'Correo electrónico corporativo y empresarial con tu propio dominio (@tuempresa.com): antispam avanzado, webmail moderno, sincronización móvil y soporte técnico 24/7. Desde $24.99/año.' : 'Corporate and business email on your own domain (@yourcompany.com): advanced antispam, modern webmail, mobile sync and 24/7 technical support. From $24.99/year.',
+  introH: es ? '¿Por qué contratar correo corporativo con Terranode?' : 'Why get corporate email with Terranode?',
+  introBody: es
+    ? 'Un correo corporativo (o correo empresarial) es la cuenta de email que usa el nombre de dominio de tu empresa — por ejemplo, ventas@tuempresa.com — en vez de un dominio genérico como Gmail o Hotmail. Además de proyectar una imagen profesional frente a tus clientes y proveedores, TerraMail te da control total sobre tus buzones, mayor seguridad con antispam y antivirus multicapa, y soporte técnico en español disponible 24/7. Es la opción ideal para pymes, agencias, profesionales independientes y empresas que ya usan un dominio propio para su sitio web y quieren que su correo tenga la misma identidad. Configura TerraMail en minutos apuntando los registros MX de tu dominio, con migración gratuita desde Gmail, Outlook o cualquier otro proveedor sin perder tus correos, contactos ni calendario.'
+    : 'Corporate email (or business email) is an email account that uses your company\u2019s own domain name — for example, sales@yourcompany.com — instead of a generic domain like Gmail or Hotmail. Beyond projecting a professional image to your clients and vendors, TerraMail gives you full control over your mailboxes, stronger security with multi-layer antispam and antivirus, and 24/7 technical support. It\u2019s the ideal choice for small businesses, agencies, independent professionals and companies that already use their own domain for their website and want their email to match. Set up TerraMail in minutes by pointing your domain\u2019s MX records, with free migration from Gmail, Outlook or any other provider without losing your emails, contacts or calendar.',
   cta1: es ? 'Ver planes' : 'View plans',
   cta2: es ? 'Hablar con ventas' : 'Talk to sales',
   plansTag: es ? 'PRECIOS' : 'PRICING',
@@ -124,8 +128,9 @@ const COMPARE = es ? [
             {T.badge}
           </span>
         </div>
-        <h1 class="mb-1 font-display text-[clamp(2.2rem,4vw,3.6rem)] font-bold leading-[1.05] tracking-tight text-white">{T.h1}</h1>
-        <h2 class="mb-[22px] font-display text-[clamp(2.2rem,4vw,3.6rem)] font-bold leading-[1.05] tracking-tight text-slate-600">{T.h1b}</h2>
+        <h1 class="mb-[22px] font-display text-[clamp(2.2rem,4vw,3.6rem)] font-bold leading-[1.05] tracking-tight text-white">
+          {T.h1}<br /><span class="text-slate-600">{T.h1b}</span>
+        </h1>
         <p class="mb-8 max-w-[460px] font-body text-base leading-[1.7] text-slate-400">{T.sub}</p>
         <div class="flex flex-wrap gap-3">
           <a href="#planes" class="rounded-lg border-none bg-[#3B82F6] px-6 py-3 font-display text-[15px] font-semibold text-white no-underline shadow-[0_0_24px_rgba(59,130,246,.3)] transition-colors hover:bg-[#2563EB]">{T.cta1}</a>
@@ -270,6 +275,14 @@ const COMPARE = es ? [
           </div>
         ))}
       </div>
+    </div>
+  </section>
+
+  <!-- Intro / contenido SEO -->
+  <section class="border-t border-white/[0.04] bg-[#080E1C] px-6 py-16">
+    <div class="mx-auto max-w-[820px]">
+      <h2 class="mb-4 font-display text-[clamp(1.5rem,2.6vw,2rem)] font-bold tracking-tight text-white">{T.introH}</h2>
+      <p class="font-body text-[15px] leading-[1.8] text-slate-400">{T.introBody}</p>
     </div>
   </section>
 
