@@ -11,6 +11,7 @@ if (guard) return guard;
   <script>
     import { mountAdminTable } from '@/lib/adminTable';
     mountAdminTable({
+      mount: '#table',
       table: 'cities',
       pk: 'slug',
       orderBy: 'sort_order',

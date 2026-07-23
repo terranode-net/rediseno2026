@@ -16,7 +16,7 @@ export interface AdminTableConfig {
   pk: string;
   columns: ColumnDef[];
   orderBy?: string; // default 'sort_order'
-  mount: string; // selector del contenedor
+  mount?: string; // selector del contenedor — por defecto '#table'
   newRowDefaults?: Record<string, any>;
   labelSingular?: string;
 }
@@ -86,8 +86,12 @@ function status(mountEl: HTMLElement, msg: string, kind: 'ok' | 'err' | 'info' =
 }
 
 export function mountAdminTable(cfg: AdminTableConfig) {
-  const mountEl = document.querySelector<HTMLElement>(cfg.mount);
-  if (!mountEl) return;
+  const mountSelector = cfg.mount || '#table';
+  const mountEl = document.querySelector<HTMLElement>(mountSelector);
+  if (!mountEl) {
+    console.error(`mountAdminTable: no se encontró "${mountSelector}" en la página. Revisa el <div id="table"> y el selector "mount".`);
+    return;
+  }
   const orderBy = cfg.orderBy ?? (cfg.columns.some((c) => c.key === 'sort_order') ? 'sort_order' : cfg.pk);
   const label = cfg.labelSingular ?? 'registro';
 
@@ -184,7 +188,10 @@ export function mountSingletonForm(opts: {
   fields: { key: string; label: string; type?: 'text' | 'textarea' | 'password' }[];
 }) {
   const mountEl = document.querySelector<HTMLElement>(opts.mount);
-  if (!mountEl) return;
+  if (!mountEl) {
+    console.error(`mountSingletonForm: no se encontró "${opts.mount}" en la página.`);
+    return;
+  }
 
   async function load() {
     mountEl!.innerHTML = '<p class="text-sm text-slate-400">Cargando…</p>';

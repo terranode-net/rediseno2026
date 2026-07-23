@@ -15,6 +15,7 @@ if (guard) return guard;
   <script>
     import { mountAdminTable } from '@/lib/adminTable';
     mountAdminTable({
+      mount: '#table',
       table: 'blog_posts',
       pk: 'slug',
       orderBy: 'published_at',
