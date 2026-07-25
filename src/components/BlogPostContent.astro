@@ -14,13 +14,68 @@ const T = es ? {
   read: 'de lectura', share: 'Compartir', copied: '¡Copiado!', inArticle: 'En este artículo', hostingTitle: 'Hosting en Ecuador',
   hostingSub: 'LiteSpeed · cPanel · SSL gratis · DDoS 160 Gbps. Desde $3/mes.', viewPlans: 'Ver planes', tags: 'Tags', authorRole: 'Editorial',
   ctaTitle: '¿Listo para llevar tu sitio al siguiente nivel?', ctaSub: 'Hosting con LiteSpeed, NVMe y soporte 24/7 desde $3/mes.', ctaBtn: 'Ver planes de hosting',
-  related: 'Artículos relacionados', faqH: 'Preguntas frecuentes',
+  related: 'Artículos relacionados', faqH: 'Preguntas frecuentes', copyCode: 'Copiar', copiedCode: '¡Copiado!',
 } : {
   read: 'read', share: 'Share', copied: 'Copied!', inArticle: 'In this article', hostingTitle: 'Hosting in Ecuador',
   hostingSub: 'LiteSpeed · cPanel · Free SSL · DDoS 160 Gbps. From $3/mo.', viewPlans: 'View plans', tags: 'Tags', authorRole: 'Editorial',
   ctaTitle: 'Ready to take your site to the next level?', ctaSub: 'LiteSpeed hosting, NVMe and 24/7 support from $3/mo.', ctaBtn: 'View hosting plans',
-  related: 'Related articles', faqH: 'Frequently asked questions',
+  related: 'Related articles', faqH: 'Frequently asked questions', copyCode: 'Copy', copiedCode: 'Copied!',
 };
+
+// ── Mini parser de markdown para sec.body ──────────────────────────────────
+// Soporta: bloques ```lang ... ``` , **negrita**, *cursiva*, `code` inline,
+// listas con "- " o "• ", y párrafos separados por línea en blanco.
+// No usa librerías externas: el body viene de la BD como texto plano/markdown simple.
+type Block =
+  | { type: 'code'; lang: string; code: string }
+  | { type: 'list'; items: string[] }
+  | { type: 'p'; text: string };
+
+function escapeHtml(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function inlineMarkdown(raw: string): string {
+  let s = escapeHtml(raw);
+  // código inline `x`
+  s = s.replace(/`([^`]+)`/g, '<code class="rounded bg-white/[0.08] px-1.5 py-0.5 font-mono text-[13px] text-[#93C5FD]">$1</code>');
+  // negrita **x**
+  s = s.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-semibold text-slate-200">$1</strong>');
+  // cursiva *x* (evita chocar con negrita ya reemplazada)
+  s = s.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, '$1<em class="italic text-slate-300">$2</em>');
+  // saltos de línea simples dentro de un párrafo
+  s = s.replace(/\n/g, '<br/>');
+  return s;
+}
+
+function parseBody(body: string): Block[] {
+  const blocks: Block[] = [];
+  const codeRe = /```([a-zA-Z0-9_+-]*)\n([\s\S]*?)```/g;
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  const pushTextChunks = (chunk: string) => {
+    const parts = chunk.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+    for (const part of parts) {
+      const lines = part.split('\n').map((l) => l.trim()).filter(Boolean);
+      const isList = lines.length > 0 && lines.every((l) => /^[-•]\s+/.test(l));
+      if (isList) {
+        blocks.push({ type: 'list', items: lines.map((l) => l.replace(/^[-•]\s+/, '')) });
+      } else {
+        blocks.push({ type: 'p', text: part });
+      }
+    }
+  };
+
+  while ((match = codeRe.exec(body)) !== null) {
+    if (match.index > lastIndex) pushTextChunks(body.slice(lastIndex, match.index));
+    blocks.push({ type: 'code', lang: match[1] || 'text', code: match[2].replace(/\n$/, '') });
+    lastIndex = codeRe.lastIndex;
+  }
+  if (lastIndex < body.length) pushTextChunks(body.slice(lastIndex));
+
+  return blocks;
+}
 ---
 <main style="padding-top:66px;background:#080E1C;min-height:100vh">
   <section class="relative overflow-hidden border-b border-white/[0.05] px-6 py-14">
@@ -64,17 +119,53 @@ const T = es ? {
 
   <div class="mx-auto grid max-w-[1100px] grid-cols-1 gap-10 px-6 py-12 md:py-24 lg:grid-cols-[1fr_280px]">
     <article>
-      {(post.sections ?? []).map((sec, i) => (
-        <div id={`section-${i}`} class="mb-9">
-          {sec.h && (
-            <h2 class="mb-3.5 flex items-center gap-2.5 font-display text-[clamp(1.2rem,2vw,1.5rem)] font-bold tracking-tight text-white">
-              <span class="inline-block h-5 w-[3px] shrink-0 rounded-sm bg-[#3B82F6]"></span>
-              {sec.h}
-            </h2>
-          )}
-          <p class="whitespace-pre-wrap font-body text-[15px] leading-[1.85] text-slate-400">{sec.body}</p>
-        </div>
-      ))}
+      {(post.sections ?? []).map((sec, i) => {
+        const blocks = parseBody(sec.body ?? '');
+        return (
+          <div id={`section-${i}`} class="mb-9">
+            {sec.h && (
+              <h2 class="mb-3.5 flex items-center gap-2.5 font-display text-[clamp(1.2rem,2vw,1.5rem)] font-bold tracking-tight text-white">
+                <span class="inline-block h-5 w-[3px] shrink-0 rounded-sm bg-[#3B82F6]"></span>
+                {sec.h}
+              </h2>
+            )}
+            {blocks.map((b) => {
+              if (b.type === 'code') {
+                return (
+                  <div class="code-block group relative mb-4 overflow-hidden rounded-xl border border-white/[0.08] bg-[#0B1120] shadow-[0_4px_20px_rgba(0,0,0,.25)]">
+                    <div class="flex items-center justify-between border-b border-white/[0.06] bg-white/[0.03] px-4 py-2">
+                      <div class="flex items-center gap-1.5">
+                        <span class="h-2.5 w-2.5 rounded-full bg-[#FF5F56]"></span>
+                        <span class="h-2.5 w-2.5 rounded-full bg-[#FFBD2E]"></span>
+                        <span class="h-2.5 w-2.5 rounded-full bg-[#27C93F]"></span>
+                        <span class="ml-2.5 font-mono text-[11px] uppercase tracking-wide text-slate-500">{b.lang}</span>
+                      </div>
+                      <button type="button" class="copy-code-btn flex items-center gap-1.5 rounded-md border border-white/[0.08] bg-white/[0.04] px-2.5 py-1 font-body text-[11px] text-slate-400 opacity-0 transition-opacity group-hover:opacity-100 hover:border-[#3B82F6]/40 hover:text-[#93C5FD]">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-3 w-3"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        <span class="copy-label">{T.copyCode}</span>
+                      </button>
+                    </div>
+                    <pre class="overflow-x-auto px-4 py-4"><code class="font-mono text-[13px] leading-[1.7] text-slate-300">{b.code}</code></pre>
+                  </div>
+                );
+              }
+              if (b.type === 'list') {
+                return (
+                  <ul class="mb-4 flex flex-col gap-2 font-body text-[15px] leading-[1.85] text-slate-400">
+                    {b.items.map((item) => (
+                      <li class="flex items-start gap-2.5">
+                        <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#3B82F6]"></span>
+                        <span set:html={inlineMarkdown(item)} />
+                      </li>
+                    ))}
+                  </ul>
+                );
+              }
+              return <p class="mb-4 font-body text-[15px] leading-[1.85] text-slate-400" set:html={inlineMarkdown(b.text)} />;
+            })}
+          </div>
+        );
+      })}
 
       <div class="mb-12 mt-2 rounded-xl border border-[#3B82F6]/20 bg-[#3B82F6]/[0.07] p-6">
         <div class="flex items-start gap-3">
@@ -144,7 +235,7 @@ const T = es ? {
   )}
 </main>
 
-<script define:vars={{ shareLabel: T.share, copiedLabel: T.copied }}>
+<script define:vars={{ shareLabel: T.share, copiedLabel: T.copied, copyLabel: T.copyCode, copiedCodeLabel: T.copiedCode }}>
   const btn = document.getElementById('blog-share-btn');
   const label = document.getElementById('blog-share-label');
   btn?.addEventListener('click', () => {
@@ -152,5 +243,18 @@ const T = es ? {
       if (label) label.textContent = copiedLabel;
       setTimeout(() => { if (label) label.textContent = shareLabel; }, 2000);
     }).catch(() => {});
+  });
+
+  document.querySelectorAll('.copy-code-btn').forEach((copyBtn) => {
+    copyBtn.addEventListener('click', () => {
+      const block = copyBtn.closest('.code-block');
+      const codeEl = block?.querySelector('pre code');
+      const text = codeEl?.textContent ?? '';
+      const labelEl = copyBtn.querySelector('.copy-label');
+      navigator.clipboard?.writeText(text).then(() => {
+        if (labelEl) labelEl.textContent = copiedCodeLabel;
+        setTimeout(() => { if (labelEl) labelEl.textContent = copyLabel; }, 2000);
+      }).catch(() => {});
+    });
   });
 </script>
