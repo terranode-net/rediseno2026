@@ -97,6 +97,96 @@ export async function getBrand(): Promise<Record<string, any>> {
   }
 }
 
+// ── Blog ─────────────────────────────────────────────────────────────────
+export interface BlogPostRow {
+  slug: string;
+  locale: string;
+  category: string;
+  title: string;
+  excerpt: string;
+  published_at: string;
+  read_time: string;
+  author: string;
+  tags: string[];
+  intro: string;
+  sections: { h: string; body: string }[];
+  conclusion: string;
+  image: string | null;
+  faqs: { q: string; a: string }[];
+  featured: boolean;
+  seo_title: string | null;
+  seo_description: string | null;
+}
+
+let _blogFallbackCache: BlogPostRow[] | null = null;
+async function blogFallback(): Promise<BlogPostRow[]> {
+  if (_blogFallbackCache) return _blogFallbackCache;
+  const { POSTS, getFullPost } = await import('./blogData');
+  _blogFallbackCache = POSTS.map((p) => {
+    const full = getFullPost(p.slug);
+    return {
+      slug: p.slug,
+      locale: 'es',
+      category: full.category,
+      title: full.title,
+      excerpt: p.excerpt,
+      published_at: p.date,
+      read_time: full.readTime,
+      author: full.author,
+      tags: full.tags,
+      intro: full.intro,
+      sections: full.sections,
+      conclusion: full.conclusion,
+      image: null,
+      faqs: [],
+      featured: !!p.featured,
+      seo_title: null,
+      seo_description: null,
+    };
+  });
+  return _blogFallbackCache;
+}
+
+/** Lista de artículos publicados para un idioma, más recientes primero. */
+export async function getBlogPosts(locale: string): Promise<BlogPostRow[]> {
+  try {
+    const { data, error } = await supabaseServer
+      .from('blog_posts')
+      .select('*')
+      .eq('locale', locale)
+      .eq('published', true)
+      .order('published_at', { ascending: false });
+    if (error || !data || data.length === 0) return blogFallback();
+    return data as BlogPostRow[];
+  } catch {
+    return blogFallback();
+  }
+}
+
+/** Un artículo por slug (o null si no existe / no está publicado). */
+export async function getBlogPost(locale: string, slug: string): Promise<BlogPostRow | null> {
+  try {
+    const { data, error } = await supabaseServer
+      .from('blog_posts')
+      .select('*')
+      .eq('locale', locale)
+      .eq('slug', slug)
+      .eq('published', true)
+      .maybeSingle();
+    if (!error && data) return data as BlogPostRow;
+  } catch {
+    /* cae al fallback */
+  }
+  const fb = await blogFallback();
+  return fb.find((p) => p.slug === slug) ?? null;
+}
+
+/** Slugs de todos los artículos publicados (para generar rutas/sitemap). */
+export async function getBlogSlugs(locale: string): Promise<string[]> {
+  const posts = await getBlogPosts(locale);
+  return posts.map((p) => p.slug);
+}
+
 /** Extrae el número de un precio con formato "$12.50" → "12.50" (para JSON-LD). */
 export function priceNumber(price: string): string {
   const m = String(price).match(/[\d.]+/);

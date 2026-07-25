@@ -1,31 +1,37 @@
 ---
+export const prerender = false;
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import BlogPostContent from '@/components/BlogPostContent.astro';
-import { POSTS, getFullPost } from '@/lib/blogData';
-import { organizationSchema } from '@/lib/schema';
+import { getBlogPost, getBlogPosts } from '@/lib/db';
+import { organizationSchema, faqSchema } from '@/lib/schema';
 import { SITE_URL } from '@/lib/site';
 
-export function getStaticPaths() {
-  return POSTS.map((p) => ({ params: { slug: p.slug } }));
-}
-
 const { slug } = Astro.params;
-const post = getFullPost(slug as string);
+const post = await getBlogPost('es', slug as string);
+if (!post) return new Response('Artículo no encontrado', { status: 404 });
+
+const allPosts = await getBlogPosts('es');
+const related = allPosts
+  .filter((p) => p.slug !== post.slug && p.category === post.category)
+  .slice(0, 3)
+  .map((p) => ({ slug: p.slug, title: p.title, cat: p.category }));
+
 const postUrl = `${SITE_URL}/es/blog/${slug}/`;
+const postImage = post.image || `${SITE_URL}/og/og-default.png`;
 
 const articleSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
   headline: post.title,
-  description: post.intro,
-  image: `${SITE_URL}/og/og-default.png`,
-  datePublished: post.date,
-  dateModified: post.date,
+  description: post.seo_description || post.excerpt || post.intro,
+  image: postImage,
+  datePublished: post.published_at,
+  dateModified: post.published_at,
   articleSection: post.category,
   author: { '@type': 'Organization', name: post.author, url: SITE_URL },
   publisher: { '@id': `${SITE_URL}/#organization` },
   mainEntityOfPage: { '@type': 'WebPage', '@id': postUrl },
-  keywords: post.tags.join(', '),
+  keywords: (post.tags ?? []).join(', '),
 };
 
 const breadcrumb = {
@@ -37,14 +43,18 @@ const breadcrumb = {
     { '@type': 'ListItem', position: 3, name: post.title, item: postUrl },
   ],
 };
+
+const jsonLd = [organizationSchema('es'), articleSchema, breadcrumb];
+if (post.faqs && post.faqs.length > 0) jsonLd.push(faqSchema(post.faqs));
 ---
 <BaseLayout
   locale="es"
   pageKey="blog"
-  title={`${post.title} | Terranode Blog`}
-  description={post.intro}
-  jsonLd={[organizationSchema('es'), articleSchema, breadcrumb]}
+  title={post.seo_title || `${post.title} | Terranode Blog`}
+  description={post.seo_description || post.intro}
+  ogImage={postImage}
+  jsonLd={jsonLd}
   canonicalOverride={{ es: postUrl, en: `${SITE_URL}/en/blog/${slug}/` }}
 >
-  <BlogPostContent locale="es" slug={slug as string} />
+  <BlogPostContent locale="es" post={post} related={related} />
 </BaseLayout>

@@ -159,6 +159,8 @@ create table if not exists public.blog_posts (
   intro text,
   sections jsonb not null default '[]'::jsonb,   -- [{h,body}]
   conclusion text,
+  image text,                                    -- URL de imagen destacada (OG + BlogPosting schema)
+  faqs jsonb not null default '[]'::jsonb,        -- [{q,a}] opcional, genera FAQPage schema si tiene datos
   featured boolean not null default false,
   published boolean not null default true,
   seo_title text,

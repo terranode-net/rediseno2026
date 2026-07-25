@@ -1,24 +1,25 @@
 ---
-import { getFullPost, CAT_COLORS } from '@/lib/blogData';
+import { CAT_COLORS } from '@/lib/blogData';
+import FAQSection from '@/components/FAQSection.astro';
+import type { BlogPostRow } from '@/lib/db';
 
-interface Props { locale: 'es' | 'en'; slug: string }
-const { locale, slug } = Astro.props;
+interface Props { locale: 'es' | 'en'; post: BlogPostRow; related: { slug: string; title: string; cat: string }[] }
+const { locale, post, related } = Astro.props;
 const es = locale === 'es';
-const post = getFullPost(slug);
 const catColor = CAT_COLORS[post.category] || '#3B82F6';
 const blogPrefix = `/${locale}/blog`;
-const hostingHref = `/${locale}/${es ? 'hosting' : 'hosting'}`;
+const hostingHref = `/${locale}/hosting`;
 
 const T = es ? {
   read: 'de lectura', share: 'Compartir', copied: '¡Copiado!', inArticle: 'En este artículo', hostingTitle: 'Hosting en Ecuador',
-  hostingSub: 'LiteSpeed · cPanel · SSL gratis · DDoS 160 Gbps. Desde $3/mes.', viewPlans: 'Ver planes', tags: 'Tags',
+  hostingSub: 'LiteSpeed · cPanel · SSL gratis · DDoS 160 Gbps. Desde $3/mes.', viewPlans: 'Ver planes', tags: 'Tags', authorRole: 'Editorial',
   ctaTitle: '¿Listo para llevar tu sitio al siguiente nivel?', ctaSub: 'Hosting con LiteSpeed, NVMe y soporte 24/7 desde $3/mes.', ctaBtn: 'Ver planes de hosting',
-  related: 'Artículos relacionados',
+  related: 'Artículos relacionados', faqH: 'Preguntas frecuentes',
 } : {
   read: 'read', share: 'Share', copied: 'Copied!', inArticle: 'In this article', hostingTitle: 'Hosting in Ecuador',
-  hostingSub: 'LiteSpeed · cPanel · Free SSL · DDoS 160 Gbps. From $3/mo.', viewPlans: 'View plans', tags: 'Tags',
+  hostingSub: 'LiteSpeed · cPanel · Free SSL · DDoS 160 Gbps. From $3/mo.', viewPlans: 'View plans', tags: 'Tags', authorRole: 'Editorial',
   ctaTitle: 'Ready to take your site to the next level?', ctaSub: 'LiteSpeed hosting, NVMe and 24/7 support from $3/mo.', ctaBtn: 'View hosting plans',
-  related: 'Related articles',
+  related: 'Related articles', faqH: 'Frequently asked questions',
 };
 ---
 <main style="padding-top:66px;background:#080E1C;min-height:100vh">
@@ -33,16 +34,16 @@ const T = es ? {
 
       <div class="mb-5 flex flex-wrap items-center gap-2.5">
         <span class="rounded-full px-2.5 py-[3px] font-body text-[11px] font-bold" style={`color:${catColor};background:${catColor}18;border:1px solid ${catColor}35`}>{post.category}</span>
-        <span class="font-body text-xs text-slate-600">{post.date}</span>
+        <span class="font-body text-xs text-slate-600">{post.published_at}</span>
         <span class="h-[3px] w-[3px] rounded-full bg-slate-700"></span>
-        <span class="font-body text-xs text-slate-600">{post.readTime} {T.read}</span>
+        <span class="font-body text-xs text-slate-600">{post.read_time} {T.read}</span>
       </div>
 
       <h1 class="mb-5 font-display text-[clamp(1.7rem,3.5vw,2.8rem)] font-bold leading-[1.15] tracking-tight text-white">{post.title}</h1>
       <p class="mb-7 font-body text-base leading-relaxed text-slate-400">{post.intro}</p>
 
       <div class="mb-7 flex flex-wrap gap-1.5">
-        {post.tags.map((tag) => <span class="rounded-full border border-white/[0.07] bg-white/[0.04] px-2.5 py-0.5 font-body text-[11px] text-slate-600">#{tag}</span>)}
+        {(post.tags ?? []).map((tag) => <span class="rounded-full border border-white/[0.07] bg-white/[0.04] px-2.5 py-0.5 font-body text-[11px] text-slate-600">#{tag}</span>)}
       </div>
 
       <div class="flex flex-wrap items-center justify-between gap-3">
@@ -50,7 +51,7 @@ const T = es ? {
           <div class="flex h-[38px] w-[38px] items-center justify-center rounded-full bg-[#3B82F6]/[0.15] font-display text-sm font-bold text-[#3B82F6]">T</div>
           <div>
             <div class="font-display text-[13px] font-semibold text-white">{post.author}</div>
-            <div class="font-body text-[11px] text-slate-600">{post.authorRole}</div>
+            <div class="font-body text-[11px] text-slate-600">{T.authorRole}</div>
           </div>
         </div>
         <button id="blog-share-btn" type="button" class="flex items-center gap-1.5 rounded-lg border border-white/[0.09] bg-white/[0.04] px-3.5 py-2 font-body text-xs text-slate-500">
@@ -63,7 +64,7 @@ const T = es ? {
 
   <div class="mx-auto grid max-w-[1100px] grid-cols-1 gap-10 px-6 py-12 md:py-24 lg:grid-cols-[1fr_280px]">
     <article>
-      {post.sections.map((sec, i) => (
+      {(post.sections ?? []).map((sec, i) => (
         <div id={`section-${i}`} class="mb-9">
           {sec.h && (
             <h2 class="mb-3.5 flex items-center gap-2.5 font-display text-[clamp(1.2rem,2vw,1.5rem)] font-bold tracking-tight text-white">
@@ -97,7 +98,7 @@ const T = es ? {
       <div class="rounded-xl border border-white/[0.07] bg-white/[0.025] p-5">
         <div class="mb-3.5 font-display text-[13px] font-bold text-white">{T.inArticle}</div>
         <nav class="flex flex-col gap-2">
-          {post.sections.map((sec, i) => (
+          {(post.sections ?? []).map((sec, i) => (
             <a href={`#section-${i}`} class="flex items-start gap-2 font-body text-xs leading-relaxed text-slate-500 no-underline hover:text-[#60A5FA]">
               <span class="mt-px shrink-0 text-slate-700">{i + 1}.</span>
               {sec.h}
@@ -115,18 +116,20 @@ const T = es ? {
       <div class="rounded-xl border border-white/[0.07] bg-white/[0.025] p-5">
         <div class="mb-3 font-display text-[13px] font-bold text-white">{T.tags}</div>
         <div class="flex flex-wrap gap-1.5">
-          {post.tags.map((tag) => <a href={`${blogPrefix}?tag=${tag}`} class="rounded-full border border-white/[0.07] bg-white/[0.04] px-2.5 py-1 font-body text-[11px] text-slate-500 no-underline hover:border-[#3B82F6]/40 hover:text-[#60A5FA]">#{tag}</a>)}
+          {(post.tags ?? []).map((tag) => <a href={`${blogPrefix}?tag=${tag}`} class="rounded-full border border-white/[0.07] bg-white/[0.04] px-2.5 py-1 font-body text-[11px] text-slate-500 no-underline hover:border-[#3B82F6]/40 hover:text-[#60A5FA]">#{tag}</a>)}
         </div>
       </div>
     </aside>
   </div>
 
-  {post.related.length > 0 && (
+  {post.faqs && post.faqs.length > 0 && <FAQSection locale={locale} items={post.faqs} title={T.faqH} />}
+
+  {related.length > 0 && (
     <section class="border-t border-white/[0.04] bg-[#060B18] px-6 pb-20">
       <div class="mx-auto max-w-[1100px] pt-14">
         <h2 class="mb-7 font-display text-[clamp(1.3rem,2vw,1.7rem)] font-bold tracking-tight text-white">{T.related}</h2>
         <div class="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
-          {post.related.map((r) => {
+          {related.map((r) => {
             const rc = CAT_COLORS[r.cat] || '#3B82F6';
             return (
               <a href={`${blogPrefix}/${r.slug}`} class="block rounded-xl border border-white/[0.07] bg-white/[0.025] p-5 no-underline transition-colors hover:border-[#3B82F6]/30">

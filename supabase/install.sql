@@ -167,6 +167,8 @@ create table if not exists public.blog_posts (
   intro text,
   sections jsonb not null default '[]'::jsonb,   -- [{h,body}]
   conclusion text,
+  image text,                                    -- URL de imagen destacada (OG + BlogPosting schema)
+  faqs jsonb not null default '[]'::jsonb,        -- [{q,a}] opcional, genera FAQPage schema si tiene datos
   featured boolean not null default false,
   published boolean not null default true,
   seo_title text,
@@ -1456,7 +1458,7 @@ insert into public.billing_settings (id,data) values (1,'{}'::jsonb) on conflict
 -- ============================================================================
 -- PASO FINAL -- CONVIERTETE EN ADMINISTRADOR
 -- ============================================================================
--- 1. Ve a Authentication -> Users -> "Add user" -> crea tu usuario (email + contrasena)
+-- 1. Ve a Authentication -> Users -> "Add user" -> crea tu usuario (email y contrasena)
 --    Marca "Auto Confirm User" para no tener que confirmar por correo.
 -- 2. Copia el UUID del usuario creado y ejecuta esta consulta reemplazando los valores:
 --

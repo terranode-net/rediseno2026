@@ -1,8 +1,11 @@
 ---
+export const prerender = false;
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import BlogContent from '@/components/BlogContent.astro';
+import { getBlogPosts } from '@/lib/db';
 import { organizationSchema, breadcrumbSchema } from '@/lib/schema';
 
+const posts = await getBlogPosts('en');
 const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'Blog', key: 'blog' }]);
 ---
 <BaseLayout
@@ -12,5 +15,5 @@ const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name
   description="Learn about hosting, VPS, dedicated servers, web security and development. Technical tutorials and guides from the Terranode team."
   jsonLd={[organizationSchema('en'), breadcrumb]}
 >
-  <BlogContent locale="en" />
+  <BlogContent locale="en" posts={posts} />
 </BaseLayout>
