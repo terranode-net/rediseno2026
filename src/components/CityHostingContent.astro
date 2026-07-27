@@ -1,0 +1,339 @@
+---
+// ============================================================================
+// CityHostingContent.astro
+// ----------------------------------------------------------------------------
+// Landing dinámica de "Hosting en <Ciudad>" — misma estructura visual que
+// CityHostingContent original, con contenido más extenso y trabajado para
+// SEO/GEO/AEO: preguntas en H2, respuestas directas arriba de cada bloque,
+// más contexto local (zona horaria, latencia, casos de uso locales) y una
+// sección adicional de "por qué elegir Terranode en <ciudad>".
+// ============================================================================
+import type { City, HostingPlan } from '@/lib/db';
+
+interface Props {
+  locale: 'es' | 'en';
+  city: City;
+  plans: HostingPlan[];
+}
+
+const { locale, city, plans } = Astro.props;
+const es = locale === 'es';
+const C = city.name;
+const countryLabel = city.country || 'Ecuador';
+
+const STACK = [
+  { n: 'cPanel', c: '#FF6C2C' },
+  { n: 'LiteSpeed', c: '#0099CC' },
+  { n: 'CloudLinux', c: '#3399CC' },
+  { n: 'WordPress', c: '#21759B' },
+  { n: 'PHP 8.x', c: '#8892BF' },
+  { n: 'MySQL', c: '#4479A1' },
+  { n: 'Encrypt', c: '#003A70' },
+  { n: 'Imunify360', c: '#5C6BC0' },
+];
+
+const FEATS = es
+  ? [
+      { t: 'Máximo Rendimiento', d: 'Tecnología LiteSpeed + CloudLinux con PHP 8.x para la máxima velocidad en tu sitio.' },
+      { t: '1-clic WordPress', d: 'Instala WordPress (o +300 apps) en segundos con el autoinstalador incluido.' },
+      { t: 'SSL Gratis', d: 'Certificado SSL automático para cada dominio y subdominio de tu cuenta.' },
+      { t: 'Filtro Anti-spam', d: 'Bandeja de entrada limpia con nuestro sistema avanzado de filtrado en tiempo real.' },
+      { t: 'Backups Cada 24h', d: 'Copias de seguridad externas automáticas almacenadas fuera del sitio.' },
+      { t: 'Protección DDoS', d: 'Defensa activa ante ataques con mitigación automática hasta 160 Gbps.' },
+      { t: 'Migración Gratuita', d: 'Nuestro equipo migra tu hosting, correos y dominios sin tiempo de inactividad.' },
+      { t: 'Soporte 24/7', d: 'Chat, WhatsApp y ticketing disponibles las 24 horas, todos los días del año.' },
+    ]
+  : [
+      { t: 'Maximum Performance', d: 'LiteSpeed + CloudLinux technology with PHP 8.x for the fastest possible site.' },
+      { t: '1-Click WordPress', d: 'Install WordPress (or 300+ apps) in seconds with the built-in auto-installer.' },
+      { t: 'Free SSL', d: 'Automatic SSL certificate for every domain and subdomain on your account.' },
+      { t: 'Anti-spam Filter', d: 'A clean inbox thanks to our advanced real-time filtering system.' },
+      { t: 'Backups Every 24h', d: 'Automatic off-site backups stored away from the server itself.' },
+      { t: 'DDoS Protection', d: 'Active defense with automatic mitigation up to 160 Gbps.' },
+      { t: 'Free Migration', d: 'Our team migrates your hosting, email and domains with zero downtime.' },
+      { t: '24/7 Support', d: 'Chat, WhatsApp and ticketing available around the clock, every day of the year.' },
+    ];
+
+const WHY_LOCAL = es
+  ? [
+      { t: `Latencia mínima desde ${C}`, d: `Nuestra infraestructura en Guayaquil y nodos en Estados Unidos reducen los tiempos de respuesta para visitantes en ${C} y el resto de ${countryLabel}, algo que un hosting genérico alojado lejos de la región no puede igualar.` },
+      { t: 'Soporte en español, en tu horario', d: `Nuestro equipo de soporte atiende en español las 24 horas, entendiendo el contexto de negocios en ${C} sin barreras de idioma ni husos horarios.` },
+      { t: 'Pagos y facturación locales', d: `Facturamos en dólares, el sistema monetario oficial de ${countryLabel}, sin sorpresas por conversión de moneda ni comisiones bancarias internacionales.` },
+      { t: 'Migración gratuita desde cualquier proveedor', d: `Si tu sitio en ${C} ya está alojado en otro proveedor, lo migramos sin costo y sin tiempo de inactividad para tus visitantes o clientes.` },
+    ]
+  : [
+      { t: `Minimal latency from ${C}`, d: `Our infrastructure in Guayaquil and US nodes reduces response times for visitors in ${C} and the rest of ${countryLabel} — something a generic hosting provider located far from the region can't match.` },
+      { t: 'Support in your language, on your schedule', d: `Our support team is available 24/7, understanding the local business context in ${C} without language or time zone barriers.` },
+      { t: 'Local billing and payments', d: `We bill in US dollars, avoiding currency conversion surprises or international banking fees.` },
+      { t: 'Free migration from any provider', d: `If your site in ${C} is already hosted elsewhere, we migrate it for free with zero downtime for your visitors or customers.` },
+    ];
+
+const REVIEWS = [
+  { name: 'Luis E.', text: es ? 'Excelente atención, nos apoyaron y asesoraron en todo. Sin duda los recomiendo para todos quienes deseen alojar sus proyectos.' : 'Excellent service, they supported and advised us on everything. I definitely recommend them to anyone looking to host their projects.' },
+  { name: 'Guillermo M.', text: es ? 'El soporte es muy ameno y te ayudan en todo. Sin duda el mejor Hosting en Ecuador que puedo recomendar.' : 'Support is friendly and they help with everything. Without a doubt the best hosting in Ecuador I can recommend.' },
+  { name: 'Miguel J.', text: es ? 'Me gusta la atención que disponen las 24 horas. Lo he referido a varios de mis clientes por la seguridad y velocidad.' : 'I love that support is available 24 hours a day. I have referred several of my clients because of the security and speed.' },
+];
+
+const T = es
+  ? {
+      badge: `Hosting en ${C}`,
+      h1a: 'El mejor ',
+      h1b: `Hosting en ${C}`,
+      h1c: ' para un sitio web rápido y confiable',
+      heroP: `Si buscas hosting en ${C} con soporte 24/7, máxima seguridad y velocidad, estás en el lugar correcto. Empresas, agencias y profesionales independientes de ${C} confían en Terranode para alojar sus sitios web, tiendas en línea y correo corporativo.`,
+      ctaStart: 'Comenzar Ahora',
+      ctaContact: 'Contáctanos',
+      reviewsP: `Recomendado por clientes en ${C} y todo ${countryLabel}`,
+      pricingKicker: 'PRECIOS',
+      pricingH2: `Elige el plan perfecto para ti en ${C}`,
+      pricingP: 'Todos incluyen cPanel, SSL gratis y soporte 24/7',
+      customTitle: `¿Necesitas un plan personalizado para tu empresa en ${C}?`,
+      customP: 'Contacta con nuestro equipo y diseñamos un plan a la medida de tu negocio.',
+      customCta: 'Cotizar ahora',
+      featsH2: 'Todo lo que tu Sitio Web Necesita',
+      whyKicker: 'POR QUÉ TERRANODE',
+      whyH2: `Por qué elegir Terranode para tu hosting en ${C}`,
+      migrationLabel: 'Migraciones Gratuitas',
+      migrationTitle: 'Haz el cambio a Terranode sin complicaciones',
+      migrationBody: 'Trasladamos tu hosting, correos y dominios con nuestro servicio de migración gratuita. Nuestro equipo experto está disponible 24/7 para una transición rápida y sin interrupciones.',
+      ddosLabel: 'Protección DDoS',
+      ddosTitle: 'Mantén tu sitio seguro con nuestra defensa impenetrable',
+      ddosBody: 'Nuestro sistema detecta y neutraliza amenazas en tiempo real, garantizando la estabilidad de tu sitio 24/7. Mitigación automática hasta 160 Gbps.',
+      faqH2: `Preguntas frecuentes sobre hosting en ${C}`,
+      contract: 'Contratar',
+      popular: 'Popular',
+      uptime: 'Uptime',
+      support: 'Soporte',
+    }
+  : {
+      badge: `Hosting in ${C}`,
+      h1a: 'The best ',
+      h1b: `Hosting in ${C}`,
+      h1c: ' for a fast, reliable website',
+      heroP: `If you're looking for hosting in ${C} with 24/7 support, top-tier security and speed, you're in the right place. Businesses, agencies and independent professionals in ${C} trust Terranode to host their websites, online stores and corporate email.`,
+      ctaStart: 'Get Started',
+      ctaContact: 'Contact Us',
+      reviewsP: `Recommended by customers in ${C} and across ${countryLabel}`,
+      pricingKicker: 'PRICING',
+      pricingH2: `Choose the perfect plan for you in ${C}`,
+      pricingP: 'All plans include cPanel, free SSL and 24/7 support',
+      customTitle: `Need a custom plan for your business in ${C}?`,
+      customP: 'Contact our team and we\u2019ll design a plan tailored to your business.',
+      customCta: 'Get a quote',
+      featsH2: 'Everything Your Website Needs',
+      whyKicker: 'WHY TERRANODE',
+      whyH2: `Why choose Terranode for hosting in ${C}`,
+      migrationLabel: 'Free Migrations',
+      migrationTitle: 'Switch to Terranode without the hassle',
+      migrationBody: 'We move your hosting, email and domains with our free migration service. Our expert team is available 24/7 for a fast, uninterrupted transition.',
+      ddosLabel: 'DDoS Protection',
+      ddosTitle: 'Keep your site safe with our impenetrable defense',
+      ddosBody: 'Our system detects and neutralizes threats in real time, keeping your site stable 24/7. Automatic mitigation up to 160 Gbps.',
+      faqH2: `Frequently asked questions about hosting in ${C}`,
+      contract: 'Order Now',
+      popular: 'Popular',
+      uptime: 'Uptime',
+      support: 'Support',
+    };
+
+const FAQS = es
+  ? [
+      { q: '¿Puedo migrar mi sitio actual a Terranode?', a: `Sí. Ofrecemos migración gratuita desde cualquier proveedor hacia nuestros servidores. Nuestro equipo gestiona todo el proceso, incluyendo archivos, base de datos y correos, sin tiempo de inactividad para tus visitantes en ${C}.` },
+      { q: '¿El SSL está incluido en todos los planes?', a: 'Sí. Todos los planes incluyen SSL Let\u2019s Encrypt gratuito para tus dominios y subdominios. Se renueva automáticamente, sin que tengas que hacer nada.' },
+      { q: '¿Cuántas cuentas de correo puedo crear?', a: 'Todos los planes incluyen correos ilimitados con tu propio dominio, sin costo adicional por cada cuenta que necesites crear.' },
+      { q: '¿Qué pasa si supero el límite de almacenamiento?', a: 'Recibirás una notificación antes de alcanzar el límite y podrás actualizar tu plan en cualquier momento desde el panel de cliente, sin perder información ni tiempo de actividad.' },
+      { q: `¿Tienen soporte técnico para clientes en ${C}?`, a: `Sí. Ofrecemos soporte 24/7 vía chat, WhatsApp y tickets en español, pensado para negocios y profesionales en ${C} y en todo ${countryLabel}.` },
+      { q: `¿El hosting en ${C} tiene la misma velocidad que en otras ciudades?`, a: `Sí. Nuestra infraestructura no depende de la ubicación física del cliente: todos los sitios alojados en Terranode, sin importar si el visitante está en ${C} o en cualquier otra parte del mundo, reciben el mismo nivel de rendimiento gracias a nuestra red optimizada.` },
+    ]
+  : [
+      { q: 'Can I migrate my current site to Terranode?', a: `Yes. We offer free migration from any provider to our servers. Our team handles the entire process — files, databases and email — with zero downtime for your visitors in ${C}.` },
+      { q: 'Is SSL included in all plans?', a: 'Yes. Every plan includes a free Let\u2019s Encrypt SSL certificate for your domains and subdomains. It renews automatically.' },
+      { q: 'How many email accounts can I create?', a: 'All plans include unlimited email accounts on your own domain, at no extra cost per account.' },
+      { q: 'What happens if I exceed my storage limit?', a: 'You\u2019ll receive a notification before reaching the limit, and you can upgrade your plan anytime from the client panel without losing data or uptime.' },
+      { q: `Do you offer technical support for customers in ${C}?`, a: `Yes. We provide 24/7 support via chat, WhatsApp and tickets, built for businesses and professionals in ${C} and across ${countryLabel}.` },
+      { q: `Is hosting in ${C} as fast as in other cities?`, a: `Yes. Our infrastructure doesn\u2019t depend on the customer\u2019s physical location: every site hosted with Terranode gets the same level of performance thanks to our optimized network, no matter where the visitor connects from.` },
+    ];
+---
+<div style="padding-top:66px;background:#080E1C;min-height:100vh;color:#CBD5E1">
+
+  {/* HERO */}
+  <div style="padding:80px 24px 72px;position:relative;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.05);background:#080E1C">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 50% 30%,rgba(37,99,235,.12),transparent 70%);pointer-events:none"></div>
+    <div style="max-width:1160px;margin:0 auto;position:relative;z-index:1">
+      <div class="grid gap-[60px] items-center" style="grid-template-columns:1fr 1fr">
+        <div>
+          <div style="display:inline-block;font-family:'Metrophobic',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#3B82F6;background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.22);border-radius:100px;padding:5px 14px;margin-bottom:24px">
+            {T.badge}
+          </div>
+          <h1 style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:clamp(1.9rem,4vw,3.2rem);line-height:1.1;letter-spacing:-1px;color:#fff;margin:0 0 20px">
+            {T.h1a}<span style="color:#3B82F6">{T.h1b}</span>{T.h1c}
+          </h1>
+          <p style="font-family:'Metrophobic',sans-serif;font-size:16px;line-height:1.75;color:#6B8CAE;margin:0 0 32px">
+            {T.heroP}
+          </p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <a href="#planes" style="background:#3B82F6;border-radius:8px;padding:13px 28px;color:#fff;font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:15px;text-decoration:none">{T.ctaStart}</a>
+            <a href="https://wa.link/nooz4l" target="_blank" rel="noopener noreferrer" style="background:transparent;border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:13px 24px;color:#CBD5E1;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:15px;text-decoration:none">{T.ctaContact}</a>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-4 gap-[10px]">
+          {STACK.map((os) => (
+            <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:14px 8px;text-align:center">
+              <div style={`width:36px;height:36px;border-radius:10px;background:${os.c}18;display:flex;align-items:center;justify-content:center;margin:0 auto 8px`}>
+                <span style={`font-family:'Instrument Sans',sans-serif;font-size:11px;font-weight:700;color:${os.c}`}>{os.n[0]}</span>
+              </div>
+              <div style="font-family:'Metrophobic',sans-serif;font-size:10px;color:#4A6A88">{os.n}</div>
+            </div>
+          ))}
+          <div style="grid-column:span 2;background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2);border-radius:10px;padding:14px;text-align:center">
+            <div style="font-family:'Instrument Sans',sans-serif;font-size:22px;font-weight:700;color:#22C55E">99.9%</div>
+            <div style="font-family:'Metrophobic',sans-serif;font-size:11px;color:#4A6A88;margin-top:4px">{T.uptime}</div>
+          </div>
+          <div style="grid-column:span 2;background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.18);border-radius:10px;padding:14px;text-align:center">
+            <div style="font-family:'Instrument Sans',sans-serif;font-size:22px;font-weight:700;color:#fff">24/7</div>
+            <div style="font-family:'Metrophobic',sans-serif;font-size:11px;color:#4A6A88;margin-top:4px">{T.support}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {/* REVIEWS */}
+  <div style="padding:52px 24px;background:#060B18;border-bottom:1px solid rgba(255,255,255,.04)">
+    <div style="max-width:1160px;margin:0 auto">
+      <p style="text-align:center;font-family:'Metrophobic',sans-serif;font-size:13px;color:#4A6A88;margin-bottom:28px">{T.reviewsP}</p>
+      <div class="grid grid-cols-3 gap-[14px]">
+        {REVIEWS.map((r) => (
+          <div style="background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:22px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+              <div style="width:38px;height:38px;border-radius:50%;background:rgba(59,130,246,.15);display:flex;align-items:center;justify-content:center;font-family:'Instrument Sans',sans-serif;font-size:14px;font-weight:700;color:#3B82F6;flex-shrink:0">
+                {r.name[0]}
+              </div>
+              <div>
+                <div style="font-family:'Instrument Sans',sans-serif;font-size:13px;font-weight:600;color:#fff">{r.name}</div>
+                <div style="color:#F59E0B;font-size:13px">★★★★★</div>
+              </div>
+            </div>
+            <p style="font-family:'Metrophobic',sans-serif;font-size:13px;color:#4A6A88;line-height:1.65;margin:0">{r.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  {/* PLANS */}
+  <div id="planes" style="padding:72px 24px;background:#060B18">
+    <div style="max-width:1160px;margin:0 auto">
+      <p style="font-family:'Metrophobic',sans-serif;font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#3B82F6;margin:0 0 8px">{T.pricingKicker}</p>
+      <h2 style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:clamp(1.6rem,3vw,2.2rem);color:#fff;margin:0 0 8px">{T.pricingH2}</h2>
+      <p style="font-family:'Metrophobic',sans-serif;font-size:14px;color:#4A6A88;margin:0 0 36px">{T.pricingP}</p>
+
+      <div class="grid grid-cols-3 gap-[14px] mb-7">
+        {plans.map((plan) => (
+          <div style={`background:${plan.popular ? 'rgba(59,130,246,.07)' : 'rgba(255,255,255,.025)'};border:1px solid ${plan.popular ? 'rgba(59,130,246,.35)' : 'rgba(255,255,255,.07)'};border-radius:16px;padding:28px 24px;position:relative;display:flex;flex-direction:column`}>
+            {plan.popular && <div style="position:absolute;top:16px;right:16px;background:#3B82F6;color:#fff;font-family:'Instrument Sans',sans-serif;font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px">{T.popular}</div>}
+            <div style="font-family:'Instrument Sans',sans-serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:4px">{plan.name}</div>
+            <div style="font-family:'Metrophobic',sans-serif;font-size:12px;color:#4A6A88;margin-bottom:16px">{plan.tagline}</div>
+            <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:20px">
+              <span style="font-family:'Instrument Sans',sans-serif;font-size:38px;font-weight:700;color:#fff">{plan.price}</span>
+              <span style="font-family:'Metrophobic',sans-serif;font-size:13px;color:#3A5A7A">{plan.period}</span>
+            </div>
+            <a href={plan.href} target="_blank" rel="noopener noreferrer"
+              style={`display:block;text-align:center;background:${plan.popular ? '#3B82F6' : 'transparent'};border:1px solid ${plan.popular ? 'transparent' : 'rgba(255,255,255,.14)'};border-radius:8px;padding:10px;color:#fff;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:14px;text-decoration:none;margin-bottom:22px`}>
+              {T.contract}
+            </a>
+            <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px">
+              {plan.feats.map((f) => (
+                <li style="display:flex;align-items:flex-start;gap:8px;font-family:'Metrophobic',sans-serif;font-size:12px;color:#6B8CAE">
+                  <span style="color:#3B82F6;flex-shrink:0;margin-top:1px">✓</span>{f}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      <div style="background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.18);border-radius:14px;padding:28px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap">
+        <div>
+          <div style="font-family:'Instrument Sans',sans-serif;font-size:17px;font-weight:700;color:#fff;margin-bottom:4px">{T.customTitle}</div>
+          <p style="font-family:'Metrophobic',sans-serif;font-size:13px;color:#4A6A88;margin:0">{T.customP}</p>
+        </div>
+        <a href="https://wa.link/nooz4l" target="_blank" rel="noopener noreferrer"
+          style="flex-shrink:0;background:#3B82F6;border-radius:8px;padding:11px 22px;color:#fff;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:14px;text-decoration:none">
+          {T.customCta}
+        </a>
+      </div>
+    </div>
+  </div>
+
+  {/* FEATURES */}
+  <div style="padding:72px 24px;background:#080E1C;border-top:1px solid rgba(255,255,255,.04)">
+    <div style="max-width:1160px;margin:0 auto">
+      <h2 style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:clamp(1.5rem,3vw,2rem);color:#fff;text-align:center;margin-top:0;margin-bottom:40px">{T.featsH2}</h2>
+      <div class="grid grid-cols-4 gap-[14px]">
+        {FEATS.map((f) => (
+          <div style="background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:22px 20px">
+            <div style="width:44px;height:44px;border-radius:12px;background:rgba(59,130,246,.1);display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-size:22px">⚡</div>
+            <div style="font-family:'Instrument Sans',sans-serif;font-size:14px;font-weight:600;color:#fff;margin-bottom:8px">{f.t}</div>
+            <p style="font-family:'Metrophobic',sans-serif;font-size:12px;color:#4A6A88;line-height:1.6;margin:0">{f.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  {/* WHY LOCAL — sección nueva, contenido específico de ciudad para GEO/AEO */}
+  <div style="padding:0 24px 72px;background:#080E1C">
+    <div style="max-width:1160px;margin:0 auto">
+      <p style="font-family:'Metrophobic',sans-serif;font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#3B82F6;margin:0 0 8px;text-align:center">{T.whyKicker}</p>
+      <h2 style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:clamp(1.5rem,3vw,2rem);color:#fff;text-align:center;margin:0 0 40px">{T.whyH2}</h2>
+      <div class="grid grid-cols-2 gap-[14px]">
+        {WHY_LOCAL.map((f) => (
+          <div style="background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:26px 24px">
+            <div style="font-family:'Instrument Sans',sans-serif;font-size:15px;font-weight:600;color:#fff;margin-bottom:8px">{f.t}</div>
+            <p style="font-family:'Metrophobic',sans-serif;font-size:13px;color:#4A6A88;line-height:1.7;margin:0">{f.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  {/* MIGRATION + DDOS */}
+  <div style="padding:0 24px 72px;background:#080E1C">
+    <div style="max-width:1160px;margin:0 auto">
+      <div class="grid grid-cols-2 gap-[14px]">
+        <div style="background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:36px 32px">
+          <div style="font-family:'Metrophobic',sans-serif;font-size:12px;color:#3B82F6;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px">{T.migrationLabel}</div>
+          <div style="font-family:'Instrument Sans',sans-serif;font-size:20px;font-weight:700;color:#fff;line-height:1.25;margin-bottom:16px">{T.migrationTitle}</div>
+          <p style="font-family:'Metrophobic',sans-serif;font-size:13px;color:#4A6A88;line-height:1.7;margin:0">{T.migrationBody}</p>
+        </div>
+        <div style="background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:36px 32px">
+          <div style="font-family:'Metrophobic',sans-serif;font-size:12px;color:#3B82F6;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px">{T.ddosLabel}</div>
+          <div style="font-family:'Instrument Sans',sans-serif;font-size:20px;font-weight:700;color:#fff;line-height:1.25;margin-bottom:16px">{T.ddosTitle}</div>
+          <p style="font-family:'Metrophobic',sans-serif;font-size:13px;color:#4A6A88;line-height:1.7;margin:0">{T.ddosBody}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {/* FAQ */}
+  <div style="padding:0 24px 96px;background:#060B18;border-top:1px solid rgba(255,255,255,.04)">
+    <div style="max-width:760px;margin:0 auto;padding-top:72px">
+      <h2 style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:clamp(1.4rem,2.5vw,2rem);color:#fff;text-align:center;margin-top:0;margin-bottom:40px">{T.faqH2}</h2>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        {FAQS.map((item, i) => (
+          <details style="background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:12px;overflow:hidden">
+            <summary style="width:100%;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;gap:16px;list-style:none;font-family:'Instrument Sans',sans-serif;font-size:14px;font-weight:600;color:#fff">
+              {item.q}
+            </summary>
+            <div style="padding:0 20px 18px;font-family:'Metrophobic',sans-serif;font-size:13px;color:#4A6A88;line-height:1.7;border-top:1px solid rgba(255,255,255,.05);padding-top:14px">
+              {item.a}
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </div>
+
+</div>
