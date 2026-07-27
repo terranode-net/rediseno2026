@@ -1,0 +1,81 @@
+---
+export const prerender = false;
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CityHostingContent from '@/components/CityHostingContent.astro';
+import { getCities, getHostingPlans } from '@/lib/db';
+import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema } from '@/lib/schema';
+import { SITE_URL } from '@/lib/site';
+
+const { city: citySlugParam } = Astro.params;
+const citySlug = String(citySlugParam || '').toLowerCase().trim();
+
+const cities = await getCities();
+let city = cities.find((c) => c.slug === citySlug);
+
+if (!city) {
+  return new Response('City not found', { status: 404 });
+}
+
+const hostingPlansRaw = await getHostingPlans();
+const plans = hostingPlansRaw.map((p) => ({
+  id: p.id,
+  name: p.name,
+  price: p.price,
+  period: p.period,
+  tagline: p.tagline,
+  popular: p.popular,
+  href: p.href,
+  feats: p.feats,
+}));
+
+const C = city.name;
+const country = city.country || 'Ecuador';
+const pageUrl = `${SITE_URL}/en/hosting-in-${city.slug}/`;
+
+const title = `Hosting in ${C} | Fast & Secure Web Hosting · Terranode`;
+const description = `Web hosting in ${C} with LiteSpeed, cPanel, free SSL, daily backups and 24/7 support. Free migration included. Plans starting at $40/year.`;
+
+const faqs = [
+  { q: 'Can I migrate my current site to Terranode?', a: `Yes. We offer free migration from any provider to our servers, including files, database and email, with zero downtime for your visitors in ${C}.` },
+  { q: 'Is SSL included in all plans?', a: 'Yes. Every plan includes a free Let\u2019s Encrypt SSL certificate for your domains and subdomains, with automatic renewal.' },
+  { q: 'How many email accounts can I create?', a: 'All plans include unlimited email accounts on your own domain, at no extra cost.' },
+  { q: 'What happens if I exceed my storage limit?', a: 'You\u2019ll receive a notification before reaching the limit, and you can upgrade your plan anytime from the client panel.' },
+  { q: `Do you offer technical support for customers in ${C}?`, a: `Yes. We provide 24/7 support via chat, WhatsApp and tickets, built for businesses and professionals in ${C} and across ${country}.` },
+  { q: `Is hosting in ${C} as fast as in other cities?`, a: `Yes. Our infrastructure doesn\u2019t depend on the customer\u2019s physical location: every site hosted with Terranode gets the same level of performance no matter where visitors connect from.` },
+];
+
+const jsonLd = [
+  organizationSchema('en'),
+  serviceSchema('en', {
+    name: `Hosting in ${C}`,
+    description: `Web hosting service with LiteSpeed, cPanel, free SSL and 24/7 support for customers in ${C}, ${country}.`,
+    pageKey: 'hosting',
+    serviceType: 'Web Hosting',
+    areaServed: [country === 'Ecuador' ? 'EC' : country, C],
+  }),
+  breadcrumbSchema('en', [
+    { name: 'Home', key: 'home' },
+    { name: 'Hosting', key: 'hosting' },
+  ]),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/en/` },
+      { '@type': 'ListItem', position: 2, name: 'Hosting', item: `${SITE_URL}/en/hosting/` },
+      { '@type': 'ListItem', position: 3, name: `Hosting in ${C}`, item: pageUrl },
+    ],
+  },
+  faqSchema(faqs),
+];
+---
+<BaseLayout
+  locale="en"
+  pageKey="hosting"
+  title={title}
+  description={description}
+  jsonLd={jsonLd}
+  canonicalOverride={{ es: `${SITE_URL}/es/hosting-en-${city.slug}/`, en: pageUrl }}
+>
+  <CityHostingContent locale="en" city={city} plans={plans} />
+</BaseLayout>
