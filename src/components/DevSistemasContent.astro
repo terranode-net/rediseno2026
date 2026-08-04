@@ -99,8 +99,8 @@ const T = {
   sub: es ? 'Desarrollamos sistemas web, ERPs, CRMs, portales y aplicaciones a medida en Ecuador que eliminan procesos manuales y conectan todas las áreas de tu empresa. Con React, Node.js y arquitectura escalable.' : 'We develop custom web systems, ERPs, CRMs, portals and applications in Ecuador that eliminate manual processes and connect every area of your business. With React, Node.js and scalable architecture.',
   introH: es ? 'Empresa de desarrollo de software en Ecuador' : 'Software development company in Ecuador',
   introBody: es
-    ? 'Elegir una empresa de desarrollo de software local en Ecuador tiene ventajas concretas frente a contratar un freelancer remoto o una agencia extranjera: comunicación en el mismo horario y zona horaria, entendimiento directo de procesos locales como la facturación electrónica del SRI, y un equipo al que puedes visitar o llamar cuando lo necesites. En Terranode desarrollamos software a medida para pymes y empresas en Guayaquil, Quito, Cuenca y el resto de Ecuador: desde sistemas de inventario y facturación integrados con el SRI, hasta ERPs completos, CRMs de gestión de clientes y portales web complejos. Cada sistema se despliega sobre nuestra propia infraestructura de VPS y servidores dedicados en Ecuador y Estados Unidos, lo que nos permite ofrecerte no solo el desarrollo, sino también el hosting, la seguridad y el soporte técnico continuo desde un mismo proveedor — sin depender de terceros para mantener tu sistema funcionando.'
-    : 'Choosing a local software development company in Ecuador has concrete advantages over hiring a remote freelancer or a foreign agency: communication in the same time zone, direct understanding of local processes like Ecuador\u2019s SRI e-invoicing system, and a team you can visit or call whenever you need to. At Terranode we build custom software for small and medium businesses in Guayaquil, Quito, Cuenca and the rest of Ecuador: from inventory and invoicing systems integrated with the SRI, to full ERPs, customer-management CRMs and complex web portals. Every system is deployed on our own VPS and dedicated server infrastructure in Ecuador and the United States, letting us offer not just development but also hosting, security and ongoing technical support from a single provider — with no dependency on third parties to keep your system running.',
+    ? 'Cuando contratas una empresa de desarrollo de software fuera de Ecuador, cada llamada implica coordinar zonas horarias, y cada duda sobre cómo funciona la facturación electrónica del SRI se vuelve una explicación larga. En Terranode eso no es un problema: somos un equipo ecuatoriano que entiende tus procesos porque los vive igual que tú, y al que puedes llamar —o visitar— cuando lo necesites. Construimos software a medida para pymes y empresas en Guayaquil, Quito, Cuenca y el resto del país: sistemas de inventario y facturación conectados al SRI, ERPs completos, CRMs para gestionar clientes, y portales web con lógica de negocio compleja. Y como también somos proveedores de infraestructura, cada sistema que desarrollamos vive en nuestros propios servidores en Ecuador y Estados Unidos — así que el desarrollo, el hosting, la seguridad y el soporte técnico salen de un solo lugar, sin que tengas que coordinar entre varios proveedores distintos cuando algo falla.'
+    : "Hire a software development company outside Ecuador, and every call means juggling time zones — and every question about how Ecuador's SRI e-invoicing system works turns into a long explanation. At Terranode that's not an issue: we're a local Ecuadorian team who lives these processes the same way you do, and you can call — or visit — whenever you need to. We build custom software for small and medium businesses across Guayaquil, Quito, Cuenca and the rest of the country: inventory and invoicing systems wired into the SRI, full ERPs, customer-management CRMs, and web portals with real business logic behind them. And since we're also an infrastructure provider, every system we build runs on our own servers in Ecuador and the United States — so development, hosting, security and support all come from one place, instead of you juggling several different vendors when something breaks.",
   cta1: es ? 'Solicitar cotización gratuita' : 'Request free quote',
   cta2: es ? '¿Solo necesitas un sitio web? → Ver Desarrollo Web' : 'Just need a website? → See Web Development',
   svcTag: es ? 'SERVICIOS' : 'SERVICES',
@@ -258,8 +258,18 @@ const CODE_LINES = [
   <!-- Intro / contenido SEO -->
   <section class="border-t border-white/[0.04] bg-[#060B18] px-6 py-16">
     <div class="mx-auto max-w-[820px]">
-      <h2 class="mb-4 font-display text-[clamp(1.5rem,2.6vw,2rem)] font-bold tracking-tight text-white">{T.introH}</h2>
-      <p class="font-body text-[15px] leading-[1.8] text-slate-400">{T.introBody}</p>
+      <div class="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-7 sm:p-9">
+        <div class="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-[#3B82F6]/10 blur-3xl"></div>
+        <div class="relative flex items-start gap-4">
+          <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#3B82F6]/15">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="1.8" class="h-[22px] w-[22px]"><path d="m8 9-4 3 4 3M16 9l4 3-4 3M14 5l-4 14" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="min-w-0">
+            <h2 class="mb-3 font-display text-[clamp(1.4rem,2.4vw,1.9rem)] font-bold tracking-tight text-white">{T.introH}</h2>
+            <p class="font-body text-[15px] leading-[1.8] text-slate-400">{T.introBody}</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 

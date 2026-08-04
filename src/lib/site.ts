@@ -24,7 +24,7 @@ export const ORG = {
   geo: { latitude: -2.1437644, longitude: -79.9104008 },
   hasMap: 'https://www.google.com/maps?cid=12881806615684494307',
   sameAs: [
-    'https://twitter.com/terranode',
+    'https://www.instagram.com/terranode_net/',
     'https://linkedin.com/company/terranode',
     'https://discord.gg/terranode',
   ],

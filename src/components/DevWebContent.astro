@@ -98,8 +98,8 @@ const T = {
   sub: es ? 'Diseñamos y desarrollamos páginas web y tiendas online en Ecuador con WordPress y WooCommerce. Sitios rápidos, seguros, optimizados para SEO y fáciles de administrar tú mismo.' : 'We design and develop websites and online stores in Ecuador with WordPress and WooCommerce. Fast, secure, SEO-optimized sites that are easy to manage yourself.',
   introH: es ? 'Agencia de diseño web en Ecuador con hosting propio' : 'Web design agency in Ecuador with in-house hosting',
   introBody: es
-    ? 'A diferencia de una agencia de diseño web independiente, Terranode también es el proveedor de la infraestructura donde vive tu sitio: alojamos tu página web en nuestros propios servidores en Ecuador y Estados Unidos, lo que significa tiempos de carga más rápidos para visitantes ecuatorianos, soporte técnico end-to-end (diseño, desarrollo y hosting con un solo proveedor) y sin depender de terceros cuando algo falla. Trabajamos con negocios, profesionales y emprendimientos en Guayaquil, Quito, Cuenca y el resto de Ecuador que necesitan una página web corporativa, una tienda online o una landing page que realmente convierta visitas en clientes. Todos nuestros sitios se construyen sobre WordPress — el gestor de contenido más usado del mundo — con SEO técnico desde el primer día: velocidad de carga optimizada, estructura de encabezados correcta, sitemap XML y certificado SSL incluido.'
-    : 'Unlike an independent web design agency, Terranode is also the provider of the infrastructure your site lives on: we host your website on our own servers in Ecuador and the United States, meaning faster load times for Ecuadorian visitors, end-to-end technical support (design, development and hosting from a single provider), and no dependency on third parties when something breaks. We work with businesses, professionals and startups in Guayaquil, Quito, Cuenca and the rest of Ecuador that need a corporate website, an online store, or a landing page that actually converts visits into customers. Every site we build runs on WordPress — the world\u2019s most widely used content management system — with technical SEO from day one: optimized load speed, correct heading structure, XML sitemap and SSL certificate included.',
+    ? 'La mayoría de agencias de diseño web te entregan el sitio terminado y te dejan buscar hosting por tu cuenta — y ahí empieza el problema cuando algo falla y nadie sabe de quién es la culpa. Terranode funciona distinto: nosotros mismos alojamos tu página en nuestros servidores en Ecuador y Estados Unidos, así que el diseño, el desarrollo y el hosting salen de un solo lugar, con tiempos de carga más rápidos para tus visitantes ecuatorianos y un único número al que llamar si algo no funciona. Trabajamos con negocios, profesionales y emprendimientos en Guayaquil, Quito, Cuenca y el resto de Ecuador que necesitan una página corporativa, una tienda online o una landing page que realmente convierta visitas en clientes. Construimos todo sobre WordPress —el gestor de contenido más usado del mundo— con SEO técnico incluido desde el primer día: velocidad optimizada, estructura de encabezados correcta, sitemap XML y certificado SSL.'
+    : "Most web design agencies hand you the finished site and leave you to sort out hosting on your own — and that's exactly when things get messy if something breaks and nobody's sure whose problem it is. Terranode works differently: we host your website ourselves, on our own servers in Ecuador and the United States, so design, development and hosting all come from one place, with faster load times for your Ecuadorian visitors and a single number to call if anything goes wrong. We work with businesses, professionals and startups across Guayaquil, Quito, Cuenca and the rest of Ecuador who need a corporate site, an online store, or a landing page that actually turns visits into customers. Everything we build runs on WordPress — the world's most widely used content management system — with technical SEO baked in from day one: optimized speed, correct heading structure, an XML sitemap and SSL included.",
   cta1: es ? 'Ver planes y precios' : 'View plans & pricing',
   cta2: es ? 'Solicitar cotización' : 'Request a quote',
   sistLink: es ? '¿Necesitas un sistema a medida? → Ver Desarrollo de Sistemas' : 'Need a custom system? → See Systems Development',
@@ -287,8 +287,18 @@ const T = {
   <!-- Intro / contenido SEO -->
   <section class="border-t border-white/[0.04] bg-[#060B18] px-6 py-16">
     <div class="mx-auto max-w-[820px]">
-      <h2 class="mb-4 font-display text-[clamp(1.5rem,2.6vw,2rem)] font-bold tracking-tight text-white">{T.introH}</h2>
-      <p class="font-body text-[15px] leading-[1.8] text-slate-400">{T.introBody}</p>
+      <div class="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-7 sm:p-9">
+        <div class="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-[#3B82F6]/10 blur-3xl"></div>
+        <div class="relative flex items-start gap-4">
+          <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#3B82F6]/15">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="1.8" class="h-[22px] w-[22px]"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M8 21h8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="min-w-0">
+            <h2 class="mb-3 font-display text-[clamp(1.4rem,2.4vw,1.9rem)] font-bold tracking-tight text-white">{T.introH}</h2>
+            <p class="font-body text-[15px] leading-[1.8] text-slate-400">{T.introBody}</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 

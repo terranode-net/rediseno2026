@@ -7,17 +7,17 @@ import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, product
 
 const faqs = [
   { q: '¿Puedo usar mi dominio existente con TerraMail?', a: 'Sí, solo necesitas apuntar los registros MX de tu dominio a nuestros servidores.' },
-  { q: '¿Cuántos buzones puedo crear en cada plan?', a: 'Starter y Business incluyen un buzón por cuenta de usuario; Empresarial incluye buzones ilimitados.' },
+  { q: '¿Cuántos buzones puedo crear en cada plan?', a: 'TerraMail 50GB y 100GB incluyen buzones ilimitados; solo comparten el espacio total de almacenamiento del plan.' },
   { q: '¿Qué es el Webmail Terramail Suite?', a: 'Una plataforma moderna de correo web con interfaz similar a Outlook.' },
   { q: '¿Pueden migrar mis correos desde Gmail o Outlook?', a: 'Sí, migraciones completas sin interrumpir tu operación.' },
-  { q: '¿El correo incluye protección contra phishing?', a: 'Sí, antispam avanzado que filtra intentos de phishing y adjuntos maliciosos.' },
+  { q: '¿El correo incluye protección contra phishing?', a: 'Sí, filtrado premium de spam (SpamExperts) que bloquea intentos de phishing y adjuntos maliciosos.' },
   { q: '¿Puedo acceder desde mi teléfono?', a: 'Sí, compatible con ActiveSync en iOS, Android y cualquier cliente estándar.' },
 ];
 
 // Datos de producto para JSON-LD (contenido estático, ver TerraMailContent.astro).
 const plans = [
-  { name: 'Starter', price: '24', description: 'Buzón de 100 GB, Para profesionales independientes.', url: `${SITE_URL}/es/store/terramail-starter` },
-  { name: 'Business', price: '69.99', description: 'Buzón de 30 GB, Para equipos y empresas en crecimiento.', url: `${SITE_URL}/es/store/terramail-business` },
+  { name: 'TerraMail 50GB', price: '50', description: '50 GB de correo y almacenamiento en la nube, buzones ilimitados.', url: `${SITE_URL}/es/store/terramail-50gb` },
+  { name: 'TerraMail 100GB', price: '90', description: '100 GB de correo y almacenamiento en la nube, buzones ilimitados.', url: `${SITE_URL}/es/store/terramail-100gb` },
 ];
 const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Correo Corporativo', key: 'terramail' }]);
 const service = serviceSchema('es', { name: 'Correo Corporativo TerraMail', description: 'Correo corporativo profesional con antispam, antivirus y webmail incluido.', pageKey: 'terramail', serviceType: 'Business Email Hosting' });
@@ -25,8 +25,8 @@ const service = serviceSchema('es', { name: 'Correo Corporativo TerraMail', desc
 <BaseLayout
   locale="es"
   pageKey="terramail"
-  title='TerraMail: Correo Corporativo y Empresarial desde $24/año | Terranode'
-  description='Correo corporativo y empresarial profesional con tu propio dominio, antispam avanzado, webmail moderno y sincronización móvil. Migración gratis. Desde $24/año.'
+  title='TerraMail: Correo Corporativo y Empresarial desde $50/año | Terranode'
+  description='Correo corporativo y empresarial profesional con tu propio dominio, filtrado premium de spam, webmail moderno y buzones ilimitados. Desde $50/año.'
   jsonLd={[organizationSchema('es'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
 >
   <TerraMailContent locale="es" />
