@@ -10,8 +10,8 @@ import { supabaseServer } from './supabaseServer';
 // ── Tipos ───────────────────────────────────────────────────────────────────
 export interface VpsRegion { id: string; name: string; country: string; ping: string; status: string }
 export interface VpsPlan { id: string; name: string; cpu: string; ram: string; disk: string; bw: string; price: string; regions: string[]; stock: Record<string, string>; href: string; popular: boolean }
-export interface DedicatedPlan { id: string; name: string; cpu: string; cores: string; ram: string; disk: string; net: string; ip: string; price: string; period: string; tagline: string; tagline_en?: string | null; href: string; popular: boolean }
-export interface MailPlan { id: string; name: string; users: number; storage: string; price: string; period: string; monthly: string; tagline: string; tagline_en?: string | null; feats: string[]; feats_en?: string[] | null; href: string; popular: boolean }
+export interface DedicatedPlan { id: string; name: string; cpu: string; cores: string; cores_en?: string | null; ram: string; disk: string; net: string; net_en?: string | null; ip: string; price: string; period: string; period_en?: string | null; tagline: string; tagline_en?: string | null; href: string; popular: boolean }
+export interface MailPlan { id: string; name: string; users: number; storage: string; price: string; period: string; period_en?: string | null; monthly: string; monthly_en?: string | null; tagline: string; tagline_en?: string | null; feats: string[]; feats_en?: string[] | null; href: string; popular: boolean }
 export interface HostingPlan { id: string; name: string; price: string; period: string; tagline: string; feats: string[]; href: string; popular: boolean }
 export interface M365Plan { id: string; name: string; badge: string | null; price: string; period: string; tagline: string; feats: string[]; href: string; popular: boolean }
 export interface City { slug: string; name: string; province: string; country: string; active: boolean }
@@ -83,9 +83,10 @@ export const getVpsRegions = () => fetchTable<VpsRegion>('vps_regions', FALLBACK
 export const getVpsPlans = () => fetchTable<VpsPlan>('vps_plans', FALLBACK_VPS);
 
 /**
- * Planes de servidores dedicados. Si `locale` es 'en', usa `tagline_en`
- * cuando esté escrito en el admin; si aún no se ha traducido, muestra el
- * texto en español para no dejar el campo vacío.
+ * Planes de servidores dedicados. Si `locale` es 'en', usa las columnas
+ * _en (tagline_en, cores_en, net_en, period_en) cuando ya se llenaron en el
+ * admin; si algún campo aún no se ha traducido, muestra el texto en español
+ * para que la página nunca se quede sin contenido.
  */
 export async function getDedicatedPlans(locale: string = 'es'): Promise<DedicatedPlan[]> {
   const plans = await fetchTable<DedicatedPlan>('dedicated_plans', FALLBACK_DED);
@@ -93,13 +94,16 @@ export async function getDedicatedPlans(locale: string = 'es'): Promise<Dedicate
   return plans.map((p) => ({
     ...p,
     tagline: p.tagline_en?.trim() ? p.tagline_en : p.tagline,
+    cores: p.cores_en?.trim() ? p.cores_en : p.cores,
+    net: p.net_en?.trim() ? p.net_en : p.net,
+    period: p.period_en?.trim() ? p.period_en : p.period,
   }));
 }
 
 /**
  * Planes de correo (TerraMail). Igual que getDedicatedPlans: en inglés usa
- * tagline_en / feats_en si ya se completaron en el admin, y si no, cae al
- * texto en español para que la página nunca se quede sin contenido.
+ * las columnas _en (tagline_en, feats_en, period_en, monthly_en) si ya se
+ * completaron en el admin, y si no, cae al texto en español.
  */
 export async function getMailPlans(locale: string = 'es'): Promise<MailPlan[]> {
   const plans = await fetchTable<MailPlan>('mail_plans', FALLBACK_MAIL);
@@ -108,6 +112,8 @@ export async function getMailPlans(locale: string = 'es'): Promise<MailPlan[]> {
     ...p,
     tagline: p.tagline_en?.trim() ? p.tagline_en : p.tagline,
     feats: p.feats_en && p.feats_en.length > 0 ? p.feats_en : p.feats,
+    period: p.period_en?.trim() ? p.period_en : p.period,
+    monthly: p.monthly_en?.trim() ? p.monthly_en : p.monthly,
   }));
 }
 export const getHostingPlans = () => fetchTable<any>('hosting_plans', []);

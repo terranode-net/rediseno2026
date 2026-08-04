@@ -9,6 +9,14 @@ export interface ColumnDef {
   options?: string[]; // para type 'select'
   placeholder?: string;
   width?: string; // ej. 'w-24'
+  /**
+   * Marca el campo como parte de una versión de idioma específica.
+   * Si se indica 'es' o 'en' en dos o más columnas, esos campos se agrupan
+   * bajo un selector de pestañas (Español / English) en vez de mostrarse
+   * todos juntos. Los campos sin `lang` se muestran siempre, en la sección
+   * "General".
+   */
+  lang?: 'es' | 'en';
 }
 
 export interface AdminTableConfig {
@@ -45,15 +53,18 @@ const ICO = {
   chevron: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 shrink-0 transition-transform" aria-hidden="true"><path d="M6 8l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   trash: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" class="h-3.5 w-3.5" aria-hidden="true"><path d="M4 6h12M8 6V4.5A1.5 1.5 0 0 1 9.5 3h1A1.5 1.5 0 0 1 12 4.5V6m2 0v9a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 6 15V6h8Z" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   save: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" class="h-3.5 w-3.5" aria-hidden="true"><path d="M4 10.5 8 14l8-8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  spinner: `<svg viewBox="0 0 20 20" fill="none" class="h-3.5 w-3.5 animate-spin" aria-hidden="true"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="2" opacity="0.25"/><path d="M17.5 10a7.5 7.5 0 0 0-7.5-7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
   plus: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4" aria-hidden="true"><path d="M10 4v12M4 10h12" stroke-linecap="round"/></svg>`,
   search: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" class="h-4 w-4" aria-hidden="true"><circle cx="9" cy="9" r="6"/><path d="m17 17-4-4" stroke-linecap="round"/></svg>`,
   image: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-5 w-5" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  check: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path d="M4 10.5 8 14l8-8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  alert: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path d="M10 6.5v4.5M10 14h.01" stroke-linecap="round"/><circle cx="10" cy="10" r="7.5"/></svg>`,
 };
 
 // ── Campos de edición ─────────────────────────────────────────────────────────
 function inputFor(col: ColumnDef, value: any, ariaCtx: string): string {
   const base =
-    'w-full rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent';
+    'w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-ink transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent';
   if (col.type === 'boolean') {
     return `<label class="relative inline-flex cursor-pointer items-center" aria-label="${esc(col.label)} — ${esc(ariaCtx)}">
       <input type="checkbox" data-field="${col.key}" ${value ? 'checked' : ''} class="peer sr-only" />
@@ -85,11 +96,11 @@ function readValue(el: HTMLElement, col: ColumnDef): any {
   }
   if (col.type === 'json') {
     const raw = (el as HTMLTextAreaElement).value.trim();
-    if (!raw) return col.key.match(/stock|feats$|data$/) ? {} : [];
+    if (!raw) return col.key.match(/stock|feats/) ? [] : {};
     try {
       return JSON.parse(raw);
     } catch {
-      throw new Error(`JSON inválido en "${col.label}"`);
+      throw new Error(`JSON inválido en "${col.label}": revisa que las comillas y corchetes estén bien cerrados.`);
     }
   }
   return (el as HTMLInputElement | HTMLTextAreaElement).value;
@@ -118,11 +129,12 @@ function regionStockWidget(row: Record<string, any>, regionsList: { id: string; 
   return `<div class="rounded-lg border border-slate-200 p-2.5">${rows || '<p class="text-xs text-slate-400">No hay regiones creadas todavía en Regiones VPS.</p>'}</div>`;
 }
 
+/** Aviso de nivel de tabla (usado por los chips rápidos, visibles siempre cerca del header de cada fila). */
 function status(mountEl: HTMLElement, msg: string, kind: 'ok' | 'err' | 'info' = 'info') {
   let bar = mountEl.querySelector<HTMLDivElement>('.admin-status');
   if (!bar) {
     bar = document.createElement('div');
-    bar.className = 'admin-status mb-4 rounded-lg px-3 py-2 text-sm';
+    bar.className = 'admin-status mb-3 rounded-lg px-3 py-2 text-sm';
     mountEl.prepend(bar);
   }
   const colors =
@@ -131,9 +143,23 @@ function status(mountEl: HTMLElement, msg: string, kind: 'ok' | 'err' | 'info' =
       : kind === 'err'
         ? 'bg-red-50 text-red-700 border border-red-200'
         : 'bg-accent-soft text-accent border border-accent/20';
-  bar.className = `admin-status mb-4 rounded-lg px-3 py-2 text-sm ${colors}`;
+  bar.className = `admin-status mb-3 rounded-lg px-3 py-2 text-sm ${colors}`;
   bar.textContent = msg;
   if (kind !== 'err') setTimeout(() => bar && bar.remove(), 2500);
+}
+
+/** Aviso pegado al pie de UNA fila (para que Guardar/Eliminar siempre muestren feedback justo donde el usuario está mirando, sin importar cuánto haya que hacer scroll en tablas largas). */
+function rowStatus(editor: HTMLElement, msg: string, kind: 'ok' | 'err') {
+  let bar = editor.querySelector<HTMLDivElement>('.row-status');
+  if (!bar) {
+    bar = document.createElement('div');
+    bar.className = 'row-status';
+    editor.querySelector('[data-row-footer]')?.before(bar);
+  }
+  const colors = kind === 'ok' ? 'bg-signal-soft text-signal border-signal/30' : 'bg-red-50 text-red-700 border-red-200';
+  bar.className = `row-status mt-3 flex items-start gap-2 rounded-lg border px-3 py-2 text-xs ${colors}`;
+  bar.innerHTML = `${kind === 'ok' ? ICO.check : ICO.alert}<span>${esc(msg)}</span>`;
+  if (kind === 'ok') setTimeout(() => bar && bar.remove(), 2500);
 }
 
 // Prioridad para auto-detectar qué booleanos mostrar como chip rápido en la fila colapsada.
@@ -152,6 +178,12 @@ export function mountAdminTable(cfg: AdminTableConfig) {
   const pageSize = cfg.pageSize ?? 20;
   let regionsList: { id: string; name: string }[] = [];
 
+  // Columnas agrupadas: generales (siempre visibles) vs. por idioma (bajo pestañas).
+  const generalCols = cfg.columns.filter((c) => !c.lang);
+  const esCols = cfg.columns.filter((c) => c.lang === 'es');
+  const enCols = cfg.columns.filter((c) => c.lang === 'en');
+  const hasLangTabs = esCols.length > 0 || enCols.length > 0;
+
   // Detección automática de qué columna usar como título/subtítulo si no se configuró.
   const textCols = cfg.columns.filter((c) => c.type === 'text' && c.key !== cfg.pk);
   const titleKey =
@@ -164,6 +196,7 @@ export function mountAdminTable(cfg: AdminTableConfig) {
   let searchTerm = '';
   let visibleCount = pageSize;
   const expandedKeys = new Set<string>();
+  const activeLangTab = new Map<string, 'es' | 'en'>();
 
   function skeleton() {
     mountEl!.innerHTML = `
@@ -193,6 +226,7 @@ export function mountAdminTable(cfg: AdminTableConfig) {
     const { data, error } = await supabase.from(cfg.table).select('*').order(orderBy, { ascending: true });
     if (error) {
       mountEl!.innerHTML = `<div class="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">Error cargando datos: ${esc(error.message)}</div>`;
+      console.error(`[adminTable:${cfg.table}] load error:`, error);
       return;
     }
     allRows = data ?? [];
@@ -205,6 +239,20 @@ export function mountAdminTable(cfg: AdminTableConfig) {
     return cfg.columns
       .filter((c) => c.type === 'text' || c.type === 'select')
       .some((c) => String(row[c.key] ?? '').toLowerCase().includes(t));
+  }
+
+  /** Renderiza el grid de campos de una lista de columnas (usado tanto para "General" como para cada pestaña de idioma). */
+  function fieldsGrid(cols: ColumnDef[], row: Record<string, any>, rowTitle: string): string {
+    return cols
+      .map((c) => {
+        const wide = c.type === 'json' || c.type === 'textarea' || c.type === 'region-stock';
+        const widget = c.type === 'region-stock' ? regionStockWidget(row, regionsList) : inputFor(c, row[c.key], rowTitle);
+        return `<div class="${wide ? 'col-span-full' : ''}">
+          <label class="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-slate-400">${esc(c.label)}</label>
+          ${widget}
+        </div>`;
+      })
+      .join('');
   }
 
   function render() {
@@ -226,7 +274,7 @@ export function mountAdminTable(cfg: AdminTableConfig) {
           />
         </div>
         <p class="text-xs text-slate-400 whitespace-nowrap">${filtered.length} ${label}(s)${searchTerm ? ` de ${allRows.length}` : ''}</p>
-        <button data-action="add" class="flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-ink px-3.5 text-xs font-semibold text-white hover:bg-ink-2">
+        <button data-action="add" class="flex h-10 shrink-0 items-center gap-1.5 rounded-lg bg-ink px-4 text-xs font-semibold text-white transition-colors hover:bg-ink-2">
           ${ICO.plus}<span>Agregar</span>
         </button>
       </div>`;
@@ -238,6 +286,7 @@ export function mountAdminTable(cfg: AdminTableConfig) {
         const rowTitle = truncate(row[titleKey] ?? pkVal, 70) || '(sin título)';
         const rowSubtitle = subtitleKey ? row[subtitleKey] : null;
         const img = cfg.imageKey ? row[cfg.imageKey] : null;
+        const lang = activeLangTab.get(pkVal) ?? 'es';
 
         const thumb = cfg.imageKey
           ? img
@@ -258,19 +307,27 @@ export function mountAdminTable(cfg: AdminTableConfig) {
           })
           .join('');
 
-        const fields = cfg.columns
-          .map((c) => {
-            const wide = c.type === 'json' || c.type === 'textarea' || c.type === 'region-stock';
-            const widget = c.type === 'region-stock' ? regionStockWidget(row, regionsList) : inputFor(c, row[c.key], rowTitle);
-            return `<div class="${wide ? 'col-span-full' : ''}">
-              <label class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-400">${esc(c.label)}</label>
-              ${widget}
-            </div>`;
-          })
-          .join('');
+        const generalFields = fieldsGrid(generalCols, row, rowTitle);
+
+        const langSection = hasLangTabs
+          ? `<div class="mt-5 border-t border-slate-200 pt-4">
+              <div class="mb-3 flex items-center justify-between">
+                <span class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Contenido por idioma</span>
+                <div class="inline-flex rounded-lg border border-slate-200 bg-slate-100 p-0.5" role="tablist" aria-label="Idioma a editar">
+                  <button type="button" role="tab" aria-selected="${lang === 'es'}" data-lang-tab="es"
+                    class="rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${lang === 'es' ? 'bg-white text-ink shadow-sm' : 'text-slate-500 hover:text-ink'}">Español</button>
+                  <button type="button" role="tab" aria-selected="${lang === 'en'}" data-lang-tab="en"
+                    class="rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${lang === 'en' ? 'bg-white text-ink shadow-sm' : 'text-slate-500 hover:text-ink'}">English</button>
+                </div>
+              </div>
+              <div data-lang-panel="es" class="${lang === 'es' ? '' : 'hidden'} grid grid-cols-2 gap-3 sm:grid-cols-3">${fieldsGrid(esCols, row, rowTitle)}</div>
+              <div data-lang-panel="en" class="${lang === 'en' ? '' : 'hidden'} grid grid-cols-2 gap-3 sm:grid-cols-3">${fieldsGrid(enCols, row, rowTitle)}</div>
+              <p class="mt-2.5 text-[11px] text-slate-400">Si dejas un campo en inglés vacío, el sitio en inglés usa automáticamente el texto en español.</p>
+            </div>`
+          : '';
 
         return `<div data-row-pk="${esc(pkVal)}" class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-card transition-shadow hover:shadow-card-hover">
-          <button type="button" data-action="toggle-row" class="flex w-full items-center gap-3 px-4 py-3 text-left">
+          <button type="button" data-action="toggle-row" class="flex w-full items-center gap-3 px-4 py-3.5 text-left">
             ${thumb}
             <div class="min-w-0 flex-1">
               <div class="flex flex-wrap items-center gap-2">
@@ -281,13 +338,15 @@ export function mountAdminTable(cfg: AdminTableConfig) {
             </div>
             <span class="shrink-0 text-slate-400 ${isOpen ? 'rotate-180' : ''}">${ICO.chevron}</span>
           </button>
-          <div class="${isOpen ? '' : 'hidden'} border-t border-slate-100 bg-slate-50/60 p-4" data-row-editor>
-            <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">${fields}</div>
-            <div class="mt-4 flex justify-end gap-2 border-t border-slate-200 pt-3">
-              <button data-action="delete" class="flex h-9 items-center gap-1.5 rounded-md border border-red-200 px-3 text-xs font-semibold text-red-600 hover:bg-red-50">
+          <div class="${isOpen ? '' : 'hidden'} border-t border-slate-100 bg-slate-50/60 p-4 sm:p-5" data-row-editor>
+            <span class="mb-3 block text-[11px] font-semibold uppercase tracking-wide text-slate-400">General</span>
+            <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">${generalFields}</div>
+            ${langSection}
+            <div data-row-footer class="mt-5 flex justify-end gap-2 border-t border-slate-200 pt-4">
+              <button data-action="delete" class="flex h-10 items-center gap-1.5 rounded-md border border-red-200 px-3.5 text-xs font-semibold text-red-600 transition-colors hover:bg-red-50">
                 ${ICO.trash}<span>Eliminar</span>
               </button>
-              <button data-action="save" class="flex h-9 items-center gap-1.5 rounded-md bg-accent px-4 text-xs font-semibold text-white hover:bg-accent-hover">
+              <button data-action="save" class="flex h-10 items-center gap-1.5 rounded-md bg-accent px-4 text-xs font-semibold text-white transition-colors hover:bg-accent-hover disabled:opacity-60">
                 ${ICO.save}<span>Guardar</span>
               </button>
             </div>
@@ -298,10 +357,10 @@ export function mountAdminTable(cfg: AdminTableConfig) {
 
     const emptyState = allRows.length === 0
       ? `<div class="rounded-xl border border-dashed border-slate-200 p-8 text-center text-sm text-slate-400">Sin registros todavía.</div>`
-      : `<div class="rounded-xl border border-dashed border-slate-200 p-8 text-center text-sm text-slate-400">No se encontraron resultados para “${esc(searchTerm)}”.</div>`;
+      : `<div class="rounded-xl border border-dashed border-slate-200 p-8 text-center text-sm text-slate-400">No se encontraron resultados para "${esc(searchTerm)}".</div>`;
 
     const loadMore = hasMore
-      ? `<div class="pt-1"><button data-action="load-more" class="w-full rounded-lg border border-slate-200 bg-white py-2.5 text-xs font-semibold text-slate-500 hover:border-accent/40 hover:text-accent">Cargar más (${filtered.length - shown.length} restantes)</button></div>`
+      ? `<div class="pt-1"><button data-action="load-more" class="w-full rounded-lg border border-slate-200 bg-white py-2.5 text-xs font-semibold text-slate-500 transition-colors hover:border-accent/40 hover:text-accent">Cargar más (${filtered.length - shown.length} restantes)</button></div>`
       : '';
 
     mountEl!.innerHTML = `
@@ -312,7 +371,7 @@ export function mountAdminTable(cfg: AdminTableConfig) {
       </div>
     `;
 
-    // Búsqueda (debounce ligero + preserva foco/cursor tras el re-render)
+    // Búsqueda (preserva foco/cursor tras el re-render)
     const searchInput = mountEl!.querySelector<HTMLInputElement>('#admin-search');
     searchInput?.addEventListener('input', () => {
       searchTerm = searchInput.value;
@@ -336,6 +395,7 @@ export function mountAdminTable(cfg: AdminTableConfig) {
       const { error } = await supabase.from(cfg.table).insert(payload);
       if (error) {
         alert('Error creando registro: ' + error.message);
+        console.error(`[adminTable:${cfg.table}] insert error:`, error);
         return;
       }
       expandedKeys.add(pkVal);
@@ -352,6 +412,23 @@ export function mountAdminTable(cfg: AdminTableConfig) {
         render();
       });
 
+      // Pestañas Español/English: cambio instantáneo sin re-renderizar toda la lista.
+      card.querySelectorAll<HTMLButtonElement>('[data-lang-tab]').forEach((tabBtn) => {
+        tabBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const chosen = tabBtn.dataset.langTab as 'es' | 'en';
+          activeLangTab.set(pkVal, chosen);
+          card.querySelectorAll<HTMLButtonElement>('[data-lang-tab]').forEach((b) => {
+            const active = b.dataset.langTab === chosen;
+            b.setAttribute('aria-selected', String(active));
+            b.className = `rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${active ? 'bg-white text-ink shadow-sm' : 'text-slate-500 hover:text-ink'}`;
+          });
+          card.querySelectorAll<HTMLElement>('[data-lang-panel]').forEach((panel) => {
+            panel.classList.toggle('hidden', panel.dataset.langPanel !== chosen);
+          });
+        });
+      });
+
       // Chips de acceso rápido: togglean y guardan un booleano al instante sin abrir el editor.
       card.querySelectorAll<HTMLButtonElement>('[data-quick-toggle]').forEach((chip) => {
         chip.addEventListener('click', async (e) => {
@@ -363,6 +440,7 @@ export function mountAdminTable(cfg: AdminTableConfig) {
           chip.disabled = false;
           if (error) {
             status(mountEl!, error.message, 'err');
+            console.error(`[adminTable:${cfg.table}] quick-toggle error:`, error);
             return;
           }
           rowData[key] = newVal;
@@ -381,8 +459,10 @@ export function mountAdminTable(cfg: AdminTableConfig) {
         });
       });
 
-      editor.querySelector('[data-action="save"]')?.addEventListener('click', async (e) => {
+      const saveBtn = editor.querySelector<HTMLButtonElement>('[data-action="save"]');
+      saveBtn?.addEventListener('click', async (e) => {
         e.stopPropagation();
+        const originalHTML = saveBtn.innerHTML;
         try {
           const payload: Record<string, any> = {};
           cfg.columns.forEach((c) => {
@@ -404,12 +484,21 @@ export function mountAdminTable(cfg: AdminTableConfig) {
             const el = editor.querySelector<HTMLElement>(`[data-field="${c.key}"]`);
             if (el) payload[c.key] = readValue(el, c);
           });
+
+          saveBtn.disabled = true;
+          saveBtn.innerHTML = `${ICO.spinner}<span>Guardando…</span>`;
+
           const { error } = await supabase.from(cfg.table).update(payload).eq(cfg.pk, rowData[cfg.pk]);
           if (error) throw error;
+
           Object.assign(rowData, payload);
-          status(mountEl!, 'Guardado ✓', 'ok');
+          rowStatus(editor, 'Cambios guardados correctamente.', 'ok');
         } catch (e: any) {
-          status(mountEl!, e.message ?? 'Error al guardar', 'err');
+          console.error(`[adminTable:${cfg.table}] save error:`, e);
+          rowStatus(editor, e?.message ?? 'No se pudo guardar. Revisa la consola del navegador para más detalle.', 'err');
+        } finally {
+          saveBtn.disabled = false;
+          saveBtn.innerHTML = originalHTML;
         }
       });
 
@@ -418,7 +507,8 @@ export function mountAdminTable(cfg: AdminTableConfig) {
         if (!confirm(`¿Eliminar este ${label}? Esta acción no se puede deshacer.`)) return;
         const { error } = await supabase.from(cfg.table).delete().eq(cfg.pk, rowData[cfg.pk]);
         if (error) {
-          status(mountEl!, error.message, 'err');
+          rowStatus(editor, error.message, 'err');
+          console.error(`[adminTable:${cfg.table}] delete error:`, error);
           return;
         }
         expandedKeys.delete(pkVal);
