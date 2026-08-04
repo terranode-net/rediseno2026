@@ -65,10 +65,13 @@ const nav = [
                     <a
                       href={item.href}
                       class:list={[
-                        'block rounded-lg px-2.5 py-2 text-sm transition-colors',
-                        active === item.key ? 'bg-accent text-white' : 'text-white/70 hover:bg-white/5 hover:text-white',
+                        'flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm transition-colors duration-150',
+                        active === item.key
+                          ? 'bg-accent text-white shadow-[0_0_0_1px_rgba(255,255,255,0.08)]'
+                          : 'text-white/70 hover:bg-white/[0.06] hover:text-white',
                       ]}
                     >
+                      <span class:list={['h-1.5 w-1.5 shrink-0 rounded-full', active === item.key ? 'bg-white' : 'bg-transparent']}></span>
                       {item.label}
                     </a>
                   </li>
