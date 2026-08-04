@@ -10,10 +10,6 @@ import { supabaseServer } from './supabaseServer';
 // ── Tipos ───────────────────────────────────────────────────────────────────
 export interface VpsRegion { id: string; name: string; country: string; ping: string; status: string }
 export interface VpsPlan { id: string; name: string; cpu: string; ram: string; disk: string; bw: string; price: string; regions: string[]; stock: Record<string, string>; href: string; popular: boolean }
-export interface DedicatedPlan { id: string; name: string; cpu: string; cores: string; cores_en?: string | null; ram: string; disk: string; net: string; net_en?: string | null; ip: string; price: string; period: string; period_en?: string | null; tagline: string; tagline_en?: string | null; href: string; popular: boolean }
-export interface MailPlan { id: string; name: string; users: number; storage: string; price: string; period: string; period_en?: string | null; monthly: string; monthly_en?: string | null; tagline: string; tagline_en?: string | null; feats: string[]; feats_en?: string[] | null; href: string; popular: boolean }
-export interface HostingPlan { id: string; name: string; price: string; period: string; tagline: string; feats: string[]; href: string; popular: boolean }
-export interface M365Plan { id: string; name: string; badge: string | null; price: string; period: string; tagline: string; feats: string[]; href: string; popular: boolean }
 export interface City { slug: string; name: string; province: string; country: string; active: boolean }
 
 // ── Fallbacks (los datos reales actuales del sitio) ─────────────────────────
@@ -37,32 +33,6 @@ const FALLBACK_VPS: VpsPlan[] = [
   { id: 'tns08', name: 'TNS-08', cpu: '22 vCPU', ram: '64 GB', disk: '1024 GB NVMe', bw: '10 TB', price: '$155.00', regions: ['ashburn', 'losangeles', 'houston', 'chicago'], stock: { ashburn: 'limited', losangeles: 'limited', houston: 'limited', chicago: 'out' }, href: 'https://my.terranode.net/store/ashburn-intel-kvm-vps/va-tns-08', popular: false },
 ];
 
-const FALLBACK_DED: DedicatedPlan[] = [
-  { id: 'e3', name: 'Intel Xeon E3-1230 V5', cpu: 'Intel Xeon E3-1230 V5 @ 3.4 GHz', cores: '4 Cores / 8 Threads', ram: '32 GB DDR4', disk: '1 TB SSD', net: '1 Gbps Ilimitado', ip: 'IPv4 + IPv6', price: '$50.00', period: '/mes', tagline: 'Ideal para proyectos personales', href: 'https://my.terranode.net/store/dedicated-servers', popular: false },
-  { id: 'e5', name: 'Intel Xeon Dual E5-2680 V4', cpu: 'Intel Xeon Dual E5-2680 V4 @ 2.4 GHz', cores: '28 Cores / 56 Threads', ram: '128 GB DDR4', disk: '1 TB SSD', net: '1 Gbps Ilimitado', ip: 'IPv4 + IPv6', price: '$94.99', period: '/mes', tagline: 'Para proyectos en crecimiento', href: 'https://my.terranode.net/store/dedicated-servers', popular: true },
-  { id: 'gold', name: 'Intel Xeon Dual Gold 6138', cpu: 'Intel Xeon Dual Gold 6138 @ 2.0 GHz', cores: '40 Cores / 80 Threads', ram: '256 GB DDR4', disk: '2 TB U.2 NVMe', net: '10 Gbps (330 TB)', ip: 'IPv4 + IPv6', price: '$149.99', period: '/mes', tagline: 'Para proyectos escalables y empresariales', href: 'https://my.terranode.net/store/dedicated-servers', popular: false },
-];
-
-const HOST_FEATS = (n: string) => [`${n} Espacio NVMe`, 'Correos ilimitados', "SSL Let's Encrypt gratis", 'cPanel incluido', '1-clic WordPress', 'Soporte 24/7'];
-const FALLBACK_HOSTING: HostingPlan[] = [
-  { id: '8gb', name: 'Plan 8 GB', price: '$40', period: '/año', tagline: 'Para proyectos personales', popular: false, href: 'https://my.terranode.net/store/business-hosting/hosting-8-gb', feats: HOST_FEATS('8 GB') },
-  { id: '14gb', name: 'Plan 14 GB', price: '$64', period: '/año', tagline: 'Para proyectos en crecimiento', popular: true, href: 'https://my.terranode.net/store/business-hosting/hosting-14-gb', feats: HOST_FEATS('14 GB') },
-  { id: '35gb', name: 'Plan 35 GB', price: '$175', period: '/año', tagline: 'Para empresas medianas', popular: false, href: 'https://my.terranode.net/store/business-hosting/hosting-35-gb', feats: HOST_FEATS('35 GB') },
-];
-
-const FALLBACK_M365: M365Plan[] = [
-  { id: 'exchange', name: 'Exchange Online Plan 1', badge: null, price: '$5.50', period: '/mes/usuario', tagline: 'Correo empresarial con Outlook sin apps de escritorio', popular: false, href: 'https://my.terranode.net', feats: ['Buzón de 50 GB por usuario', 'Mensajes hasta 150 MB', 'Outlook Web App', 'Antispam y antimalware', 'Soporte Terranode 24/7'] },
-  { id: 'basic', name: 'Microsoft 365 Business Basic', badge: 'M365', price: '$7.20', period: '/mes/usuario', tagline: 'Productividad en la nube para todo tu equipo', popular: false, href: 'https://my.terranode.net', feats: ['Buzón de 50 GB por usuario', '1 TB en OneDrive', 'Teams: chat, llamadas y video', 'SharePoint colaborativo', 'Soporte Terranode 24/7'] },
-  { id: 'standard', name: 'Microsoft 365 Business Standard', badge: 'M365', price: '$12.50', period: '/mes/usuario', tagline: 'Todo lo de Basic más las apps de escritorio descargables', popular: true, href: 'https://my.terranode.net', feats: ['Todo lo del plan Business Basic', 'Apps de escritorio instalables', 'Hasta 5 PCs o Macs por usuario', 'Soporte Terranode 24/7 + migración gratis'] },
-];
-
-const MAIL_FEATS_BASE = ['Webmail Terramail Suite', 'Sincronización móvil (ActiveSync)', 'Acceso POP3 / IMAP / SMTP', 'Antivirus en tiempo real', 'Antispam avanzado', 'SSL/TLS cifrado'];
-const FALLBACK_MAIL: MailPlan[] = [
-  { id: 'starter', name: 'Starter', users: 1, storage: '10 GB', price: '$50', period: '/año', monthly: '≈ $2.08/mes', tagline: 'Para profesionales independientes', popular: false, href: 'https://my.terranode.net/store/corporate-email', feats: ['Buzón de 10 GB', ...MAIL_FEATS_BASE, 'Soporte 24/7'] },
-  { id: 'business', name: 'Business', users: 5, storage: '30 GB', price: '$69.99', period: '/año', monthly: '≈ $5.83/mes', tagline: 'Para equipos y empresas en crecimiento', popular: true, href: 'https://my.terranode.net/store/corporate-email', feats: ['Buzón de 30 GB', ...MAIL_FEATS_BASE, 'Calendario y contactos compartidos', 'Soporte prioritario 24/7'] },
-  { id: 'custom', name: 'Empresarial', users: 0, storage: 'Custom', price: 'Custom', period: '', monthly: 'Contacta al equipo de ventas', tagline: 'Solución a medida para grandes empresas', popular: false, href: '/contacto', feats: ['Almacenamiento ilimitado', 'Administración centralizada', 'Soporte dedicado', 'SLA empresarial'] },
-];
-
 // ── Helper genérico ─────────────────────────────────────────────────────────
 async function fetchTable<T>(table: string, fallback: T[], order = 'sort_order'): Promise<T[]> {
   try {
@@ -79,45 +49,12 @@ async function fetchTable<T>(table: string, fallback: T[], order = 'sort_order')
 }
 
 // ── API pública ─────────────────────────────────────────────────────────────
+// Nota: los planes de Dedicated, Correo (TerraMail), Hosting y Microsoft 365
+// ya NO se leen de Supabase — son contenido estático directamente en cada
+// componente (DedicatedContent.astro, TerraMailContent.astro,
+// HostingContent.astro / src/lib/staticPlans.ts, M365Content.astro).
 export const getVpsRegions = () => fetchTable<VpsRegion>('vps_regions', FALLBACK_REGIONS);
 export const getVpsPlans = () => fetchTable<VpsPlan>('vps_plans', FALLBACK_VPS);
-
-/**
- * Planes de servidores dedicados. Si `locale` es 'en', usa las columnas
- * _en (tagline_en, cores_en, net_en, period_en) cuando ya se llenaron en el
- * admin; si algún campo aún no se ha traducido, muestra el texto en español
- * para que la página nunca se quede sin contenido.
- */
-export async function getDedicatedPlans(locale: string = 'es'): Promise<DedicatedPlan[]> {
-  const plans = await fetchTable<DedicatedPlan>('dedicated_plans', FALLBACK_DED);
-  if (locale !== 'en') return plans;
-  return plans.map((p) => ({
-    ...p,
-    tagline: p.tagline_en?.trim() ? p.tagline_en : p.tagline,
-    cores: p.cores_en?.trim() ? p.cores_en : p.cores,
-    net: p.net_en?.trim() ? p.net_en : p.net,
-    period: p.period_en?.trim() ? p.period_en : p.period,
-  }));
-}
-
-/**
- * Planes de correo (TerraMail). Igual que getDedicatedPlans: en inglés usa
- * las columnas _en (tagline_en, feats_en, period_en, monthly_en) si ya se
- * completaron en el admin, y si no, cae al texto en español.
- */
-export async function getMailPlans(locale: string = 'es'): Promise<MailPlan[]> {
-  const plans = await fetchTable<MailPlan>('mail_plans', FALLBACK_MAIL);
-  if (locale !== 'en') return plans;
-  return plans.map((p) => ({
-    ...p,
-    tagline: p.tagline_en?.trim() ? p.tagline_en : p.tagline,
-    feats: p.feats_en && p.feats_en.length > 0 ? p.feats_en : p.feats,
-    period: p.period_en?.trim() ? p.period_en : p.period,
-    monthly: p.monthly_en?.trim() ? p.monthly_en : p.monthly,
-  }));
-}
-export const getHostingPlans = () => fetchTable<any>('hosting_plans', []);
-export const getM365Plans = () => fetchTable<any>('m365_plans', []);
 export const getCities = () => fetchTable<City>('cities', []);
 
 /** Ajustes de marca (fila única). */

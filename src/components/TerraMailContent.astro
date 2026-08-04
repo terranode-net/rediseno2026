@@ -1,18 +1,20 @@
 ---
-interface Props { locale: 'es' | 'en'; plans?: any[] }
-const { locale, plans } = Astro.props;
+interface Props { locale: 'es' | 'en' }
+const { locale } = Astro.props;
 const es = locale === 'es';
 const contactoHref = `/${locale}/${es ? 'contacto' : 'contact'}`;
 const BL = '#3B82F6';
 
-const PLANS = (plans && plans.length) ? plans : es ? [
-  { id: 'essentials', popular: false, name: 'TerraMail Essentials', price: '$24.99', period: '/año', monthly: '≈ $2.08/mes', tagline: 'Ideal para freelancers y proyectos personales', href: 'https://my.terranode.net/store/business-hosting', feats: ['Buzón de 10 GB', 'Webmail moderno (Terramail Suite)', 'Sincronización móvil (ActiveSync)', 'Acceso POP3 / IMAP / SMTP', 'Antivirus en tiempo real', 'Antispam avanzado', 'SSL/TLS cifrado', 'Soporte 24/7'] },
-  { id: 'pro', popular: true, name: 'TerraMail Pro', price: '$69.99', period: '/año', monthly: '≈ $5.83/mes', tagline: 'Para profesionales y equipos en crecimiento', href: 'https://my.terranode.net/store/business-hosting', feats: ['Buzón de 30 GB', 'Webmail moderno (Terramail Suite)', 'Sincronización móvil (ActiveSync)', 'Acceso POP3 / IMAP / SMTP', 'Antivirus en tiempo real', 'Antispam avanzado', 'SSL/TLS cifrado', 'Calendario y contactos compartidos', 'Soporte prioritario 24/7'] },
-  { id: 'enterprise', popular: false, name: 'TerraMail Enterprise', price: 'Custom', period: '', monthly: 'Contacta al equipo de ventas', tagline: 'Para empresas con volumen alto de buzones', href: contactoHref, feats: ['Buzones ilimitados', 'Almacenamiento a medida', 'Dominios múltiples', 'ActiveSync para todos los dispositivos', 'Antivirus y antispam enterprise', 'SLA garantizado', 'Migración gratuita', 'Gestor de cuenta dedicado'] },
+// Contenido estático — ya no se administra desde /admin (ver nota en README/commit).
+// Para actualizar precios o texto, edita directamente aquí.
+const PLANS = es ? [
+  { id: 'starter', popular: false, name: 'Starter', price: '$24', period: '/año', monthly: '≈ $2.08/mes', tagline: 'Para profesionales independientes', href: 'https://my.terranode.net/store/corporate-email', feats: ['Buzón de 100 GB', 'Webmail Terramail Suite', 'Sincronización móvil (ActiveSync)', 'Acceso POP3 / IMAP / SMTP', 'Antivirus en tiempo real', 'Antispam avanzado', 'SSL/TLS cifrado', 'Soporte 24/7'] },
+  { id: 'business', popular: true, name: 'Business', price: '$69.99', period: '/año', monthly: '≈ $5.83/mes', tagline: 'Para equipos y empresas en crecimiento', href: 'https://my.terranode.net/store/corporate-email', feats: ['Buzón de 30 GB', 'Webmail Terramail Suite', 'Sincronización móvil (ActiveSync)', 'Acceso POP3 / IMAP / SMTP', 'Antivirus en tiempo real', 'Antispam avanzado', 'SSL/TLS cifrado', 'Calendario y contactos compartidos', 'Soporte prioritario 24/7'] },
+  { id: 'custom', popular: false, name: 'Empresarial', price: 'Custom', period: '', monthly: 'Contacta al equipo de ventas', tagline: 'Solución a medida para grandes empresas', href: contactoHref, feats: ['Almacenamiento ilimitado', 'Administración centralizada', 'Soporte dedicado', 'SLA empresarial'] },
 ] : [
-  { id: 'essentials', popular: false, name: 'TerraMail Essentials', price: '$24.99', period: '/yr', monthly: '≈ $2.08/mo', tagline: 'Ideal for freelancers and personal projects', href: 'https://my.terranode.net/store/business-hosting', feats: ['10 GB mailbox', 'Modern webmail (Terramail Suite)', 'Mobile sync (ActiveSync)', 'POP3 / IMAP / SMTP access', 'Real-time antivirus', 'Advanced antispam', 'SSL/TLS encryption', '24/7 Support'] },
-  { id: 'pro', popular: true, name: 'TerraMail Pro', price: '$69.99', period: '/yr', monthly: '≈ $5.83/mo', tagline: 'For professionals and growing teams', href: 'https://my.terranode.net/store/business-hosting', feats: ['30 GB mailbox', 'Modern webmail (Terramail Suite)', 'Mobile sync (ActiveSync)', 'POP3 / IMAP / SMTP access', 'Real-time antivirus', 'Advanced antispam', 'SSL/TLS encryption', 'Shared calendar and contacts', '24/7 priority support'] },
-  { id: 'enterprise', popular: false, name: 'TerraMail Enterprise', price: 'Custom', period: '', monthly: 'Contact sales team', tagline: 'For businesses with high mailbox volume', href: contactoHref, feats: ['Unlimited mailboxes', 'Custom storage', 'Multiple domains', 'ActiveSync for all devices', 'Enterprise antivirus & antispam', 'Guaranteed SLA', 'Free migration', 'Dedicated account manager'] },
+  { id: 'starter', popular: false, name: 'Starter', price: '$24', period: '/yr', monthly: '≈ $2.08/month', tagline: 'For independent professionals', href: 'https://my.terranode.net/store/corporate-email', feats: ['100 GB Mailbox', 'Terramail Suite Webmail', 'Mobile Sync (ActiveSync)', 'POP3 / IMAP / SMTP Access', 'Real-time Antivirus', 'Advanced Antispam', 'SSL/TLS Encryption', '24/7 Support'] },
+  { id: 'business', popular: true, name: 'Business', price: '$69.99', period: '/yr', monthly: '≈ $5.83/month', tagline: 'For growing teams and businesses', href: 'https://my.terranode.net/store/corporate-email', feats: ['30 GB Mailbox', 'Terramail Suite Webmail', 'Mobile Sync (ActiveSync)', 'POP3 / IMAP / SMTP Access', 'Real-time Antivirus', 'Advanced Antispam', 'SSL/TLS Encryption', 'Shared calendar and contacts', '24/7 priority support'] },
+  { id: 'custom', popular: false, name: 'Enterprise', price: 'Custom', period: '', monthly: 'Contact sales team', tagline: 'Custom solution for large enterprises', href: contactoHref, feats: ['Unlimited storage', 'Centralized administration', 'Dedicated support', 'Enterprise SLA'] },
 ];
 
 const FEATS = es ? [
@@ -281,8 +283,18 @@ const COMPARE = es ? [
   <!-- Intro / contenido SEO -->
   <section class="border-t border-white/[0.04] bg-[#080E1C] px-6 py-16">
     <div class="mx-auto max-w-[820px]">
-      <h2 class="mb-4 font-display text-[clamp(1.5rem,2.6vw,2rem)] font-bold tracking-tight text-white">{T.introH}</h2>
-      <p class="font-body text-[15px] leading-[1.8] text-slate-400">{T.introBody}</p>
+      <div class="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-7 sm:p-9">
+        <div class="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-[#3B82F6]/10 blur-3xl"></div>
+        <div class="relative flex items-start gap-4">
+          <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#3B82F6]/15">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="1.8" class="h-[22px] w-[22px]"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="min-w-0">
+            <h2 class="mb-3 font-display text-[clamp(1.4rem,2.4vw,1.9rem)] font-bold tracking-tight text-white">{T.introH}</h2>
+            <p class="font-body text-[15px] leading-[1.8] text-slate-400">{T.introBody}</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 

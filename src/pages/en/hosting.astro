@@ -2,11 +2,8 @@
 export const prerender = false;
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import HostingContent from '@/components/HostingContent.astro';
-import { getHostingPlans, priceNumber } from '@/lib/db';
 import { SITE_URL } from '@/lib/site';
 import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
-
-const hostingPlans = await getHostingPlans();
 
 const faqs = [
   { q: 'Can I migrate my current site to Terranode?', a: 'Yes. We offer free migration from any provider, including files, database and email, with zero downtime.' },
@@ -15,12 +12,13 @@ const faqs = [
   { q: 'What happens if I exceed my storage limit?', a: "You'll get a notification before reaching the limit and can upgrade anytime." },
   { q: 'Do you support e-commerce?', a: 'Yes. Install WooCommerce, Prestashop, Magento or any CMS with 1 click.' },
 ];
-const plans = hostingPlans.map((p) => ({
-  name: p.name,
-  price: priceNumber(p.price),
-  description: (p.feats ?? []).slice(0, 4).join(', ') + '.',
-  url: `${SITE_URL}/en/store/hosting-${p.id}`,
-}));
+
+// Datos de producto para JSON-LD (contenido estático, ver HostingContent.astro).
+const plans = [
+  { name: '8 GB Plan', price: '40', description: '8 GB NVMe Space, 40 GB Bandwidth, 5 Databases, Unlimited emails.', url: `${SITE_URL}/en/store/hosting-8gb` },
+  { name: '14 GB Plan', price: '64', description: '14 GB NVMe Space, 70 GB Bandwidth, 7 Databases, Unlimited emails.', url: `${SITE_URL}/en/store/hosting-14gb` },
+  { name: '35 GB Plan', price: '175', description: '35 GB NVMe Space, 175 GB Bandwidth, 17 Databases, Unlimited emails.', url: `${SITE_URL}/en/store/hosting-35gb` },
+];
 const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'Hosting', key: 'hosting' }]);
 const service = serviceSchema('en', { name: 'Web Hosting', description: 'Professional web hosting with LiteSpeed, CloudLinux and cPanel. Free SSL, daily backups.', pageKey: 'hosting', serviceType: 'Web Hosting' });
 ---
@@ -31,5 +29,5 @@ const service = serviceSchema('en', { name: 'Web Hosting', description: 'Profess
   description='Web hosting with LiteSpeed, CloudLinux, cPanel and free SSL. Plans from $40/yr, free migration and 24/7 support.'
   jsonLd={[organizationSchema('en'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
 >
-  <HostingContent locale="en" plans={hostingPlans} />
+  <HostingContent locale="en" />
 </BaseLayout>

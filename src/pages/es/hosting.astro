@@ -2,11 +2,8 @@
 export const prerender = false;
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import HostingContent from '@/components/HostingContent.astro';
-import { getHostingPlans, priceNumber } from '@/lib/db';
 import { SITE_URL } from '@/lib/site';
 import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
-
-const hostingPlans = await getHostingPlans();
 
 const faqs = [
   { q: '¿Puedo migrar mi sitio actual a Terranode?', a: 'Sí. Ofrecemos migración gratuita desde cualquier proveedor. Nuestro equipo gestiona todo el proceso, incluyendo archivos, base de datos y correos, sin tiempo de inactividad.' },
@@ -15,12 +12,13 @@ const faqs = [
   { q: '¿Qué pasa si supero el límite de almacenamiento?', a: 'Recibirás una notificación antes de alcanzar el límite y puedes actualizar tu plan en cualquier momento.' },
   { q: '¿Tienen soporte para e-commerce?', a: 'Sí. Puedes instalar WooCommerce, Prestashop, Magento o cualquier otro CMS con 1 clic.' },
 ];
-const plans = hostingPlans.map((p) => ({
-  name: p.name,
-  price: priceNumber(p.price),
-  description: (p.feats ?? []).slice(0, 4).join(', ') + '.',
-  url: `${SITE_URL}/es/store/hosting-${p.id}`,
-}));
+
+// Datos de producto para JSON-LD (contenido estático, ver HostingContent.astro).
+const plans = [
+  { name: 'Plan 8 GB', price: '40', description: '8 GB Espacio NVMe, 40 GB Banda ancha, 5 Bases de datos, Correos ilimitados.', url: `${SITE_URL}/es/store/hosting-8gb` },
+  { name: 'Plan 14 GB', price: '64', description: '14 GB Espacio NVMe, 70 GB Banda ancha, 7 Bases de datos, Correos ilimitados.', url: `${SITE_URL}/es/store/hosting-14gb` },
+  { name: 'Plan 35 GB', price: '175', description: '35 GB Espacio NVMe, 175 GB Banda ancha, 17 Bases de datos, Correos ilimitados.', url: `${SITE_URL}/es/store/hosting-35gb` },
+];
 const breadcrumb = breadcrumbSchema('es', [{ name: 'Inicio', key: 'home' }, { name: 'Hosting', key: 'hosting' }]);
 const service = serviceSchema('es', { name: 'Web Hosting Ecuador', description: 'Hosting web profesional con LiteSpeed, CloudLinux y cPanel. SSL gratis, backups diarios.', pageKey: 'hosting', serviceType: 'Web Hosting' });
 ---
@@ -31,5 +29,5 @@ const service = serviceSchema('es', { name: 'Web Hosting Ecuador', description: 
   description='Hosting web con LiteSpeed, CloudLinux, cPanel y SSL gratis. Planes desde $40/año, migración gratuita y soporte 24/7.'
   jsonLd={[organizationSchema('es'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
 >
-  <HostingContent locale="es" plans={hostingPlans} />
+  <HostingContent locale="es" />
 </BaseLayout>

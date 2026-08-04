@@ -9,10 +9,6 @@ if (guard) return guard;
 const cards = [
   { href: '/admin/vps-regions', title: 'Regiones VPS', desc: 'Ubicaciones, ping y estado' },
   { href: '/admin/vps-plans', title: 'Planes VPS', desc: 'Specs, precios y stock por región' },
-  { href: '/admin/dedicated', title: 'Servidores dedicados', desc: 'Specs y precios' },
-  { href: '/admin/mail', title: 'Correo (TerraMail)', desc: 'Planes de correo corporativo' },
-  { href: '/admin/hosting', title: 'Web hosting', desc: 'Planes de hosting compartido' },
-  { href: '/admin/m365', title: 'Microsoft 365', desc: 'Planes M365' },
   { href: '/admin/blog', title: 'Blog', desc: 'Artículos ES/EN' },
   { href: '/admin/cities', title: 'Ciudades', desc: 'SEO local' },
   { href: '/admin/providers', title: 'Proveedores', desc: 'Datos del Hosting Detector' },
@@ -23,8 +19,10 @@ const cards = [
 ---
 <AdminLayout title="Panel principal" active="dashboard">
   <p class="mb-6 max-w-2xl text-sm text-slate-500">
-    Todo lo que edites aquí se refleja al instante en el sitio público — las páginas leen los precios y el contenido
-    directamente de Supabase en cada visita.
+    Los planes de Dedicated, Correo (TerraMail), Hosting y Microsoft 365 ya no se administran desde aquí — son contenido
+    estático directamente en el código de cada página. Para cambiar esos precios o textos, pide que se edite el archivo
+    del componente correspondiente. Lo que sí ves abajo se refleja al instante en el sitio público, leyendo directo de
+    Supabase en cada visita.
   </p>
   <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
     {cards.map((c) => (

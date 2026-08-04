@@ -2,11 +2,8 @@
 export const prerender = false;
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import M365Content from '@/components/M365Content.astro';
-import { getM365Plans, priceNumber } from '@/lib/db';
 import { SITE_URL } from '@/lib/site';
 import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
-
-const m365Plans = await getM365Plans();
 
 const faqs = [
   { q: 'My company already has M365, can I migrate with Terranode?', a: 'Yes. We transfer your existing subscription with no interruptions, with local support.' },
@@ -16,12 +13,13 @@ const faqs = [
   { q: 'Can you help me set up Microsoft 365 from scratch?', a: 'Yes, we handle activation, domain, accounts and data migration.' },
   { q: 'Can I pay monthly or annually?', a: 'We offer both; annual billing gets an additional discount.' },
 ];
-const plans = m365Plans.map((p) => ({
-  name: p.name,
-  price: priceNumber(p.price),
-  description: (p.feats ?? []).slice(0, 3).join(', ') + '.',
-  url: `${SITE_URL}/en/store/m365-${p.id}`,
-}));
+
+// Datos de producto para JSON-LD (contenido estático, ver M365Content.astro).
+const plans = [
+  { name: 'Exchange Online Plan 1', price: '5.50', description: '50 GB mailbox per user, Messages up to 150 MB, Outlook Web App.', url: `${SITE_URL}/en/store/m365-exchange` },
+  { name: 'Microsoft 365 Business Basic', price: '7.20', description: '50 GB mailbox per user, 1 TB OneDrive storage, Teams: chat, calls and video.', url: `${SITE_URL}/en/store/m365-basic` },
+  { name: 'Microsoft 365 Business Standard', price: '12.50', description: 'Everything in Business Basic, Installable Word, Excel, PowerPoint, Outlook.', url: `${SITE_URL}/en/store/m365-standard` },
+];
 const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'Microsoft 365', key: 'm365' }]);
 const service = serviceSchema('en', { name: 'Microsoft 365', description: 'Microsoft 365 suite with Teams, OneDrive, Exchange and local support in Ecuador. Terranode is a certified Microsoft Partner.', pageKey: 'm365', serviceType: 'Microsoft 365 Implementation' });
 ---
@@ -32,5 +30,5 @@ const service = serviceSchema('en', { name: 'Microsoft 365', description: 'Micro
   description='Teams, Outlook, Word, Excel, PowerPoint and 1 TB in the cloud. Sold and supported by Terranode, Microsoft certified partner in Ecuador. Free migration.'
   jsonLd={[organizationSchema('en'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
 >
-  <M365Content locale="en" plans={m365Plans} />
+  <M365Content locale="en" />
 </BaseLayout>

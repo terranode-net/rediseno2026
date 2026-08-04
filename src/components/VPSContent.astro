@@ -308,8 +308,18 @@ const contactoHref = `/${locale}/${es ? 'contacto' : 'contact'}`;
   <!-- Intro / contenido SEO -->
   <section class="border-t border-white/[0.04] bg-[#080E1C] px-6 py-16">
     <div class="mx-auto max-w-[820px]">
-      <h2 class="mb-4 font-display text-[clamp(1.5rem,2.6vw,2rem)] font-bold tracking-tight text-white">{T.introH}</h2>
-      <p class="font-body text-[15px] leading-[1.8] text-slate-400">{T.introBody}</p>
+      <div class="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-7 sm:p-9">
+        <div class="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-[#3B82F6]/10 blur-3xl"></div>
+        <div class="relative flex items-start gap-4">
+          <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#3B82F6]/15">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="1.8" class="h-[22px] w-[22px]"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="min-w-0">
+            <h2 class="mb-3 font-display text-[clamp(1.4rem,2.4vw,1.9rem)] font-bold tracking-tight text-white">{T.introH}</h2>
+            <p class="font-body text-[15px] leading-[1.8] text-slate-400">{T.introBody}</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 

@@ -2,7 +2,8 @@
 export const prerender = false;
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import CityHostingContent from '@/components/CityHostingContent.astro';
-import { getCities, getHostingPlans } from '@/lib/db';
+import { getCities } from '@/lib/db';
+import { getHostingPlansStatic } from '@/lib/staticPlans';
 import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema } from '@/lib/schema';
 import { SITE_URL } from '@/lib/site';
 
@@ -21,17 +22,7 @@ if (!city) {
   return new Response('Ciudad no encontrada', { status: 404 });
 }
 
-const hostingPlansRaw = await getHostingPlans();
-const plans = hostingPlansRaw.map((p) => ({
-  id: p.id,
-  name: p.name,
-  price: p.price,
-  period: p.period,
-  tagline: p.tagline,
-  popular: p.popular,
-  href: p.href,
-  feats: p.feats,
-}));
+const plans = getHostingPlansStatic('es');
 
 const C = city.name;
 const country = city.country || 'Ecuador';

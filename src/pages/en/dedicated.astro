@@ -2,11 +2,8 @@
 export const prerender = false;
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import DedicatedContent from '@/components/DedicatedContent.astro';
-import { getDedicatedPlans, priceNumber } from '@/lib/db';
 import { SITE_URL } from '@/lib/site';
 import { organizationSchema, breadcrumbSchema, faqSchema, serviceSchema, productPlanSchema } from '@/lib/schema';
-
-const dedPlans = await getDedicatedPlans();
 
 const faqs = [
   { q: 'How long does it take to provision the server?', a: 'Dedicated servers typically provision in 24-48 business hours.' },
@@ -15,21 +12,22 @@ const faqs = [
   { q: 'Can I configure RAID from the panel?', a: 'Yes, RAID 1, 5 and 10 automatically with no manual intervention.' },
   { q: 'Do plans include additional IPs?', a: 'Every server includes 1 IPv4 and IPv6. Additional /29 blocks available.' },
 ];
-const plans = dedPlans.map((p) => ({
-  name: p.name,
-  price: priceNumber(p.price),
-  description: `${p.cores}, ${p.ram}, ${p.disk}, ${p.net}.`,
-  url: `${SITE_URL}/en/store/dedicated-${p.id}`,
-}));
+
+// Datos de producto para JSON-LD (contenido estático, ver DedicatedContent.astro).
+const plans = [
+  { name: 'Intel Xeon E3-1230 V5', price: '50.00', description: '4 Cores / 8 Threads, 32 GB DDR4, 1 TB SSD, 1 Gbps Unmetered.', url: `${SITE_URL}/en/store/dedicated-e3` },
+  { name: 'Intel Xeon Dual E5-2680 V4', price: '94.99', description: '28 Cores / 56 Threads, 128 GB DDR4, 1 TB SSD, 1 Gbps Unmetered.', url: `${SITE_URL}/en/store/dedicated-e5` },
+  { name: 'Intel Xeon Dual Gold 6138', price: '149.99', description: '40 Cores / 80 Threads, 256 GB DDR4, 2 TB U.2 NVMe, 10 Gbps (330 TB).', url: `${SITE_URL}/en/store/dedicated-gold` },
+];
 const breadcrumb = breadcrumbSchema('en', [{ name: 'Home', key: 'home' }, { name: 'Dedicated Servers', key: 'dedicados' }]);
 const service = serviceSchema('en', { name: 'Dedicated Servers', description: 'Exclusive Intel Xeon hardware with NVMe storage and remote IPMI.', pageKey: 'dedicados', serviceType: 'Dedicated Server Hosting' });
 ---
 <BaseLayout
   locale="en"
   pageKey="dedicados"
-  title='Intel Xeon Dedicated Servers from $47.99/mo | Terranode'
-  description='Dedicated servers with Intel Xeon, ECC DDR4 RAM, Enterprise NVMe, remote IPMI and DDoS 160 Gbps. From $47.99/mo.'
+  title='Intel Xeon Dedicated Servers from $50/mo | Terranode'
+  description='Dedicated servers with Intel Xeon, ECC DDR4 RAM, Enterprise NVMe, remote IPMI and DDoS 160 Gbps. From $50/mo.'
   jsonLd={[organizationSchema('en'), breadcrumb, service, ...productPlanSchema(plans), faqSchema(faqs)]}
 >
-  <DedicatedContent locale="en" plans={dedPlans} />
+  <DedicatedContent locale="en" />
 </BaseLayout>

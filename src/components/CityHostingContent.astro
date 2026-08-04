@@ -8,12 +8,13 @@
 // más contexto local (zona horaria, latencia, casos de uso locales) y una
 // sección adicional de "por qué elegir Terranode en <ciudad>".
 // ============================================================================
-import type { City, HostingPlan } from '@/lib/db';
+import type { City } from '@/lib/db';
+import type { HostingPlanStatic } from '@/lib/staticPlans';
 
 interface Props {
   locale: 'es' | 'en';
   city: City;
-  plans: HostingPlan[];
+  plans: HostingPlanStatic[];
 }
 
 const { locale, city, plans } = Astro.props;
