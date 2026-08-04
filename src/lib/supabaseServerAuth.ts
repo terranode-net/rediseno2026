@@ -8,7 +8,6 @@ const cookieOptions: CookieOptionsWithName = {
   path: '/',
   sameSite: 'lax',
   secure: true,
-  httpOnly: true,
   maxAge: 60 * 60 * 24 * 7, // 7 días
 };
 
