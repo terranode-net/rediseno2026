@@ -7,6 +7,11 @@ const guard = await requireAdmin(Astro);
 if (guard) return guard;
 ---
 <AdminLayout title="Servidores dedicados" active="dedicated">
+  <p class="mb-4 max-w-2xl text-sm text-slate-500">
+    Usa las pestañas <strong>Español / English</strong> dentro de cada servidor para editar el contenido de cada idioma
+    por separado — por ejemplo "Ilimitado" vs "Unmetered", o "/mes" vs "/mo". Si dejas un campo en inglés vacío,
+    el sitio en inglés usa automáticamente el texto en español.
+  </p>
   <div id="table"></div>
   <script>
     import { mountAdminTable } from '@/lib/adminTable';
@@ -15,27 +20,38 @@ if (guard) return guard;
       table: 'dedicated_plans',
       pk: 'id',
       labelSingular: 'servidor',
+      titleKey: 'name',
+      subtitleKey: 'price',
+      pageSize: 15,
       newRowDefaults: {
-        name: 'Nuevo servidor', cpu: '', cores: '', ram: '', disk: '', net: '', ip: 'IPv4 + IPv6',
-        price: '$0.00', period: '/mes', tagline: '', tagline_en: '', href: 'https://my.terranode.net/store/dedicated-servers', popular: false, sort_order: 99, active: true,
+        name: 'Nuevo servidor', cpu: '', ram: '', disk: '', ip: 'IPv4 + IPv6', price: '$0.00',
+        cores: '', cores_en: '', net: '', net_en: '', period: '/mes', period_en: '',
+        tagline: '', tagline_en: '',
+        href: 'https://my.terranode.net/store/dedicated-servers', popular: false, sort_order: 99, active: true,
       },
       columns: [
+        // — General: igual en ambos idiomas —
         { key: 'id', label: 'ID', type: 'text', width: 'w-20' },
         { key: 'name', label: 'Nombre', type: 'text' },
         { key: 'cpu', label: 'CPU', type: 'text' },
-        { key: 'cores', label: 'Cores', type: 'text', width: 'w-28' },
         { key: 'ram', label: 'RAM', type: 'text', width: 'w-24' },
         { key: 'disk', label: 'Disco', type: 'text', width: 'w-28' },
-        { key: 'net', label: 'Red', type: 'text', width: 'w-28' },
         { key: 'ip', label: 'IP', type: 'text', width: 'w-24' },
         { key: 'price', label: 'Precio', type: 'text', width: 'w-20' },
-        { key: 'period', label: 'Periodo', type: 'text', width: 'w-16' },
-        { key: 'tagline', label: 'Tagline (ES)', type: 'text' },
-        { key: 'tagline_en', label: 'Tagline (EN)', type: 'text' },
-        { key: 'href', label: 'Link compra', type: 'text', width: 'w-28' },
+        { key: 'href', label: 'Link compra', type: 'text' },
         { key: 'popular', label: 'Popular', type: 'boolean', width: 'w-16' },
         { key: 'sort_order', label: 'Orden', type: 'number', width: 'w-16' },
         { key: 'active', label: 'Activo', type: 'boolean', width: 'w-16' },
+        // — Pestaña Español —
+        { key: 'cores', label: 'Cores', type: 'text', placeholder: '4 Núcleos / 8 Hilos', lang: 'es' },
+        { key: 'net', label: 'Red', type: 'text', placeholder: '1 Gbps Ilimitado', lang: 'es' },
+        { key: 'period', label: 'Periodo', type: 'text', placeholder: '/mes', lang: 'es' },
+        { key: 'tagline', label: 'Tagline', type: 'text', lang: 'es' },
+        // — Pestaña English —
+        { key: 'cores_en', label: 'Cores', type: 'text', placeholder: '4 Cores / 8 Threads', lang: 'en' },
+        { key: 'net_en', label: 'Red', type: 'text', placeholder: '1 Gbps Unmetered', lang: 'en' },
+        { key: 'period_en', label: 'Periodo', type: 'text', placeholder: '/mo', lang: 'en' },
+        { key: 'tagline_en', label: 'Tagline', type: 'text', lang: 'en' },
       ],
     });
   </script>
