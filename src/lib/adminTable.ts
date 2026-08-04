@@ -445,11 +445,16 @@ export function mountAdminTable(cfg: AdminTableConfig) {
           const key = chip.dataset.quickToggle!;
           const newVal = !rowData[key];
           chip.disabled = true;
-          const { error } = await supabase.from(cfg.table).update({ [key]: newVal }).eq(cfg.pk, rowData[cfg.pk]);
+          const { data, error } = await supabase.from(cfg.table).update({ [key]: newVal }).eq(cfg.pk, rowData[cfg.pk]).select();
           chip.disabled = false;
           if (error) {
             status(mountEl!, error.message, 'err');
             console.error(`[adminTable:${cfg.table}] quick-toggle error:`, error);
+            return;
+          }
+          if (!data || data.length === 0) {
+            status(mountEl!, 'No se guardó: tu sesión no tiene permisos de administrador sobre este registro (revisa RLS/is_admin() o vuelve a iniciar sesión).', 'err');
+            console.error(`[adminTable:${cfg.table}] quick-toggle: 0 filas afectadas — RLS bloqueó la escritura o el registro no existe.`);
             return;
           }
           rowData[key] = newVal;
@@ -497,8 +502,11 @@ export function mountAdminTable(cfg: AdminTableConfig) {
           saveBtn.disabled = true;
           saveBtn.innerHTML = `${ICO.spinner}<span>Guardando…</span>`;
 
-          const { error } = await supabase.from(cfg.table).update(payload).eq(cfg.pk, rowData[cfg.pk]);
+          const { data, error } = await supabase.from(cfg.table).update(payload).eq(cfg.pk, rowData[cfg.pk]).select();
           if (error) throw error;
+          if (!data || data.length === 0) {
+            throw new Error('No se guardó: tu sesión no tiene permisos de administrador sobre este registro (revisa la política RLS / is_admin(), o cierra sesión y vuelve a entrar).');
+          }
 
           Object.assign(rowData, payload);
           rowStatus(editor, 'Cambios guardados correctamente.', 'ok');
@@ -514,10 +522,15 @@ export function mountAdminTable(cfg: AdminTableConfig) {
       editor.querySelector('[data-action="delete"]')?.addEventListener('click', async (e) => {
         e.stopPropagation();
         if (!confirm(`¿Eliminar este ${label}? Esta acción no se puede deshacer.`)) return;
-        const { error } = await supabase.from(cfg.table).delete().eq(cfg.pk, rowData[cfg.pk]);
+        const { data, error } = await supabase.from(cfg.table).delete().eq(cfg.pk, rowData[cfg.pk]).select();
         if (error) {
           rowStatus(editor, error.message, 'err');
           console.error(`[adminTable:${cfg.table}] delete error:`, error);
+          return;
+        }
+        if (!data || data.length === 0) {
+          rowStatus(editor, 'No se eliminó: tu sesión no tiene permisos de administrador sobre este registro.', 'err');
+          console.error(`[adminTable:${cfg.table}] delete: 0 filas afectadas — RLS bloqueó el borrado o el registro no existe.`);
           return;
         }
         expandedKeys.delete(pkVal);
