@@ -16,6 +16,9 @@ if (guard) return guard;
       pk: 'slug',
       orderBy: 'sort_order',
       labelSingular: 'ciudad',
+      titleKey: 'name',
+      subtitleKey: 'province',
+      pageSize: 30,
       newRowDefaults: { name: '', province: '', country: 'Ecuador', active: true, sort_order: 99 },
       columns: [
         { key: 'slug', label: 'Slug', type: 'text', width: 'w-32' },

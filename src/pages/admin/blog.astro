@@ -22,6 +22,10 @@ if (guard) return guard;
       pk: 'slug',
       orderBy: 'published_at',
       labelSingular: 'artículo',
+      titleKey: 'title',
+      subtitleKey: 'category',
+      imageKey: 'image',
+      pageSize: 10,
       newRowDefaults: {
         locale: 'es', category: '', title: 'Nuevo artículo', excerpt: '', published_at: new Date().toISOString().slice(0, 10),
         read_time: '5 min', author: 'Equipo Terranode', tags: [], intro: '', sections: [], conclusion: '',
