@@ -327,7 +327,7 @@ export function mountAdminTable(cfg: AdminTableConfig) {
           : '';
 
         return `<div data-row-pk="${esc(pkVal)}" class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-card transition-shadow hover:shadow-card-hover">
-          <button type="button" data-action="toggle-row" class="flex w-full items-center gap-3 px-4 py-3.5 text-left">
+          <div data-action="toggle-row" role="button" tabindex="0" aria-expanded="${isOpen}" class="flex w-full cursor-pointer items-center gap-3 px-4 py-3.5 text-left outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2">
             ${thumb}
             <div class="min-w-0 flex-1">
               <div class="flex flex-wrap items-center gap-2">
@@ -337,7 +337,7 @@ export function mountAdminTable(cfg: AdminTableConfig) {
               ${chips ? `<div class="mt-1.5 flex flex-wrap gap-1.5">${chips}</div>` : ''}
             </div>
             <span class="shrink-0 text-slate-400 ${isOpen ? 'rotate-180' : ''}">${ICO.chevron}</span>
-          </button>
+          </div>
           <div class="${isOpen ? '' : 'hidden'} border-t border-slate-100 bg-slate-50/60 p-4 sm:p-5" data-row-editor>
             <span class="mb-3 block text-[11px] font-semibold uppercase tracking-wide text-slate-400">General</span>
             <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">${generalFields}</div>
@@ -410,6 +410,15 @@ export function mountAdminTable(cfg: AdminTableConfig) {
         if (expandedKeys.has(pkVal)) expandedKeys.delete(pkVal);
         else expandedKeys.add(pkVal);
         render();
+      });
+      card.querySelector('[data-action="toggle-row"]')?.addEventListener('keydown', (e) => {
+        const ke = e as KeyboardEvent;
+        if (ke.key === 'Enter' || ke.key === ' ') {
+          ke.preventDefault();
+          if (expandedKeys.has(pkVal)) expandedKeys.delete(pkVal);
+          else expandedKeys.add(pkVal);
+          render();
+        }
       });
 
       // Pestañas Español/English: cambio instantáneo sin re-renderizar toda la lista.
