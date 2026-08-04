@@ -1,0 +1,42 @@
+---
+export const prerender = false;
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { requireAdmin } from '@/lib/supabaseServerAuth';
+
+const guard = await requireAdmin(Astro);
+if (guard) return guard;
+---
+<AdminLayout title="Correo (TerraMail)" active="mail">
+  <p class="mb-4 max-w-2xl text-sm text-slate-500"><strong>Feats</strong> es JSON: <code class="rounded bg-slate-100 px-1">["Buzón de 10 GB","Soporte 24/7"]</code>. Los campos <strong>(EN)</strong> son opcionales: si los dejas vacíos, la versión en inglés del sitio usa automáticamente el texto en español.</p>
+  <div id="table"></div>
+  <script>
+    import { mountAdminTable } from '@/lib/adminTable';
+    mountAdminTable({
+      mount: '#table',
+      table: 'mail_plans',
+      pk: 'id',
+      labelSingular: 'plan de correo',
+      newRowDefaults: {
+        name: 'Nuevo plan', users: 1, storage: '10 GB', price: '$0', period: '/año', monthly: '',
+        tagline: '', tagline_en: '', feats: [], feats_en: [], href: 'https://my.terranode.net/store/corporate-email', popular: false, sort_order: 99, active: true,
+      },
+      columns: [
+        { key: 'id', label: 'ID', type: 'text', width: 'w-24' },
+        { key: 'name', label: 'Nombre', type: 'text', width: 'w-28' },
+        { key: 'users', label: 'Usuarios', type: 'number', width: 'w-20' },
+        { key: 'storage', label: 'Almacén.', type: 'text', width: 'w-20' },
+        { key: 'price', label: 'Precio', type: 'text', width: 'w-20' },
+        { key: 'period', label: 'Periodo', type: 'text', width: 'w-16' },
+        { key: 'monthly', label: 'Equiv. mensual', type: 'text', width: 'w-28' },
+        { key: 'tagline', label: 'Tagline (ES)', type: 'text' },
+        { key: 'tagline_en', label: 'Tagline (EN)', type: 'text' },
+        { key: 'feats', label: 'Características (ES)', type: 'json', width: 'w-56' },
+        { key: 'feats_en', label: 'Características (EN)', type: 'json', width: 'w-56' },
+        { key: 'href', label: 'Link compra', type: 'text', width: 'w-28' },
+        { key: 'popular', label: 'Popular', type: 'boolean', width: 'w-16' },
+        { key: 'sort_order', label: 'Orden', type: 'number', width: 'w-16' },
+        { key: 'active', label: 'Activo', type: 'boolean', width: 'w-16' },
+      ],
+    });
+  </script>
+</AdminLayout>
