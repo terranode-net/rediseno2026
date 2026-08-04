@@ -10,8 +10,8 @@ import { supabaseServer } from './supabaseServer';
 // ── Tipos ───────────────────────────────────────────────────────────────────
 export interface VpsRegion { id: string; name: string; country: string; ping: string; status: string }
 export interface VpsPlan { id: string; name: string; cpu: string; ram: string; disk: string; bw: string; price: string; regions: string[]; stock: Record<string, string>; href: string; popular: boolean }
-export interface DedicatedPlan { id: string; name: string; cpu: string; cores: string; ram: string; disk: string; net: string; ip: string; price: string; period: string; tagline: string; href: string; popular: boolean }
-export interface MailPlan { id: string; name: string; users: number; storage: string; price: string; period: string; monthly: string; tagline: string; feats: string[]; href: string; popular: boolean }
+export interface DedicatedPlan { id: string; name: string; cpu: string; cores: string; ram: string; disk: string; net: string; ip: string; price: string; period: string; tagline: string; tagline_en?: string | null; href: string; popular: boolean }
+export interface MailPlan { id: string; name: string; users: number; storage: string; price: string; period: string; monthly: string; tagline: string; tagline_en?: string | null; feats: string[]; feats_en?: string[] | null; href: string; popular: boolean }
 export interface HostingPlan { id: string; name: string; price: string; period: string; tagline: string; feats: string[]; href: string; popular: boolean }
 export interface M365Plan { id: string; name: string; badge: string | null; price: string; period: string; tagline: string; feats: string[]; href: string; popular: boolean }
 export interface City { slug: string; name: string; province: string; country: string; active: boolean }
@@ -81,8 +81,35 @@ async function fetchTable<T>(table: string, fallback: T[], order = 'sort_order')
 // ── API pública ─────────────────────────────────────────────────────────────
 export const getVpsRegions = () => fetchTable<VpsRegion>('vps_regions', FALLBACK_REGIONS);
 export const getVpsPlans = () => fetchTable<VpsPlan>('vps_plans', FALLBACK_VPS);
-export const getDedicatedPlans = () => fetchTable<DedicatedPlan>('dedicated_plans', FALLBACK_DED);
-export const getMailPlans = () => fetchTable<MailPlan>('mail_plans', FALLBACK_MAIL);
+
+/**
+ * Planes de servidores dedicados. Si `locale` es 'en', usa `tagline_en`
+ * cuando esté escrito en el admin; si aún no se ha traducido, muestra el
+ * texto en español para no dejar el campo vacío.
+ */
+export async function getDedicatedPlans(locale: string = 'es'): Promise<DedicatedPlan[]> {
+  const plans = await fetchTable<DedicatedPlan>('dedicated_plans', FALLBACK_DED);
+  if (locale !== 'en') return plans;
+  return plans.map((p) => ({
+    ...p,
+    tagline: p.tagline_en?.trim() ? p.tagline_en : p.tagline,
+  }));
+}
+
+/**
+ * Planes de correo (TerraMail). Igual que getDedicatedPlans: en inglés usa
+ * tagline_en / feats_en si ya se completaron en el admin, y si no, cae al
+ * texto en español para que la página nunca se quede sin contenido.
+ */
+export async function getMailPlans(locale: string = 'es'): Promise<MailPlan[]> {
+  const plans = await fetchTable<MailPlan>('mail_plans', FALLBACK_MAIL);
+  if (locale !== 'en') return plans;
+  return plans.map((p) => ({
+    ...p,
+    tagline: p.tagline_en?.trim() ? p.tagline_en : p.tagline,
+    feats: p.feats_en && p.feats_en.length > 0 ? p.feats_en : p.feats,
+  }));
+}
 export const getHostingPlans = () => fetchTable<any>('hosting_plans', []);
 export const getM365Plans = () => fetchTable<any>('m365_plans', []);
 export const getCities = () => fetchTable<City>('cities', []);
@@ -118,67 +145,42 @@ export interface BlogPostRow {
   seo_description: string | null;
 }
 
-let _blogFallbackCache: BlogPostRow[] | null = null;
-async function blogFallback(): Promise<BlogPostRow[]> {
-  if (_blogFallbackCache) return _blogFallbackCache;
-  const { POSTS, getFullPost } = await import('./blogData');
-  _blogFallbackCache = POSTS.map((p) => {
-    const full = getFullPost(p.slug);
-    return {
-      slug: p.slug,
-      locale: 'es',
-      category: full.category,
-      title: full.title,
-      excerpt: p.excerpt,
-      published_at: p.date,
-      read_time: full.readTime,
-      author: full.author,
-      tags: full.tags,
-      intro: full.intro,
-      sections: full.sections,
-      conclusion: full.conclusion,
-      image: null,
-      faqs: [],
-      featured: !!p.featured,
-      seo_title: null,
-      seo_description: null,
-    };
-  });
-  return _blogFallbackCache;
-}
-
-/** Lista de artículos publicados para un idioma, más recientes primero. */
-export async function getBlogPosts(locale: string): Promise<BlogPostRow[]> {
+/**
+ * Lista de artículos publicados, más recientes primero.
+ * No filtra por idioma: /es/blog y /en/blog muestran el mismo listado
+ * completo, ya que hoy los artículos se redactan en un solo idioma (es)
+ * y se quiere que ambas versiones del sitio los muestren igual.
+ * El parámetro `locale` se mantiene por compatibilidad con quien ya
+ * llama a esta función, pero no afecta el resultado.
+ */
+export async function getBlogPosts(_locale?: string): Promise<BlogPostRow[]> {
   try {
     const { data, error } = await supabaseServer
       .from('blog_posts')
       .select('*')
-      .eq('locale', locale)
       .eq('published', true)
       .order('published_at', { ascending: false });
-    if (error || !data || data.length === 0) return blogFallback();
+    if (error || !data) return [];
     return data as BlogPostRow[];
   } catch {
-    return blogFallback();
+    return [];
   }
 }
 
-/** Un artículo por slug (o null si no existe / no está publicado). */
-export async function getBlogPost(locale: string, slug: string): Promise<BlogPostRow | null> {
+/** Un artículo por slug (o null si no existe / no está publicado). No filtra por idioma. */
+export async function getBlogPost(_locale: string, slug: string): Promise<BlogPostRow | null> {
   try {
     const { data, error } = await supabaseServer
       .from('blog_posts')
       .select('*')
-      .eq('locale', locale)
       .eq('slug', slug)
       .eq('published', true)
       .maybeSingle();
     if (!error && data) return data as BlogPostRow;
+    return null;
   } catch {
-    /* cae al fallback */
+    return null;
   }
-  const fb = await blogFallback();
-  return fb.find((p) => p.slug === slug) ?? null;
 }
 
 /** Slugs de todos los artículos publicados (para generar rutas/sitemap). */
